@@ -1,6 +1,7 @@
 var fs          = require('fs'),
     restify     = require('restify'),
     generator   = require('viveka-fingerprint-generator'),
+    differ      = require('viveka-difference-tool'),
     server      = restify.createServer({ name: 'Viveka server', version: '0.0.1' });
 
 server.use(restify.acceptParser(server.acceptable));
