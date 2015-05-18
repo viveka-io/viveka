@@ -1,0 +1,34 @@
+var mongoose = require('mongoose'),
+    schemas = {},
+    models = {},
+    db;
+
+schemas.Test = mongoose.Schema({
+    config: String
+});
+
+schemas.FingerPrint = mongoose.Schema({
+    testId: String,
+    state: String,
+    domTree: String,
+    image: String
+});
+
+models.Test         = mongoose.model('Test', schemas.Test);
+models.FingerPrint  = mongoose.model('FingerPrint', schemas.FingerPrint);
+
+function init(link) {
+    console.log('Connecting to database ..')
+    mongoose.connect(link);
+    db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'connection error:'));
+    db.once('open', function (callback) {
+        console.log('Connected to database ..')
+    });
+}
+
+module.exports = {
+    schemas: schemas,
+    models: models,
+    init: init
+};
