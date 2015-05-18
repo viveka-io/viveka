@@ -127,5 +127,5 @@ server.get('/fingerprints/:id', getFingerPrint);
 
 server.listen(5555, function() {
     console.log('%s listening at %s', server.name, server.url);
-    db.init('mongodb://viveka:vivekapass@ds047968.mongolab.com:47968/viveka');
+    db.init('MONGO_DATABASE_URL');
 });
