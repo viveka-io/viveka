@@ -71,6 +71,37 @@ function getFingerPrint(req, res, next) {
     });
 }
 
+function refreshFingerPrint(req, res, next) {
+    var config,
+        fingerPrint;
+
+    db.models.FingerPrint.find({ _id: req.params.id }, function (err, fingerPrint) {
+        if (err) {
+            console.error(err);
+            res.send({error: err});
+        } else {
+            fingerPrint = fingerPrint[0];
+
+            db.models.Test.find({ _id: fingerPrint.testId }, function (err, test) {
+                if (err) {
+                    console.error(err);
+                } else {
+                    config = JSON.parse(test[0].config);
+                    console.log('Refreshing fingerprint: ' + fingerPrint._id);
+                    generator.createFingerPrint(config).then(function(response) {
+                        console.log('DONE');
+
+                        // IMPLEMENT IT HERE
+                    });
+                    res.send(fingerPrint);
+                }
+            });
+
+
+        }
+    });
+}
+
 function createFingerPrint(req, res, next) {
     // - get test data (req.params.id)
     // - create new fingerprint entry
@@ -97,7 +128,6 @@ function createFingerPrint(req, res, next) {
                         console.log('Fingeprint generation finished ..');
 
                         fingerPrint.domTree = response.jsonFingerPrint;
-                        fingerPrint.image   = response.imageFingerPrint;
                         fingerPrint.state   = 'DONE';
 
                         fingerPrint.save(function (err, fingerPrint) {
@@ -105,6 +135,12 @@ function createFingerPrint(req, res, next) {
                                 console.error(err);
                             } else {
                                 console.log('Fingerprint saved ..');
+                                fs.writeFile('public/images/fingerprints/'+ fingerPrint.id +'.png', response.imageFingerPrint, 'base64', function(error) {
+                                    if (error) { console.log(error); }
+                                    else {
+                                        console.log('Screenshot saved ..');
+                                    }
+                                });
                             }
                         });
                     });
@@ -143,6 +179,7 @@ server.get('/tests/:id', getTest);
 server.get('/tests/:id/fingerprints', getFingerPrints);
 server.post('/tests/:id/fingerprints', createFingerPrint);
 server.get('/fingerprints/:id', getFingerPrint);
+server.post('/fingerprints/:id', refreshFingerPrint);
 server.get('/differences/:id', getDifference);
 server.get('/differences/:baselineId/:targetId', generateDifference);
 server.get(/.*/, restify.serveStatic({
