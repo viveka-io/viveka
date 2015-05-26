@@ -89,9 +89,24 @@ function refreshFingerPrint(req, res, next) {
                     config = JSON.parse(test[0].config);
                     console.log('Refreshing fingerprint: ' + fingerPrint._id);
                     generator.createFingerPrint(config).then(function(response) {
-                        console.log('DONE');
+                        console.log('Fingeprint generation finished ..');
 
-                        // IMPLEMENT IT HERE
+                        fingerPrint.domTree = JSON.stringify(response.jsonFingerPrint);
+                        fingerPrint.state   = 'DONE';
+
+                        fingerPrint.save(function (err, fingerPrint) {
+                            if (err) {
+                                console.error(err);
+                            } else {
+                                console.log('Fingerprint saved ..');
+                                fs.writeFile('public/images/fingerprints/'+ fingerPrint.id +'.png', response.imageFingerPrint, 'base64', function(error) {
+                                    if (error) { console.log(error); }
+                                    else {
+                                        console.log('Screenshot saved ..');
+                                    }
+                                });
+                            }
+                        });
                     });
                     res.send(fingerPrint);
                 }
@@ -127,7 +142,7 @@ function createFingerPrint(req, res, next) {
                     generator.createFingerPrint(config).then(function(response) {
                         console.log('Fingeprint generation finished ..');
 
-                        fingerPrint.domTree = response.jsonFingerPrint;
+                        fingerPrint.domTree = JSON.stringify(response.jsonFingerPrint);
                         fingerPrint.state   = 'DONE';
 
                         fingerPrint.save(function (err, fingerPrint) {
