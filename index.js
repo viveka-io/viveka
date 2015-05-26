@@ -136,10 +136,7 @@ server.use(restify.acceptParser(server.acceptable));
 server.use(restify.jsonp());
 server.use(restify.bodyParser({ mapParams: false }));
 
-server.get(/.*/, restify.serveStatic({
-    directory: './public',
-    default: 'index.html'
-}));
+
 server.post('/tests', createTest);
 server.get('/tests', getTests);
 server.get('/tests/:id', getTest);
@@ -148,6 +145,10 @@ server.post('/tests/:id/fingerprints', createFingerPrint);
 server.get('/fingerprints/:id', getFingerPrint);
 server.get('/differences/:id', getDifference);
 server.get('/differences/:baselineId/:targetId', generateDifference);
+server.get(/.*/, restify.serveStatic({
+    directory: './public',
+    default: 'index.html'
+}));
 
 server.listen(5555, function() {
     console.log('%s listening at %s', server.name, server.url);
