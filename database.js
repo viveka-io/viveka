@@ -14,8 +14,15 @@ schemas.FingerPrint = mongoose.Schema({
     image: String
 });
 
+schemas.Difference = mongoose.Schema({
+    baselineId: String,
+    comparedId: String,
+    diff: String
+});
+
 models.Test         = mongoose.model('Test', schemas.Test);
 models.FingerPrint  = mongoose.model('FingerPrint', schemas.FingerPrint);
+models.Difference   = mongoose.model('Difference', schemas.Difference);
 
 function init(link) {
     console.log('Connecting to database ..')

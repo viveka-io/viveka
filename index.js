@@ -82,6 +82,7 @@ function createFingerPrint(req, res, next) {
         if (err) {
             console.error(err);
         } else {
+            // SHOULD CHECK IF THERE IS AN UNFINISHED FINGERPRINT
             console.log('Generating fingeprint for: ' + test[0]._id);
             config = JSON.parse(test[0].config);
             fingerPrint = new db.models.FingerPrint({ testId: test[0]._id, state: 'NEW' });
@@ -114,16 +115,39 @@ function createFingerPrint(req, res, next) {
     });
 }
 
+function getDifference(req, res, next) {
+    // - get the difference
+    db.models.Difference.find({ _id: req.params.id }, function (err, difference) {
+        if (err) {
+            console.error(err);
+            res.send({error: err});
+        } else {
+            console.log('Difference: ' + difference[0]);
+            res.send(difference[0]);
+        }
+    });
+}
+
+function generateDifference(req, res, next) {
+    res.send({'TODO': 'IMPLEMENT ME'});
+}
+
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.jsonp());
 server.use(restify.bodyParser({ mapParams: false }));
 
+server.get(/.*/, restify.serveStatic({
+    directory: './public',
+    default: 'index.html'
+}));
 server.post('/tests', createTest);
 server.get('/tests', getTests);
 server.get('/tests/:id', getTest);
 server.get('/tests/:id/fingerprints', getFingerPrints);
 server.post('/tests/:id/fingerprints', createFingerPrint);
 server.get('/fingerprints/:id', getFingerPrint);
+server.get('/differences/:id', getDifference);
+server.get('/differences/:baselineId/:targetId', generateDifference);
 
 server.listen(5555, function() {
     console.log('%s listening at %s', server.name, server.url);
