@@ -1,0 +1,8 @@
+web:  
+  build: .
+  links:
+    - db:db
+  ports:
+    - 5555:5555
+db:  
+  image: mongo:latest

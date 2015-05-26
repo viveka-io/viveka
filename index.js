@@ -189,5 +189,6 @@ server.get(/.*/, restify.serveStatic({
 
 server.listen(5555, function() {
     console.log('%s listening at %s', server.name, server.url);
-    db.init('MONGO_DATABASE_URL');
+    console.log('Database URI: %s', process.env.MONGO_DATABASE_URL);
+    db.init(process.env.MONGO_DATABASE_URL);
 });
