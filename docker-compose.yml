@@ -1,10 +1,14 @@
 web:
-  image: node:0.12
+  build: .
+  volumes:
+    - .:/opt/app-modules/app
+  working_dir: /opt/app-modules/app
   links:
     - db
   ports:
     - 5555:5555
   environment:
     - MONGO_DATABASE_URL=mongodb://db/viveka
+  command: npm start
 db:
   image: mongo:3.0
