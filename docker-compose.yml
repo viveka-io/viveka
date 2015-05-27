@@ -1,8 +1,10 @@
-web:  
-  build: .
+web:
+  image: node:0.12
   links:
-    - db:db
+    - db
   ports:
     - 5555:5555
-db:  
-  image: mongo:latest
+  environment:
+    - MONGO_DATABASE_URL=mongodb://db/viveka
+db:
+  image: mongo:3.0
