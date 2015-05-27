@@ -26,7 +26,7 @@ function getTests(req, res, next) {
             console.error(err);
             res.send({error: err});
         } else {
-            console.log('Tests size:' + tests.length);
+            console.log('Tests size: ' + tests.length);
             res.send({tests: tests});
         }
     });
@@ -129,6 +129,7 @@ function createFingerPrint(req, res, next) {
             console.error(err);
         } else {
             // SHOULD CHECK IF THERE IS AN UNFINISHED FINGERPRINT
+            // AND ABORT IF IT EXISTS
             console.log('Generating fingeprint for: ' + test[0]._id);
             config = JSON.parse(test[0].config);
             fingerPrint = new db.models.FingerPrint({ testId: test[0]._id, state: 'NEW' });
@@ -180,13 +181,50 @@ function getDifference(req, res, next) {
 }
 
 function generateDifference(req, res, next) {
-    res.send({'TODO': 'IMPLEMENT ME'});
+    var diff,
+        a,
+        b;
+
+    db.models.Difference.find({ baselineId: req.params.baselineId, comparedId: req.params.targetId }, function (err, difference) {
+         if (err) {
+            console.error(err);
+            res.send({error: err});
+        } else {
+            diff = difference[0];
+            if (diff) {
+                console.log('Difference: ' + difference[0]);
+                res.send(difference[0]);
+            } else {
+                diff = new db.models.Difference({ baselineId: req.params.baselineId, comparedId: req.params.targetId });
+                db.models.FingerPrint.find({ _id: req.params.baselineId }, function (err, fingerPrint) {
+                    a = fingerPrint[0];
+                    db.models.FingerPrint.find({ _id: req.params.targetId }, function (err, fingerPrint) {
+                        b = fingerPrint[0];
+                        if (a && b) {
+                            console.log('Generate difference');
+                            diff.diff = JSON.stringify(differ.diff(JSON.parse(a.domTree), JSON.parse(b.domTree)));
+                            diff.save(function (err, diff) {
+                                if (err) {
+                                    console.error(err);
+                                    res.send({error: err});
+                                } else {
+                                    console.log('DIFF saved: ' + diff._id);
+                                    res.send(diff);
+                                }
+                            });
+                        } else {
+                            res.send({error: 'Missing fingerprint'});
+                        }
+                    });
+                })
+            }
+        }
+    });
 }
 
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.jsonp());
 server.use(restify.bodyParser({ mapParams: false }));
-
 
 server.post('/tests', createTest);
 server.get('/tests', getTests);
@@ -194,7 +232,6 @@ server.get('/tests/:id', getTest);
 server.get('/tests/:id/fingerprints', getFingerPrints);
 server.post('/tests/:id/fingerprints', createFingerPrint);
 server.get('/fingerprints/:id', getFingerPrint);
-server.post('/fingerprints/:id', refreshFingerPrint);
 server.get('/differences/:id', getDifference);
 server.get('/differences/:baselineId/:targetId', generateDifference);
 server.get(/.*/, restify.serveStatic({
