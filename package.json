@@ -1,5 +1,5 @@
 {
-  "name": "viveka-server",
+  "name": "viveka",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://chrisakakay@github.com/viveka-io/viveka-server.git"
+    "url": "https://chrisakakay@github.com/viveka-io/viveka.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/viveka-io/viveka-server/issues"
+    "url": "https://github.com/viveka-io/viveka/issues"
   },
-  "homepage": "https://github.com/viveka-io/viveka-server",
+  "homepage": "https://github.com/viveka-io/viveka",
   "dependencies": {
     "mongoose": "^4.0.3",
     "restify": "^3.0.2",

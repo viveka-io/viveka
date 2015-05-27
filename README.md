@@ -1,4 +1,4 @@
-# viveka-server
+# viveka
 
 You can run it using [vagrant-docker](https://github.com/mucsi96/vagrant-docker)
 
