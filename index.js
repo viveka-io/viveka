@@ -1,8 +1,9 @@
 var fs          = require('fs'),
-    restify     = require('restify'),
+    express     = require('express'),
     generator   = require('viveka-fingerprint-generator'),
     differ      = require('viveka-difference-tool'),
-    server      = restify.createServer({ name: 'Viveka server', version: '0.0.1' }),
+    bodyParser  = require('body-parser'),
+    app         = express(),
     db          = require('./database.js');
 
 function createTest(req, res, next) {
@@ -222,25 +223,23 @@ function generateDifference(req, res, next) {
     });
 }
 
-server.use(restify.acceptParser(server.acceptable));
-server.use(restify.jsonp());
-server.use(restify.bodyParser({ mapParams: false }));
+app.use('/bower_components',  express.static(__dirname + '/../bower_components'));
+app.use(express.static(__dirname + '/docs'));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-server.post('/tests', createTest);
-server.get('/tests', getTests);
-server.get('/tests/:id', getTest);
-server.get('/tests/:id/fingerprints', getFingerPrints);
-server.post('/tests/:id/fingerprints', createFingerPrint);
-server.get('/fingerprints/:id', getFingerPrint);
-server.get('/differences/:id', getDifference);
-server.get('/differences/:baselineId/:targetId', generateDifference);
-server.get(/.*/, restify.serveStatic({
-    directory: './docs',
-    default: 'index.html'
-}));
 
-server.listen(5555, function() {
-    console.log('%s listening at %s', server.name, server.url);
+app.post('/tests', createTest);
+app.get('/tests', getTests);
+app.get('/tests/:id', getTest);
+app.get('/tests/:id/fingerprints', getFingerPrints);
+app.post('/tests/:id/fingerprints', createFingerPrint);
+app.get('/fingerprints/:id', getFingerPrint);
+app.get('/differences/:id', getDifference);
+app.get('/differences/:baselineId/:targetId', generateDifference);
+
+var server = app.listen(5555, function() {
+    console.log('%s listening at %s', server.address().address, server.address().port);
     console.log('Database URI: %s', process.env.MONGO_DATABASE_URL);
     db.init(process.env.MONGO_DATABASE_URL);
 });

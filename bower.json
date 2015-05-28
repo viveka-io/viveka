@@ -1,0 +1,18 @@
+{
+  "name": "viveka",
+  "main": "index.js",
+  "version": "0.0.1",
+  "homepage": "https://github.com/viveka-io/viveka",
+  "description": "viveka",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4"
+  }
+}

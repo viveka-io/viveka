@@ -19,7 +19,8 @@
   "homepage": "https://github.com/viveka-io/viveka",
   "dependencies": {
     "mongoose": "^4.0.3",
-    "restify": "^3.0.2",
+    "express": "^4.12.4",
+    "body-parser": "^1.12.4",
     "viveka-difference-tool": "git://github.com/viveka-io/viveka-difference-tool",
     "viveka-fingerprint-generator": "git://github.com/viveka-io/viveka-fingerprint-generator"
   }
