@@ -1,0 +1,86 @@
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+    padding: 10px;
+    margin: 0;
+}
+
+.request {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid black;
+    margin-bottom: 10px;
+    float: left;
+}
+
+.request:hover {
+    cursor: pointer;
+}
+
+.request .url {
+    line-height: 40px;
+    height: 40px;
+    vertical-align: middle;
+}
+
+.request.missing .url {
+    font-style: italic;
+    color: lightgray;
+}
+
+.request .url::before {
+    color: white;
+    width: 60px;
+    text-align: center;
+    float: left;
+    padding: 10px;
+    line-height: 20px;
+    margin-right: 10px;
+}
+.get {
+    background-color: #e7f0f7;
+    border-color: #c3d9ec;
+}
+
+.get .url::before {
+    background-color: #0f6ab4;
+    content: 'GET';
+}
+
+.post {
+    background-color: #e7f6ec;
+    border-color: #c3e8d1;
+}
+
+.post .url::before {
+    background-color: #10a54a;
+    content: 'POST';
+}
+
+.delete {
+    background-color: #f5e8e8;
+    border-color: #e8c6c7;
+}
+
+.delete .url::before {
+    background-color: #a41e22;
+    content: 'DELETE';
+}
+
+.put {
+    background-color: #f9f2e9;
+    border-color: #f0e0ca;
+}
+
+.put .url::before {
+    background-color: #c5862b;
+    content: 'PUT';
+}
+
+.request .content {
+    width: 100%;
+    min-height: 100px;
+    clear: both;
+    padding: 10px;
+    display: none;
+    box-sizing: border-box;
+}
