@@ -84,3 +84,25 @@ body {
     display: none;
     box-sizing: border-box;
 }
+
+.request .content pre {
+    background-color: white;
+    padding: 10px;
+}
+
+.request .content input[type="text"] {
+    border: none;
+    padding: 5px 10px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.submit {
+    padding: 5px 10px;
+    background-color: black;
+    color: white;
+}
+
+.missing .submit {
+    display: none;
+}
