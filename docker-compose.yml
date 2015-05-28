@@ -9,6 +9,6 @@ web:
     - 5555:5555
   environment:
     - MONGO_DATABASE_URL=mongodb://db/viveka
-  command: npm start
+  command: nodemon index.js
 db:
   image: mongo:3.0

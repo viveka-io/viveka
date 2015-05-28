@@ -235,7 +235,7 @@ server.get('/fingerprints/:id', getFingerPrint);
 server.get('/differences/:id', getDifference);
 server.get('/differences/:baselineId/:targetId', generateDifference);
 server.get(/.*/, restify.serveStatic({
-    directory: './public',
+    directory: './docs',
     default: 'index.html'
 }));
 
