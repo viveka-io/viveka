@@ -1,3 +1,62 @@
+var source      = $("#request-template").html(),
+    template    = Handlebars.compile(source),
+    requests    = [
+        {
+            type: 'get',
+            url: '/tests'
+        },
+        {
+            type: 'post',
+            url: '/tests',
+            additionalClasses: 'missing'
+        },
+        {
+            type: 'get',
+            url: '/tests/{testId}',
+            inputs : [ { name: 'testId'} ]
+        },
+        {
+            type: 'delete',
+            url: '/tests/{testId}',
+            additionalClasses: 'missing'
+        },
+        {
+            type: 'put',
+            url: '/tests/{testId}',
+            additionalClasses: 'missing'
+        },
+        {
+            type: 'get',
+            url: '/tests/{testId}/fingerprints',
+            inputs : [ { name: 'testId'} ]
+        },
+        {
+            type: 'post',
+            url: '/tests/{testId}/fingerprints',
+            additionalClasses: 'missing'},
+        {
+            type: 'get',
+            url: '/fingerprints/{fingerPrintId}',
+            inputs : [ { name: 'fingerPrintId'} ]
+        },
+        {
+            type: 'get',
+            url: '/differences/{differenceId}',
+            inputs : [ { name: 'differenceId'} ]
+        },
+        {
+            type: 'get',
+            url: '/differences/{baselineFingerPrintId}/{targetFingerPrintId}',
+            additionalClasses: 'missing'
+        }
+    ];
+
+$.each(requests, function (i, request) {
+    var html = template(request);
+
+    $('body').append(html);
+})
+
 $('body').on('click', '.url', function () {
     $(this).parent().find('.content').toggle();
 });
@@ -11,7 +70,7 @@ $('body').on('click', '.submit:not("missing")', function () {
     $.ajax({
         method: method,
         url: replaceUrl(url, $t.find('.content')),
-        data: {}
+       data: {}
     }).done(function (data) {
         $c.html(JSON.stringify(data, undefined, 4));
     });
@@ -29,3 +88,4 @@ function replaceUrl(url, content) {
     console.log(url);
     return url;
 }
+

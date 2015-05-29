@@ -8,92 +8,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="main.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js"></script>
+        <script id="request-template" type="text/x-handlebars-template">
+            <div class="request {{type}} {{additionalClasses}}">
+                <span class="url">{{url}}</span>
+                <div class="content">
+                    {{#each inputs}}
+                        <input placeholder="{{name}}" name="{{name}}" type="text" value="{{name}}">
+                    {{/each}}
+                    <span>Response</span>
+                    <pre></pre>
+                    <span class="submit">SUBMIT</span>
+                </div>
+            </div>
+        </script>
     </head>
     <body>
-        <div class="request get">
-            <span class="url">/tests</span>
-            <div class="content">
-                <span>Response</span>
-                <pre></pre>
-                <span class="submit">SUBMIT</span>
-            </div>
-        </div>
-        <div class="request post missing">
-            <span class="url">/tests</span>
-            <div class="content">
-                <span>Response</span>
-                <pre></pre>
-                <span class="submit">SUBMIT</span>
-            </div>
-        </div>
-        <div class="request get">
-            <span class="url">/tests/{testId}</span>
-            <div class="content">
-                <input placeholder="testId" name="testId" type="text" value="TEST_ID">
-                <span>Response</span>
-                <pre></pre>
-                <span class="submit">SUBMIT</span>
-            </div>
-        </div>
-        <div class="request delete missing">
-            <span class="url">/tests/{testId}</span>
-            <div class="content">
-                <span>Response</span>
-                <pre></pre>
-                <span class="submit">SUBMIT</span>
-            </div>
-        </div>
-        <div class="request put missing">
-            <span class="url">/tests/{testId}</span>
-            <div class="content">
-                <span>Response</span>
-                <pre></pre>
-                <span class="submit">SUBMIT</span>
-            </div>
-        </div>
-        <div class="request get">
-            <span class="url">/tests/{testId}/fingerprints</span>
-            <div class="content">
-                <input placeholder="testId" name="testId" type="text" value="TEST_ID">
-                <span>Response</span>
-                <pre></pre>
-                <span class="submit">SUBMIT</span>
-            </div>
-        </div>
-        <div class="request post missing">
-            <span class="url">/tests/{testId}/fingerprints</span>
-            <div class="content">
-                <span>Response</span>
-                <pre></pre>
-                <span class="submit">SUBMIT</span>
-            </div>
-        </div>
-        <div class="request get">
-            <span class="url">/fingerprints/{fingerPrintId}</span>
-            <div class="content">
-                <input placeholder="testId" name="fingerPrintId" type="text" value="FINGERPRINT_ID">
-                <span>Response</span>
-                <pre></pre>
-                <span class="submit">SUBMIT</span>
-            </div>
-        </div>
-        <div class="request get">
-            <span class="url">/differences/{differenceId}</span>
-            <div class="content">
-                <input placeholder="testId" name="differenceId" type="text" value="DIFFERENCE_ID">
-                <span>Response</span>
-                <pre></pre>
-                <span class="submit">SUBMIT</span>
-            </div>
-        </div>
-        <div class="request get missing">
-            <span class="url">/differences/{baselineFingerPrintId}/{targetFingerPrintId}</span>
-            <div class="content">
-                <span>Response</span>
-                <pre></pre>
-                <span class="submit">SUBMIT</span>
-            </div>
-        </div>
         <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
         <script src="index.js"></script>
     </body>
