@@ -8,7 +8,13 @@ var source      = $("#request-template").html(),
         {
             type: 'post',
             url: '/tests',
-            additionalClasses: 'missing'
+            inputs: [
+                { name: 'browserWidth',     value: 1280, additionalClasses: 'data' },
+                { name: 'browserHeight',    value: 720, additionalClasses: 'data' },
+                { name: 'url',              value: 'https://nodejs.org/', additionalClasses: 'data' },
+                { name: 'generator',        value: 'SENSE', additionalClasses: 'data' },
+                { name: 'browser',          value: 'PHANTOMJS', additionalClasses: 'data' }
+            ]
         },
         {
             type: 'get',
@@ -18,7 +24,7 @@ var source      = $("#request-template").html(),
         {
             type: 'delete',
             url: '/tests/{testId}',
-            additionalClasses: 'missing'
+            inputs : [ { name: 'testId'} ]
         },
         {
             type: 'put',
@@ -33,7 +39,8 @@ var source      = $("#request-template").html(),
         {
             type: 'post',
             url: '/tests/{testId}/fingerprints',
-            additionalClasses: 'missing'},
+            inputs : [ { name: 'testId'} ]
+        },
         {
             type: 'get',
             url: '/fingerprints/{fingerPrintId}',
@@ -47,7 +54,10 @@ var source      = $("#request-template").html(),
         {
             type: 'get',
             url: '/differences/{baselineFingerPrintId}/{targetFingerPrintId}',
-            additionalClasses: 'missing'
+            inputs : [
+                { name: 'baselineFingerPrintId'},
+                { name: 'targetFingerPrintId'}
+            ]
         }
     ];
 
@@ -70,11 +80,21 @@ $('body').on('click', '.submit:not("missing")', function () {
     $.ajax({
         method: method,
         url: replaceUrl(url, $t.find('.content')),
-       data: {}
+        data: collectData($t.find('.content'))
     }).done(function (data) {
         $c.html(JSON.stringify(data, undefined, 4));
     });
 });
+
+function collectData(content) {
+    var data = {};
+
+    $.each(content.find('input.data'), function () {
+        data[$(this).attr('name')] = $(this).val();
+    });
+
+    return data;
+}
 
 function replaceUrl(url, content) {
     var matches = url.match(/{.*}/g);
@@ -82,7 +102,9 @@ function replaceUrl(url, content) {
     if(matches && matches.length > 0) {
         $.each(matches, function(i, match) {
             var input = content.find('input[name="'+match.substr(1, match.length-2)+'"]');
-            url = url.replace(match, input.val());
+            if (input.val()) {
+                url = url.replace(match, input.val());
+            }
         })
     }
     console.log(url);

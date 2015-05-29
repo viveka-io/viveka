@@ -11,8 +11,8 @@ function createTest(req, res, next) {
     var test = new db.models.Test({ config: JSON.stringify(req.body) });
     test.save(function (err, test) {
         if (err) {
-            console.error(err);
             res.send({error: err});
+            return next(err);
         } else {
             console.log('TEST saved: ' + test._id);
             res.send(test);
@@ -24,8 +24,8 @@ function getTests(req, res, next) {
     // - get the tests
     db.models.Test.find(function (err, tests) {
         if (err) {
-            console.error(err);
             res.send({error: err});
+            return next(err);
         } else {
             console.log('Tests size: ' + tests.length);
             res.send({tests: tests});
@@ -37,11 +37,25 @@ function getTest(req, res, next) {
     // - get test data (req.params.id)
     db.models.Test.find({ _id: req.params.id }, function (err, test) {
         if (err) {
-            console.error(err);
             res.send({error: err});
+            return next(err);
         } else {
             console.log('Test: ' + test[0]);
             res.send(test[0]);
+        }
+    });
+}
+
+function deleteTest(req, res, next) {
+    // - delete test (req.params.id)
+    // SHOULD WE REMOVE ALL THE FINGERPRINTS AND DIFFS RELATED TO THIS?
+    db.models.Test.findByIdAndRemove(req.params.id, function (err, post) {
+        if (err) {
+            res.send({error: err});
+            return next(err);
+        } else {
+            console.log(post);
+            res.send(post);
         }
     });
 }
@@ -50,8 +64,8 @@ function getFingerPrints(req, res, next) {
     // - get the fingerprints associated with the test
     db.models.FingerPrint.find({ testId: req.params.id }, function (err, fingerPrints) {
         if (err) {
-            console.error(err);
             res.send({error: err});
+            return next(err);
         } else {
             console.log('FingerPrints: ' + fingerPrints.length);
             res.send({fingerPrints: fingerPrints});
@@ -63,8 +77,8 @@ function getFingerPrint(req, res, next) {
     // - req.params.id
     db.models.FingerPrint.find({ _id: req.params.id }, function (err, fingerPrint) {
         if (err) {
-            console.error(err);
             res.send({error: err});
+            return next(err);
         } else {
             console.log('Fingerprint: ' + fingerPrint[0]);
             res.send(fingerPrint[0]);
@@ -78,8 +92,8 @@ function refreshFingerPrint(req, res, next) {
 
     db.models.FingerPrint.find({ _id: req.params.id }, function (err, fingerPrint) {
         if (err) {
-            console.error(err);
             res.send({error: err});
+            return next(err);
         } else {
             fingerPrint = fingerPrint[0];
 
@@ -172,8 +186,8 @@ function getDifference(req, res, next) {
     // - get the difference
     db.models.Difference.find({ _id: req.params.id }, function (err, difference) {
         if (err) {
-            console.error(err);
             res.send({error: err});
+            return next(err);
         } else {
             console.log('Difference: ' + difference[0]);
             res.send(difference[0]);
@@ -188,8 +202,8 @@ function generateDifference(req, res, next) {
 
     db.models.Difference.find({ baselineId: req.params.baselineId, comparedId: req.params.targetId }, function (err, difference) {
          if (err) {
-            console.error(err);
             res.send({error: err});
+            return next(err);
         } else {
             diff = difference[0];
             if (diff) {
@@ -228,10 +242,10 @@ app.use(express.static(__dirname + '/docs'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-
 app.post('/tests', createTest);
 app.get('/tests', getTests);
 app.get('/tests/:id', getTest);
+app.delete('/tests/:id', deleteTest);
 app.get('/tests/:id/fingerprints', getFingerPrints);
 app.post('/tests/:id/fingerprints', createFingerPrint);
 app.get('/fingerprints/:id', getFingerPrint);
