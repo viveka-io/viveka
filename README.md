@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-On Linux you need git and [Docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/).
+On Linux you need git, [Docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/).
 On Windows and Mac you need git and [Vagrant](https://www.vagrantup.com/)
 
 ## Running
