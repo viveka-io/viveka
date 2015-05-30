@@ -1,4 +1,4 @@
-# viveka
+![alt-tag](http://viveka.io/viveka.png)
 
 ## Prerequisites
 
