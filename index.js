@@ -1,7 +1,7 @@
 var fs          = require('fs'),
     express     = require('express'),
-    generator   = require('viveka-fingerprint-generator'),
-    differ      = require('viveka-difference-tool'),
+    generator   = require('./viveka-fingerprint-generator'),
+    differ      = require('./viveka-difference-tool'),
     bodyParser  = require('body-parser'),
     app         = express(),
     db          = require('./database.js');
@@ -159,6 +159,7 @@ function createFingerPrint(req, res, next) {
                         console.log('Fingeprint generation finished ..');
 
                         fingerPrint.domTree = JSON.stringify(response.jsonFingerPrint);
+                        fingerPrint.screenshot = 'images/fingerprints/'+ fingerPrint.id +'.png';
                         fingerPrint.state   = 'DONE';
 
                         fingerPrint.save(function (err, fingerPrint) {
@@ -166,7 +167,7 @@ function createFingerPrint(req, res, next) {
                                 console.error(err);
                             } else {
                                 console.log('Fingerprint saved ..');
-                                fs.writeFile('public/images/fingerprints/'+ fingerPrint.id +'.png', response.imageFingerPrint, 'base64', function(error) {
+                                fs.writeFile('public/' + fingerPrint.screenshot, response.imageFingerPrint, 'base64', function(error) {
                                     if (error) { console.log(error); }
                                     else {
                                         console.log('Screenshot saved ..');
@@ -239,6 +240,7 @@ function generateDifference(req, res, next) {
 
 app.use('/bower_components',  express.static(__dirname + '/../bower_components'));
 app.use(express.static(__dirname + '/docs'));
+app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -253,7 +255,7 @@ app.get('/differences/:id', getDifference);
 app.get('/differences/:baselineId/:targetId', generateDifference);
 
 var server = app.listen(5555, function() {
-    console.log('%s listening at %s', server.address().address, server.address().port);
-    console.log('Database URI: %s', process.env.MONGO_DATABASE_URL);
-    db.init(process.env.MONGO_DATABASE_URL);
+    console.log('Viveka server is listening at %s', server.address().port);
+    console.log('Database URI: %s', process.env.DB_URI);
+    db.init(process.env.DB_URI);
 });

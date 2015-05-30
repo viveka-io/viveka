@@ -1,0 +1,9 @@
+[submodule "viveka-difference-tool"]
+	path = viveka-difference-tool
+	url = git@github.com:viveka-io/viveka-difference-tool.git
+[submodule "viveka-fingerprint-generator"]
+    path = viveka-fingerprint-generator
+    url = git@github.com:viveka-io/viveka-fingerprint-generator.git
+[submodule "viveka-test-page"]
+	path = viveka-test-page
+	url = git@github.com:viveka-io/viveka-test-page.git

@@ -98,6 +98,8 @@ body {
 }
 
 .submit {
+    display: block;
+    border: none;
     padding: 5px 10px;
     background-color: black;
     color: white;

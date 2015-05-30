@@ -10,7 +10,8 @@ schemas.Test = mongoose.Schema({
 schemas.FingerPrint = mongoose.Schema({
     testId: String,
     state: String,
-    domTree: String
+    domTree: String,
+    screenshot: String
 });
 
 schemas.Difference = mongoose.Schema({

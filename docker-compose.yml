@@ -1,14 +1,34 @@
 web:
   build: .
   volumes:
-    - .:/opt/app-modules/app
-  working_dir: /opt/app-modules/app
+    - .:/opt/viveka-modules/viveka
+  working_dir: /opt/viveka-modules/viveka
   links:
     - db
+    - firefox
+    - chrome
   ports:
     - 5555:5555
   environment:
-    - MONGO_DATABASE_URL=mongodb://db/viveka
+    - DB_URI=mongodb://db:27017/viveka
+    - FIREFOX_URI=http://firefox:4444/wd/hub
+    - CHROME_URI=http://chrome:4444/wd/hub
   command: nodemon index.js
 db:
   image: mongo:3.0
+firefox:
+  image: selenium/standalone-firefox:2.45.0
+  links:
+    - testpage
+chrome:
+  image: selenium/standalone-chrome:2.45.0
+  links:
+    - testpage
+testpage:
+  build: viveka-test-page/
+  volumes:
+    - viveka-test-page:/opt/viveka-modules/viveka-test-page
+  working_dir: /opt/viveka-modules/viveka-test-page
+  ports:
+    - 5556:5556
+  command: nodemon index.js

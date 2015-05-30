@@ -11,9 +11,9 @@ var source      = $("#request-template").html(),
             inputs: [
                 { name: 'browserWidth',     value: 1280, additionalClasses: 'data' },
                 { name: 'browserHeight',    value: 720, additionalClasses: 'data' },
-                { name: 'url',              value: 'https://nodejs.org/', additionalClasses: 'data' },
+                { name: 'url',              value: 'http://testpage:5556/', additionalClasses: 'data' },
                 { name: 'generator',        value: 'SENSE', additionalClasses: 'data' },
-                { name: 'browser',          value: 'PHANTOMJS', additionalClasses: 'data' }
+                { name: 'browser',          value: 'FIREFOX', additionalClasses: 'data' }
             ]
         },
         {
@@ -75,7 +75,8 @@ $('body').on('click', '.submit:not("missing")', function () {
     var $t     = $(this).parent().parent(),
         method = $t.attr('class').replace('request', ' ').trim().toUpperCase(),
         url    = $t.find('.url').html(),
-        $c     = $t.find('.content pre');
+        $c     = $t.find('.content pre'),
+        $img   = $t.find('.content img');
 
     $.ajax({
         method: method,
@@ -83,6 +84,9 @@ $('body').on('click', '.submit:not("missing")', function () {
         data: collectData($t.find('.content'))
     }).done(function (data) {
         $c.html(JSON.stringify(data, undefined, 4));
+        if (data.screenshot) {
+            $img.attr('src', data.screenshot);
+        }
     });
 });
 
