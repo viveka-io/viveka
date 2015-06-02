@@ -1,3 +1,4 @@
 *.log
 node_modules
 public/images/fingerprints
+.idea
