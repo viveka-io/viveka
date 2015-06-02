@@ -81,7 +81,7 @@ function getFingerPrint(req, res, next) {
             return next(err);
         } else {
             console.log('Fingerprint: ' + fingerPrint[0]);
-            res.send(fingerPrint[0]);
+            res.send(JSON.parse(JSON.stringify(fingerPrint[0])));
         }
     });
 }
@@ -251,6 +251,7 @@ app.delete('/tests/:id', deleteTest);
 app.get('/tests/:id/fingerprints', getFingerPrints);
 app.post('/tests/:id/fingerprints', createFingerPrint);
 app.get('/fingerprints/:id', getFingerPrint);
+app.put('/fingerprints/:id', refreshFingerPrint);
 app.get('/differences/:id', getDifference);
 app.get('/differences/:baselineId/:targetId', generateDifference);
 

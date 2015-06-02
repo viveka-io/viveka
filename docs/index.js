@@ -47,6 +47,11 @@ var source      = $("#request-template").html(),
             inputs : [ { name: 'fingerPrintId'} ]
         },
         {
+            type: 'put',
+            url: '/fingerprints/{fingerPrintId}',
+            inputs : [ { name: 'fingerPrintId'} ]
+        },
+        {
             type: 'get',
             url: '/differences/{differenceId}',
             inputs : [ { name: 'differenceId'} ]
@@ -83,6 +88,7 @@ $('body').on('click', '.submit:not("missing")', function () {
         url: replaceUrl(url, $t.find('.content')),
         data: collectData($t.find('.content'))
     }).done(function (data) {
+        if (data.domTree) data.domTree = JSON.parse(data.domTree);
         $c.html(JSON.stringify(data, undefined, 4));
         if (data.screenshot) {
             $img.attr('src', data.screenshot);
