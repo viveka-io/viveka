@@ -1,7 +1,7 @@
 var fs          = require('fs'),
     express     = require('express'),
-    generator   = require('./viveka-fingerprint-generator'),
-    differ      = require('./viveka-difference-tool'),
+    generator   = require('./fingerprint-generator'),
+    differ      = require('./difference-generator'),
     bodyParser  = require('body-parser'),
     app         = express(),
     db          = require('./database.js');
