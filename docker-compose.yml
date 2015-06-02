@@ -25,10 +25,10 @@ chrome:
   links:
     - testpage
 testpage:
-  build: viveka-test-page/
+  build: test-page/
   volumes:
-    - viveka-test-page:/opt/viveka-modules/viveka-test-page
-  working_dir: /opt/viveka-modules/viveka-test-page
+    - test-page:/opt/viveka-modules/test-page
+  working_dir: /opt/viveka-modules/test-page
   ports:
     - 5556:5556
   command: nodemon index.js

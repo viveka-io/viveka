@@ -20,6 +20,8 @@
   "dependencies": {
     "mongoose": "^4.0.3",
     "express": "^4.12.4",
-    "body-parser": "^1.12.4"
+    "body-parser": "^1.12.4",
+    "node-png": "^0.4.3",
+    "selenium-webdriver": "^2.45.1"
   }
 }
