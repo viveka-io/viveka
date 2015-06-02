@@ -4,3 +4,6 @@
 [submodule "viveka-fingerprint-generator"]
     path = viveka-fingerprint-generator
     url = git@github.com:viveka-io/viveka-fingerprint-generator.git
+[submodule "viveka-test-page"]
+	path = viveka-test-page
+	url = git@github.com:viveka-io/viveka-test-page.git
