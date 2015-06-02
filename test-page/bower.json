@@ -1,0 +1,21 @@
+{
+  "name": "viveka-test-page",
+  "version": "0.0.1",
+  "homepage": "https://github.com/viveka-io/viveka-test-page",
+  "authors": [
+    "Igor Mucsicska <mucsi_96@yahoo.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "director": "~1.2.8",
+    "handlebars": "~3.0.3",
+    "jquery": "~2.1.4"
+  }
+}
