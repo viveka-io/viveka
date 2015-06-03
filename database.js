@@ -1,4 +1,6 @@
 var mongoose = require('mongoose'),
+    log = require('bunyan').createLogger({name: "viveka-server"}),
+    VError = require('verror'),
     schemas = {},
     models = {},
     db;
@@ -24,13 +26,17 @@ models.Test         = mongoose.model('Test', schemas.Test);
 models.FingerPrint  = mongoose.model('FingerPrint', schemas.FingerPrint);
 models.Difference   = mongoose.model('Difference', schemas.Difference);
 
-function init(link) {
-    console.log('Connecting to database ..')
+function init(link, callback) {
+    log.info('Connecting to database ..')
     mongoose.connect(link);
     db = mongoose.connection;
-    db.on('error', console.error.bind(console, 'connection error:'));
-    db.once('open', function (callback) {
-        console.log('Connected to database ..')
+    db.on('error', function (err) {
+        var werr = new VError(err, 'Connection to "%s" failed', link);
+        callback(werr);
+    });
+    db.once('open', function () {
+        log.info('Connected to database ..');
+        callback();
     });
 }
 

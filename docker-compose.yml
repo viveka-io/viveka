@@ -13,7 +13,7 @@ web:
     - DB_URI=mongodb://db:27017/viveka
     - FIREFOX_URI=http://firefox:4444/wd/hub
     - CHROME_URI=http://chrome:4444/wd/hub
-  command: nodemon index.js
+  command: nodemon index.js | bunyan -o short
 db:
   image: mongo:3.0
 firefox:
