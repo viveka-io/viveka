@@ -16,16 +16,24 @@ function createHash(node, png) {
         left     = node.offset.left,
         width    = node.offset.width,
         height   = node.offset.height,
-        onScreen = (0 <= top && top < png.height) && (0 <= left && left < png.width) && (left + width <= png.width) && (top + height <= png.height),
+        onScreen = (0 <= top && top < png.height) &&
+                   (0 <= left && left < png.width) &&
+                   (left + width <= png.width) &&
+                   (top + height <= png.height) &&
+                    width > 0 &&
+                    height > 0,
         hash     = -1,
-        tempPNG  = new PNG({
+        tempPNG;
+
+    if (onScreen) {
+        tempPNG = new PNG({
             width: width,
             height: height,
             filterType: 4
         });
 
-    if (onScreen) {
         png.bitblt(tempPNG, left, top, width, height, 0, 0);
+
         if (tempPNG.data) {
             hash = crypto.createHash("md5").update(tempPNG.data).digest("hex");
         }
@@ -65,32 +73,25 @@ function createFingerPrint(config, saveToFile) {
                     checkCRC: false,
                     filterType: 4
                 }),
+                defer = webdriver.promise.defer(),
                 imageBuffer = new Buffer(image, 'base64');
 
             response.imageFingerPrint = image;
 
             screenshot.parse(imageBuffer).on('parsed', function() {
-
-                console.log("Create hash codes...");
+                log.info("Create hash codes...");
                 processNodes(response.jsonFingerPrint.nodes, this);
-
-                if (saveToFile) {
-                    fs.writeFile('fingerprints/'+ config.id +'.json', JSON.stringify(response.jsonFingerPrint), function(error) {
-                        if (error) { console.log(error); }
-                    });
-                    console.log("Write screenshot image...");
-                    fs.writeFile('fingerprints/'+ config.id +'.png', image, 'base64', function(error) {
-                        if (error) { console.log(error); }
-                    });
-                    console.log("Write fingerprint json...");
-                    fs.writeFile('fingerprints/'+ config.id +'-fingerprint.json', JSON.stringify(response), function(error) {
-                        if (error) { console.log(error); }
-                    });
-                }
+                defer.fulfill(response);
             });
 
             driver.quit();
-            return response;
+            return defer.promise;
+        }, function (err) {
+            return webdriver.promise.rejected(err);
+        })
+        .then(function(fingerPrint) {
+            log.info('Fingerprint created.');
+            return webdriver.promise.fulfilled(fingerPrint);
         }, function (err) {
             return webdriver.promise.rejected(err);
         });

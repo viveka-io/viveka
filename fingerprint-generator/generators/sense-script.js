@@ -68,10 +68,25 @@ var Sense = (function () {
         elem.name                 = node.tagName;
         if(node.id !== '')        elem.name += '#' + node.id;
         if(node.className !== '') elem.name += '.' + node.className.split(' ').join('.');
+        elem.style                = getStyleObject(node);
         elem.offset               = getPosition(node);
         elem.nodes                = [];
 
         return elem;
+    }
+
+    function getStyleObject(element){
+        var style = getComputedStyle(element),
+            styleObj = {},
+            nameString,
+            i;
+
+        for(i = 0; i < style.length; i++) {
+            nameString= style[i];
+            styleObj[nameString] = style.getPropertyValue(nameString);
+        }
+
+        return styleObj;
     }
 
 

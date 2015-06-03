@@ -85,6 +85,14 @@ body {
     box-sizing: border-box;
 }
 
+.request .content img {
+    max-width: 250px;
+    margin: 2em 20px;
+    float: right;
+    max-height: 320px;
+    outline: 1px solid #fff;
+}
+
 .request .content pre {
     background-color: white;
     padding: 10px;

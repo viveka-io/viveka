@@ -102,7 +102,7 @@ function refreshFingerPrint(req, res, next) {
             config = JSON.parse(test[0].config);
             log.info('Refreshing fingerprint: ' + fingerPrint._id);
             generator.createFingerPrint(config).then(function(response) {
-                log.info('Fingeprint generation finished ..');
+                log.info('Fingerprint generation finished ..');
 
                 fingerPrint.domTree = JSON.stringify(response.jsonFingerPrint);
                 fingerPrint.state   = 'DONE';
@@ -145,7 +145,7 @@ function createFingerPrint(req, res, next) {
 
         // SHOULD CHECK IF THERE IS AN UNFINISHED FINGERPRINT
         // AND ABORT IF IT EXISTS
-        log.info('Generating fingeprint for: ' + test[0]._id);
+        log.info('Generating fingerprint for: ' + test[0]._id);
         config = JSON.parse(test[0].config);
         fingerPrint = new db.models.FingerPrint({ testId: test[0]._id, state: 'NEW' });
 
@@ -156,7 +156,7 @@ function createFingerPrint(req, res, next) {
 
             log.info('Fingerprint: ' + fingerPrint);
             generator.createFingerPrint(config).then(function(response) {
-                log.info('Fingeprint generation finished ..');
+                log.info('Fingerprint generation finished ..');
 
                 fingerPrint.domTree = JSON.stringify(response.jsonFingerPrint);
                 fingerPrint.screenshot = 'images/fingerprints/'+ fingerPrint.id +'.png';
