@@ -1,11 +1,11 @@
-var fs = require('fs'),
-    path = require('path'),
-    script = fs.readFileSync(path.join(__dirname, './sense-script.js'), 'utf8'),
+var fs      = require('fs'),
+    path    = require('path'),
+    script  = fs.readFileSync(path.join(__dirname, './sense-script.js'), 'utf8'),
     waitForJQueryScript = 'return window.jQuery !== undefined';
 
 module.exports = {
     getFingerPrint: function(driver) {
-        var s = script + 'return Sense.getJSONFootprint();';
+        var s = 'try { ' + script + 'return Sense.getJSONFootprint(); } catch(e) { return { error: e }; }';
 
         return driver
             .getTitle().then(function(title) {

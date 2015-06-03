@@ -1,4 +1,7 @@
 var fs = require('fs'),
+    log = require('bunyan').createLogger({name: "fingerprint-generator"}),
+    VError = require('verror'),
+    webdriver = require('selenium-webdriver'),
     PNG = require('node-png').PNG,
     crypto = require('crypto'),
     driverBuilder = require('./driver-builder.js'),
@@ -50,11 +53,14 @@ function createFingerPrint(config, saveToFile) {
             return generators[config.generator].getFingerPrint(driver);
         })
         .then(function(fingerPrint) {
-            // console.log(JSON.stringify(JScON.parse(fingerPrint), null, 4));
+            if (fingerPrint.error) {
+                return webdriver.promise.rejected(new VError(fingerPrint.error, 'Error during execution of sense-script.'));
+            }
+
             response.jsonFingerPrint = JSON.parse(fingerPrint);
             return driver.takeScreenshot();
         })
-        .then(function(image, err) {
+        .then(function(image) {
             var screenshot = new PNG({
                     checkCRC: false,
                     filterType: 4
@@ -85,6 +91,8 @@ function createFingerPrint(config, saveToFile) {
 
             driver.quit();
             return response;
+        }, function (err) {
+            return webdriver.promise.rejected(err);
         });
 }
 

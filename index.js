@@ -96,9 +96,7 @@ function refreshFingerPrint(req, res, next) {
 
         db.models.Test.find({ _id: fingerPrint.testId }, function (err, test) {
             if (err) {
-                var werr = new VError(err, 'Failed to get test "%s" from db', fingerPrint.testId);
-
-                return log.error(werr.message);
+                return next(new VError(err, 'Failed to get test "%s" from db', fingerPrint.testId));
             }
 
             config = JSON.parse(test[0].config);
@@ -125,6 +123,8 @@ function refreshFingerPrint(req, res, next) {
                         log.info('Screenshot saved ..');
                     });
                 });
+            }, function(error) {
+                return next(error);
             });
             res.send(fingerPrint);
         });
