@@ -9,14 +9,14 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/viveka-io/viveka-test-page.git"
+        "url": "https://github.com/viveka-io/viveka.git"
     },
     "author": "",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/viveka-io/viveka-test-page/issues"
+        "url": "https://github.com/viveka-io/viveka/issues"
     },
-    "homepage": "https://github.com/viveka-io/viveka-test-page",
+    "homepage": "https://github.com/viveka-io/viveka",
     "dependencies": {
         "connect-handlebars": "mucsi96/connect-handlebars",
         "express": "^4.12.4"
