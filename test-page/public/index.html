@@ -4,77 +4,67 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>TodoMVC</title>
-    <link rel="stylesheet" href="css/index.css">
+    <title>Test page</title>
+    <link href="bower_components/bootstrap-material-design/dist/css/roboto.min.css" rel="stylesheet">
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bower_components/bootstrap-material-design/dist/css/material.min.css" rel="stylesheet">
+    <link href="bower_components/bootstrap-material-design/dist/css/ripples.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/app.css">
 </head>
 
 <body>
-    <section id="todoapp">
-        <header id="header">
-            <h1>todos</h1>
-            <input id="new-todo" placeholder="What needs to be done?" autofocus="">
-        </header>
-        <section id="main" style="display: none;">
-            <input id="toggle-all" type="checkbox">
-            <label for="toggle-all">Mark all as complete</label>
-            <ul id="todo-list">
-            </ul>
-        </section>
-        <footer id="footer" style="display: none;">
-            <span id="todo-count"><strong>0</strong> items left</span>
-            <ul id="filters">
-                <li>
-                    <a class="selected" href="./index_files/index.html">All</a>
-                </li>
-                <li>
-                    <a href="http://todomvc.com/examples/jquery/#/active">Active</a>
-                </li>
-                <li>
-                    <a href="http://todomvc.com/examples/jquery/#/completed">Completed</a>
-                </li>
-            </ul>
-        </footer>
-    </section>
-    <footer id="info">
-        <p>Double-click to edit a todo</p>
-        <p>Created by <a href="http://sindresorhus.com/">Sindre Sorhus</a></p>
-        <p>Part of <a href="http://todomvc.com/">TodoMVC</a></p>
-    </footer>
-
-    <script id="todo-template" type="text/x-handlebars-template">
-        {{#this}}
-        <li {{#if completed}}class="completed" {{/if}} data-id="{{id}}">
-            <div class="view">
-                <input class="toggle" type="checkbox" {{#if completed}}checked{{/if}}>
-                <label>{{title}}</label>
-                <button class="destroy"></button>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Test page</a>
             </div>
-            <input class="edit" value="{{title}}">
-        </li>
-        {{/this}}
-    </script>
-
-    <script id="footer-template" type="text/x-handlebars-template">
-        <span id="todo-count"><strong>{{activeTodoCount}}</strong> {{activeTodoWord}} left</span>
-        <ul id="filters">
-            <li>
-                <a {{#eq filter 'all'}}class="selected" {{/eq}} href="#/all">All</a>
-            </li>
-            <li>
-                <a {{#eq filter 'active'}}class="selected" {{/eq}}href="#/active">Active</a>
-            </li>
-            <li>
-                <a {{#eq filter 'completed'}}class="selected" {{/eq}}href="#/completed">Completed</a>
-            </li>
-        </ul>
-        {{#if completedTodos}}
-        <button id="clear-completed">Clear completed</button>{{/if}}
-    </script>
-
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Test case <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">Element added</a></li>
+                        <li><a href="#">Element removed</a></li>
+                        <li class="divider"></li>
+                        <li class="active"><a href="#">Floated element added</a></li>
+                        <li><a href="#">Floated element removed</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">Fixed position element added</a></li>
+                        <li><a href="#">Fixed position element removed</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">Relative positioned element added</a></li>
+                        <li><a href="#">Relative positioned element removed</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">Margin changed</a></li>
+                        <li><a href="#">Border changed</a></li>
+                        <li><a href="#">Padding changed</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">Background color changed</a></li>
+                        <li><a href="#">Color changed</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">Multiple changes</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="active"><a href="#side-by-side">Side by side</a></li>
+                <li><a href="#baseline">Baseline</a></li>
+                <li><a href="#current">Current</a></li>
+            </ul>
+        </div>
+    </nav>
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="bower_components/handlebars/handlebars.min.js"></script>
     <script src="bower_components/director/build/director.min.js"></script>
+    <script src="bower_components/bootstrap-material-design/dist/js/ripples.min.js"></script>
+    <script src="bower_components/bootstrap-material-design/dist/js/material.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        // This command is used to initialize some elements and make them work properly
+        $.material.init();
+    });
+    </script>
     <script src="js/app.js"></script>
 </body>
+
 </html>
