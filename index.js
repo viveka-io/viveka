@@ -202,21 +202,25 @@ function generateDifference(req, res, next) {
         a,
         b;
 
-    db.models.Difference.find({ baselineId: req.params.baselineId, comparedId: req.params.targetId }, function (err, difference) {
+    db.models.Difference.findOne({ baselineId: req.params.baselineId, comparedId: req.params.targetId }, function (err, difference) {
         if (err) {
             return next(new VError(err, 'Failed to get difference by baselineId "%s" and comparedId "%s" from db', req.params.baselineId, req.params.targetId));
         }
 
-        diff = difference[0];
+        diff = difference;
         if (diff) {
-            log.info('Difference: ' + difference[0]);
-            res.send(difference[0]);
+            log.info('Difference: ' + difference);
+            res.send(difference);
         } else {
             diff = new db.models.Difference({ baselineId: req.params.baselineId, comparedId: req.params.targetId });
-            db.models.FingerPrint.find({ _id: req.params.baselineId }, function (err, fingerPrint) {
-                a = fingerPrint[0];
-                db.models.FingerPrint.find({ _id: req.params.targetId }, function (err, fingerPrint) {
-                    b = fingerPrint[0];
+            db.models.FingerPrint.findOne({ _id: req.params.baselineId }, function (err, fingerPrint) {
+                a = fingerPrint;
+                db.models.FingerPrint.findOne({ _id: req.params.targetId }, function (err, fingerPrint) {
+                    b = fingerPrint;
+
+                    console.log(a)
+                    console.log(b)
+
                     if (a && b) {
                         log.info('Generate difference');
                         diff.diff = JSON.stringify(differ.diff(JSON.parse(a.domTree), JSON.parse(b.domTree)));
@@ -226,7 +230,7 @@ function generateDifference(req, res, next) {
                             }
 
                             log.info('DIFF saved: ' + diff._id);
-                            res.send(diff);
+                            return res.send(diff);
                         });
                     }
 

@@ -65,8 +65,6 @@
         activeView = view;
     });
 
-    router.init();
-
-    router.setRoute('/element-added/side-by-side-view');
+    router.init('/element-added/side-by-side-view');
 })();
 

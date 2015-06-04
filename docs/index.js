@@ -89,6 +89,7 @@ $('body').on('click', '.submit:not("missing")', function () {
         data: collectData($t.find('.content'))
     }).done(function (data) {
         if (data.domTree) data.domTree = JSON.parse(data.domTree);
+        if (data.diff) data.diff = JSON.parse(data.diff);
         $c.html(JSON.stringify(data, undefined, 4));
         if (data.screenshot) {
             $img.attr('src', data.screenshot);
@@ -107,7 +108,7 @@ function collectData(content) {
 }
 
 function replaceUrl(url, content) {
-    var matches = url.match(/{.*}/g);
+    var matches = url.match(/{.*?}/g);
 
     if(matches && matches.length > 0) {
         $.each(matches, function(i, match) {
