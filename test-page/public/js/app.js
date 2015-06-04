@@ -46,6 +46,16 @@
         $('header .test-case').text(_.result(_.find(header.testCases, 'id', id), 'name'));
     }
 
+    function render(testCase, view, noHeader) {
+        $('#view').empty().append(Handlebars.templates[view](header));
+        $('.baseline').append(Handlebars.templates[testCase + '-baseline']());
+        $('.current').append(Handlebars.templates[testCase + '-current']());
+        setTestCaseCaption(testCase);
+        activateById(activeView, view);
+        activeTestCase = testCase;
+        activeView = view;
+    }
+
     router.on('/:param', function(param) {
         if (param.indexOf('-view') !== -1) {
             router.setRoute('/' + activeTestCase + '/' + param);
@@ -56,13 +66,12 @@
     });
 
     router.on('/:testCase/:view', function (testCase, view) {
-        $('#view').empty().append(Handlebars.templates[view](header));
-        $('.baseline').append(Handlebars.templates[testCase + '-baseline']());
-        $('.current').append(Handlebars.templates[testCase + '-current']());
-        setTestCaseCaption(testCase);
-        activateById(activeView, view);
-        activeTestCase = testCase;
-        activeView = view;
+        render(testCase, view);
+    });
+
+    router.on('/:testCase/:view/no-header', function (testCase, view) {
+        render(testCase, view, true);
+        $('header').empty();
     });
 
     router.init('/element-added/side-by-side-view');
