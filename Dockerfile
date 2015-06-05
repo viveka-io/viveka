@@ -1,4 +1,5 @@
 FROM node:0.12
+
 RUN npm install -g bower
 RUN npm install -g nodemon
 RUN npm install -g bunyan
