@@ -25,7 +25,7 @@ chrome:
   links:
     - testpage
 testpage:
-  build: test-page/
+  build: .
   volumes:
     - test-page:/opt/viveka-modules/test-page
   working_dir: /opt/viveka-modules/test-page
