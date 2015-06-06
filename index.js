@@ -1,5 +1,6 @@
 var fs          = require('fs'),
     express     = require('express'),
+    connect_handlebars = require('connect-handlebars'),
     log         = require('bunyan').createLogger({name: "viveka-server"}),
     VError      = require('verror'),
     generator   = require('./fingerprint-generator'),
@@ -78,7 +79,6 @@ function getFingerPrint(req, res, next) {
             return next(new VError(err, 'Failed to get fingerprint "%s" from db', req.params.id));
         }
 
-        log.info('Fingerprint: ' + fingerPrint[0]);
         res.send(JSON.parse(JSON.stringify(fingerPrint[0])));
     });
 }
@@ -105,15 +105,16 @@ function refreshFingerPrint(req, res, next) {
                 log.info('Fingerprint generation finished ..');
 
                 fingerPrint.domTree = JSON.stringify(response.jsonFingerPrint);
+                fingerPrint.screenshot = '/images/fingerprints/'+ fingerPrint.id +'.png';
                 fingerPrint.state   = 'DONE';
 
-                fingerPrint.save(function (err, fingerPrint) {
+                fingerPrint.save(function (err) {
                     if (err) {
                         return next(new VError(err, 'Failed to save fingerprint to db'));
                     }
 
-                    log.info('Fingerprint saved ..');
-                    var fileName = 'public/images/fingerprints/'+ fingerPrint.id +'.png';
+                    log.info('Fingerprint saved to db ..');
+                    var fileName = 'public' + fingerprint.screenshot;
 
                     fs.writeFile(fileName, response.imageFingerPrint, 'base64', function(err) {
                         if (err) {
@@ -149,26 +150,25 @@ function createFingerPrint(req, res, next) {
         config = JSON.parse(test[0].config);
         fingerPrint = new db.models.FingerPrint({ testId: test[0]._id, state: 'NEW' });
 
-        fingerPrint.save(function (err, fingerPrint) {
+        fingerPrint.save(function (err, fingerprint) {
             if (err) {
                 return next(new VError(err, 'Failed to save fingerprint to db'));
             }
 
-            log.info('Fingerprint: ' + fingerPrint);
             generator.createFingerPrint(config).then(function(response) {
                 log.info('Fingerprint generation finished ..');
 
                 fingerPrint.domTree = JSON.stringify(response.jsonFingerPrint);
-                fingerPrint.screenshot = 'images/fingerprints/'+ fingerPrint.id +'.png';
+                fingerPrint.screenshot = '/images/fingerprints/'+ fingerPrint.id +'.png';
                 fingerPrint.state   = 'DONE';
 
-                fingerPrint.save(function (err, fingerPrint) {
+                fingerPrint.save(function (err) {
                     if (err) {
                         return next(new VError(err, 'Failed to save fingerprint to db'));
                     }
 
-                    log.info('Fingerprint saved ..');
-                    var fileName = 'public/images/fingerprints/'+ fingerPrint.id +'.png';
+                    log.info('Fingerprint saved to db..');
+                    var fileName = 'public' + fingerprint.screenshot;
 
                     fs.writeFile(fileName, response.imageFingerPrint, 'base64', function(err) {
                         if (err) {
@@ -254,8 +254,13 @@ function clientErrorHandler(err, req, res, next) {
   }
 }
 
-app.use('/bower_components',  express.static(__dirname + '/../bower_components'));
-app.use(express.static(__dirname + '/docs'));
+app.use('/testpage/bower_components',  express.static(__dirname + '/../bower_components'));
+app.use("/testpage/js/templates.js", connect_handlebars(__dirname + "/test-page/templates", {
+    exts: ['hbs']
+}));
+app.use('/testpage', express.static(__dirname + '/test-page/public'));
+app.use('/apipage/bower_components',  express.static(__dirname + '/../bower_components'));
+app.use('/apipage', express.static(__dirname + '/api-page'));
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

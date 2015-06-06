@@ -1,34 +1,27 @@
+dnsdock:
+  image: tonistiigi/dnsdock:v1.6.0
+  volumes:
+    - "/var/run/docker.sock:/var/run/docker.sock"
+  ports:
+    - "172.17.42.1:53:53/udp"
 web:
   build: .
   volumes:
     - .:/opt/viveka-modules/viveka
   working_dir: /opt/viveka-modules/viveka
-  links:
-    - db
-    - firefox
-    - chrome
   ports:
     - 5555:5555
+  dns: 172.17.42.1
   environment:
-    - DB_URI=mongodb://db:27017/viveka
-    - FIREFOX_URI=http://firefox:4444/wd/hub
-    - CHROME_URI=http://chrome:4444/wd/hub
+    - DB_URI=mongodb://viveka_db_1.mongo.docker:27017/viveka
+    - FIREFOX_URI=http://viveka_firefox_1.standalone-firefox.docker:4444/wd/hub
+    - CHROME_URI=http://viveka_chrome_1.standalone-chrome.docker:4444/wd/hub
   command: nodemon index.js | bunyan -o short
 db:
   image: mongo:3.0
 firefox:
   image: selenium/standalone-firefox:2.45.0
-  links:
-    - testpage
+  dns: 172.17.42.1
 chrome:
   image: selenium/standalone-chrome:2.45.0
-  links:
-    - testpage
-testpage:
-  build: .
-  volumes:
-    - test-page:/opt/viveka-modules/test-page
-  working_dir: /opt/viveka-modules/test-page
-  ports:
-    - 5556:5556
-  command: nodemon index.js
+  dns: 172.17.42.1
