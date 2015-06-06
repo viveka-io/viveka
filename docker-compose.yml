@@ -1,9 +1,9 @@
 dnsdock:
   image: tonistiigi/dnsdock:v1.6.0
   volumes:
-    - "/var/run/docker.sock:/var/run/docker.sock"
+    - /var/run/docker.sock:/var/run/docker.sock
   ports:
-    - "172.17.42.1:53:53/udp"
+    - 172.17.42.1:53:53/udp
 web:
   build: .
   volumes:
