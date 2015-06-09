@@ -255,9 +255,7 @@ function clientErrorHandler(err, req, res, next) {
 }
 
 app.use('/testpage/bower_components',  express.static(__dirname + '/../bower_components'));
-app.use("/testpage/js/templates.js", connect_handlebars(__dirname + "/test-page/templates", {
-    exts: ['hbs']
-}));
+app.use('/testpage/js/templates.js', connect_handlebars(__dirname + '/test-page/templates'));
 app.use('/testpage', express.static(__dirname + '/test-page/public'));
 app.use('/apipage/bower_components',  express.static(__dirname + '/../bower_components'));
 app.use('/apipage', express.static(__dirname + '/api-page'));
