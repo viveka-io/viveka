@@ -284,6 +284,9 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.get('/', function(req, res) {
+    res.redirect('/apipage');
+});
 app.post('/tests', createTest);
 app.get('/tests', getTests);
 app.get('/tests/:id', getTest);

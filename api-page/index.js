@@ -11,7 +11,7 @@ var source      = $("#request-template").html(),
             inputs: [
                 { name: 'browserWidth',     value: 1280, additionalClasses: 'data' },
                 { name: 'browserHeight',    value: 720, additionalClasses: 'data' },
-                { name: 'url',              value: 'http://viveka_web_1.viveka_web.docker:5555/testpage', additionalClasses: 'data' },
+                { name: 'url',              value: 'http://localhost:5555/testpage', additionalClasses: 'data' },
                 { name: 'generator',        value: 'SENSE', additionalClasses: 'data' },
                 { name: 'browser',          value: 'FIREFOX', additionalClasses: 'data' }
             ]
