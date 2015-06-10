@@ -114,7 +114,7 @@ function refreshFingerPrint(req, res, next) {
                     }
 
                     log.info('Fingerprint saved to db ..');
-                    var fileName = 'public' + fingerprint.screenshot;
+                    var fileName = 'public' + fingerPrint.screenshot;
 
                     fs.writeFile(fileName, response.imageFingerPrint, 'base64', function(err) {
                         if (err) {
@@ -150,7 +150,7 @@ function createFingerPrint(req, res, next) {
         config = JSON.parse(test[0].config);
         fingerPrint = new db.models.FingerPrint({ testId: test[0]._id, state: 'NEW' });
 
-        fingerPrint.save(function (err, fingerprint) {
+        fingerPrint.save(function (err, fingerPrint) {
             if (err) {
                 return next(new VError(err, 'Failed to save fingerprint to db'));
             }
@@ -168,7 +168,7 @@ function createFingerPrint(req, res, next) {
                     }
 
                     log.info('Fingerprint saved to db..');
-                    var fileName = 'public' + fingerprint.screenshot;
+                    var fileName = 'public' + fingerPrint.screenshot;
 
                     fs.writeFile(fileName, response.imageFingerPrint, 'base64', function(err) {
                         if (err) {
