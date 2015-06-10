@@ -241,6 +241,27 @@ function generateDifference(req, res, next) {
     });
 }
 
+function generateDifferenceJSON(req, res, next) {
+    var diff,
+        a,
+        b;
+
+    db.models.FingerPrint.findOne({ _id: req.params.baselineId }, function (err, fingerPrint) {
+        a = fingerPrint;
+        db.models.FingerPrint.findOne({ _id: req.params.targetId }, function (err, fingerPrint) {
+            b = fingerPrint;
+
+            if (a && b) {
+                log.info('Generate difference JSON');
+                diff = differ.diff(JSON.parse(a.domTree), JSON.parse(b.domTree));
+                return res.send(diff);
+            }
+
+            next(new VError('Missing fingerprint'));
+        });
+    })
+}
+
 function logErrors(err, req, res, next) {
   log.error(err);
   next(err);
@@ -275,6 +296,7 @@ app.get('/fingerprints/:id', getFingerPrint);
 app.put('/fingerprints/:id', refreshFingerPrint);
 app.get('/differences/:id', getDifference);
 app.get('/differences/:baselineId/:targetId', generateDifference);
+app.get('/differences-json/:baselineId/:targetId', generateDifferenceJSON);
 app.use(logErrors);
 app.use(clientErrorHandler);
 

@@ -70,7 +70,7 @@ $.each(requests, function (i, request) {
     var html = template(request);
 
     $('body').append(html);
-})
+});
 
 $('body').on('click', '.url', function () {
     $(this).parent().find('.content').toggle();
