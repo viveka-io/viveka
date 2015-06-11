@@ -14,14 +14,19 @@ db:
   image: mongo:3.0
   net: container:web
 firefox:
-  image: selenium/standalone-firefox:2.45.0
+  image: selenium/standalone-firefox:2.46.0
   net: container:web
   environment:
     - DISPLAY=:98.0
     - JAVA_TOOL_OPTIONS="-Dselenium.port=4445"
 chrome:
-  image: selenium/standalone-chrome:2.45.0
+  image: selenium/standalone-chrome:2.46.0
   net: container:web
   environment:
     - DISPLAY=:99.0
     - JAVA_TOOL_OPTIONS="-Dselenium.port=4446"
+galen:
+  build: galen
+  volumes: galen:/usr/src/galen
+  working_dir: /usr/src/galen
+  command: bash
