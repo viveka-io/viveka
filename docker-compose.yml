@@ -27,6 +27,6 @@ chrome:
     - JAVA_TOOL_OPTIONS="-Dselenium.port=4446"
 galen:
   build: galen
-  volumes: galen:/usr/src/galen
+  volumes: .:/usr/src/galen
   working_dir: /usr/src/galen
-  command: bash
+  command: galen -v
