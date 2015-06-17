@@ -20,23 +20,29 @@ function getImageSlice(node, png) {
         filterType: 4
     });
 
+    height = Math.min(height, png.height - top);
+    width  = Math.min(width, png.width - left);
+
     png.bitblt(tempPNG, left, top, width, height, 0, 0);
 
     return tempPNG.data;
 }
 
 function comparePixels(a, b) {
-    var i;
+    var i,
+        differentByteIndexes = [];
 
     if (a === b) return true;
 
     for (i=0; i < a.length; i++) {
         if (Math.abs(b[i] - a[i]) > threshold) {
             return false;
+        } else {
+            differentByteIndexes.push(i);
         }
     }
 
-    return true;
+    return differentByteIndexes;
 }
 
 function compareSlices(a, b) {
