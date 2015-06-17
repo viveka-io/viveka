@@ -218,9 +218,6 @@ function generateDifference(req, res, next) {
                 db.models.FingerPrint.findOne({ _id: req.params.targetId }, function (err, fingerPrint) {
                     b = fingerPrint;
 
-                    console.log(a)
-                    console.log(b)
-
                     if (a && b) {
                         log.info('Generate difference');
                         diff.diff = JSON.stringify(differ.diff(JSON.parse(a.domTree), JSON.parse(b.domTree)));

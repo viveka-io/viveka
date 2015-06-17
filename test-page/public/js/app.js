@@ -48,8 +48,8 @@
 
     function render(testCase, view, noHeader) {
         $('#view').empty().append(Handlebars.templates[view](header));
-        $('.baseline').append(Handlebars.templates[testCase + '-baseline']());
-        $('.current').append(Handlebars.templates[testCase + '-current']());
+        $('.baseline').append(Handlebars.templates[testCase + '-baseline']()).removeClass('baseline');
+        $('.current').append(Handlebars.templates[testCase + '-current']()).removeClass('current');
         setTestCaseCaption(testCase);
         activateById(activeView, view);
         activeTestCase = testCase;
