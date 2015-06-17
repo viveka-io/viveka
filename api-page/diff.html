@@ -5,30 +5,33 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>DIFFY</title>
     <meta name="description" content="">
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <style>
         html,body {
             margin: 0;
             padding: 0;
         }
         body {
-            background: #fff;
-            font: normal 16px/1 Tahoma, sans-serif;
+            background: #fafafa;
+            font: normal 16px/1 'Roboto', Arial, Helvetica, sans-serif;
         }
 
         button {
-            background: #ddd;
+            background: transparent;
             border: 0;
-            border-radius: 5px;
+            border-radius: 3px;
             padding: 10px;
             font-weight: bold;
-            box-shadow: 0 0 2px rgba(0,0,0,.5), inset 0 1px 0 rgba(0,0,0,.1);
+            font-size: 11px;
             outline: 0;
             margin: 0 5px;
+            text-transform: uppercase;
+            cursor: pointer;
         }
 
         button[data-pushed="true"] {
-            box-shadow: 0 2px 2px rgba(0,0,0,.5);
-            background: #ccc;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, .25);
+            color: #999;
         }
         button[data-pushed="true"] i {
             background: transparent!important;
@@ -36,12 +39,11 @@
 
         button i {
             display: inline-block;
-            border-radius: 100%;
-            border: 1px solid #666;
-            width: 1em;
-            height: 1em;
+            border: 1px solid rgba(0, 0, 0, .2);
+            width: 10px;
+            height: 10px;
             margin-right: 5px;
-            vertical-align: bottom;
+            vertical-align: -1px;
             line-height: 0;
         }
 
@@ -55,16 +57,20 @@
             margin: 2%;
             position: relative;
             float: left;
+            border: 1px solid #e0e0e0;
+            box-sizing: border-box;
         }
 
         .buttons {
             text-align: center;
             padding: 10px;
+            background: #fff;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, .2);
         }
 
         .diff {
             position: absolute;
-            outline: 1px dotted rgba(0,0,0,.2);
+            /*outline: 1px dotted #eee;*/
             box-sizing: border-box;
         }
 
@@ -74,20 +80,24 @@
             box-sizing: border-box;
         }
 
-        button.node_removed i       { background: rgba(255,0,0,.2); }
-        button.node_added i         { background: rgba(0,255,0,.2); }
-        button.not_matching_name i  { background: rgba(255,255,0,.2); }
-        button.not_matching_hash i  { background: rgba(0,0,255,.2); }
+        button.node_removed i       { background: rgba(244, 67, 54, 1); }
+        button.node_added i         { background: rgba(76, 175, 80, 1); }
+        button.not_matching_name i  { background: rgba(255, 235, 59, 1); }
+        button.not_matching_hash i  { background: rgba(33, 150, 243, 1); }
+        button.offset_width i       { background: rgba(233, 30, 99, 1); }
+        button.offset_height i      { background: rgba(156, 39, 176, 1); }
 
 
-        .node_removed .node_removed                     { background: rgba(255,0,0,.2); }
-        .node_added .node_added                         { background: rgba(0,255,0,.2); }
-        .not_matching_name .not_matching_name span      { background: rgba(255,255,0,.2); }
-        .not_matching_hash .not_matching_hash b         { background: rgba(0,0,255,.2); }
-        .offset_width .offset_width_lower               { border-right: 5px solid rgba(255,0,0,.2); }
-        .offset_width .offset_width_higher              { border-right: 5px solid rgba(0,255,0,.2); }
-        .offset_height .offset_height_lower             { border-bottom: 5px solid rgba(255,0,0,.2);}
-        .offset_height .offset_height_higher            { border-bottom: 5px solid rgba(0,255,0,.2);}
+        .node_removed .node_removed                     { background: rgba(244, 67, 54, .2); }
+        .node_added .node_added                         { background: rgba(76, 175, 80, .2); }
+        .not_matching_name .not_matching_name span      { background: rgba(255, 235, 59, .2); }
+        .not_matching_hash .not_matching_hash b         { background: rgba(33, 150, 243, .2); }
+        .offset_width .offset_width_lower               { background: rgba(233, 30, 99, .05); }
+        .offset_width .offset_width_higher              { background: rgba(233, 30, 99, .05); }
+        .offset_height .offset_height_lower             { background: rgba(156, 39, 176, .05);}
+        .offset_height .offset_height_higher            { background: rgba(156, 39, 176, .05);}
+        /*.offset_height .offset_height_lower             { border-bottom: 5px solid rgba(255,0,0,.2);}*/
+        /*.offset_height .offset_height_higher            { border-bottom: 5px solid rgba(0,255,0,.2);}*/
         .offset_x .offset_x_lower:after,
         .offset_x .offset_x_higher:after,
         .offset_x .offset_y_lower:after,
@@ -99,10 +109,10 @@
             border: 10px solid transparent;
             transform: translate(-50%, -50%);
         }
-        .offset_x .offset_x_lower:after                 { left: 0; top: 50%; border-right-color: rgba(0,0,0,.4); margin-left: -10px;}
-        .offset_x .offset_x_higher:after                { left: 0; top: 50%; border-left-color: rgba(0,0,0,.4); }
-        .offset_y .offset_y_lower:after                 { left: 50%; top: 0; border-bottom-color: rgba(0,0,0,.4); margin-top: -10px; }
-        .offset_y .offset_y_higher:after                { left: 50%; top: 0; border-top-color: rgba(0,0,0,.4); }
+        .offset_x .offset_x_lower:after                 { left: 0; top: 50%; border-right-color: rgba(0, 0, 0, .4); margin-left: -10px;}
+        .offset_x .offset_x_higher:after                { left: 0; top: 50%; border-left-color: rgba(0, 0, 0, .4); }
+        .offset_y .offset_y_lower:after                 { left: 50%; top: 0; border-bottom-color: rgba(0, 0, 0, .4); margin-top: -10px; }
+        .offset_y .offset_y_higher:after                { left: 50%; top: 0; border-top-color: rgba(0, 0, 0, .4); }
 
 
     </style>
@@ -202,13 +212,13 @@
         <button class="node_added"><i></i>Added</button>
         <button class="not_matching_name"><i></i>Name</button>
         <button class="not_matching_hash"><i></i>Hash</button>
-        <button class="offset_width"><i></i>Width</button>
-        <button class="offset_height"><i></i>Height</button>
-        <button class="offset_x"><i></i>Left</button>
-        <button class="offset_y"><i></i>Top</button>
+        <button class="offset_width" data-pushed="true"><i></i>Width</button>
+        <button class="offset_height" data-pushed="true"><i></i>Height</button>
+        <button class="offset_x" data-pushed="true"><i></i>Left</button>
+        <button class="offset_y" data-pushed="true"><i></i>Top</button>
     </div>
 
-    <div id="wrapper" class="node_removed node_added not_matching_name not_matching_hash offset_width offset_height offset_x offset_y">
+    <div id="wrapper" class="node_removed node_added not_matching_name not_matching_hash">
         <div class="container" id="contA">
             <img id="imgA">
         </div>

@@ -112,6 +112,7 @@ function cleanUpDiff(diffs) {
 
 module.exports = {
     diff: function(a, b) {
+        diff = [];
         compare(a.nodes[0], b.nodes[0]);
         return cleanUpDiff(diff);
     }
