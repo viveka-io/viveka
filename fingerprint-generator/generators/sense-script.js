@@ -19,10 +19,10 @@
 };
 
 var Sense = (function () {
-    var tree = { name: 'ROOT', nodes: []};
+    var tree = { name: 'ROOT', nodes: [], path: ''};
 
     function walk(node, func, point) {
-        var t = func(node),
+        var t = func(node, point),
             isVisible = jQuery(node).isOnScreen();
 
         if (t.offset.visible) {
@@ -62,12 +62,13 @@ var Sense = (function () {
         parent.offset.height = parentBottom - parentTop;
     }
 
-    function build(node) {
+    function build(node, parent) {
         var elem = {};
 
         elem.name                 = node.tagName;
         if(node.id !== '')        elem.name += '#' + node.id;
         if(node.className !== '') elem.name += '.' + node.className.split(' ').join('.');
+        elem.path                 = parent.path + (parent.path ? ' ' : '') + elem.name;
         elem.style                = getStyleObject(node);
         elem.offset               = getPosition(node);
         elem.nodes                = [];

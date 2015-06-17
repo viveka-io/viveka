@@ -12,10 +12,6 @@ body {
     float: left;
 }
 
-.request:hover {
-    cursor: pointer;
-}
-
 .request .url {
     line-height: 40px;
     height: 40px;
@@ -35,6 +31,7 @@ body {
     padding: 10px;
     line-height: 20px;
     margin-right: 10px;
+    cursor: pointer;
 }
 .get {
     background-color: #e7f0f7;
