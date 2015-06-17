@@ -104,10 +104,14 @@ function compare(a, b) {
             compare(a.nodes[i], b.nodes[i]);
         }
     }
+
 }
 
 function isMatchingVisually(a, b) {
-    return isMatchingSize(a, b) && compareSlices(a, b);
+    var isVisibleA = a.offset.width > 0 && a.offset.height > 0,
+        isVisibleB = b.offset.width > 0 && b.offset.height > 0;
+
+    return isVisibleA && isVisibleB && isMatchingSize(a, b) && compareSlices(a, b);
 }
 
 function isMatchingName(a, b) {
@@ -130,30 +134,33 @@ function sameNodes(a, b) {
     return a && b && isMatchingName(a, b) && isMatchingVisually(a, b) && isMatchingSize(a, b);
 }
 
-function cleanUpDiff(diffs) {
-    return diffs.filter(function (value, index) {
-        var i;
+function cleanUpDiff() {
+    var i,
+        j,
+        leftValue,
+        rightValue;
 
-        for (i = index+1; i < diffs.length; i++) {
+    for (j = 0; j < diff.length; j++) {
+        for (i = 0; i < diff.length; i++) {
 
-            if (value.a && diffs[i].b && sameNodes(value.a, diffs[i].b)) {
-                value.differences.push('NODE_ADDED');
-                diffs[i].differences.push('NODE_REMOVED');
-                delete value.a;
-                delete diffs[i].b;
+            leftValue  = diff[j];
+            rightValue = diff[i];
+
+            if (leftValue.a && rightValue.b && sameNodes(leftValue.a, rightValue.b)) {
+                leftValue.differences.push('NODE_ADDED');
+                rightValue.differences.push('NODE_REMOVED');
+                delete leftValue.a;
+                delete rightValue.b;
             }
 
-            if (value.b && diffs[i].a && sameNodes(value.b, diffs[i].a)) {
-                value.differences.push('NODE_REMOVED');
-                diffs[i].differences.push('NODE_ADDED');
-                delete value.b;
-                delete diffs[i].a;
+            if (leftValue.b && rightValue.a && sameNodes(leftValue.b, rightValue.a)) {
+                leftValue.differences.push('NODE_REMOVED');
+                rightValue.differences.push('NODE_ADDED');
+                delete leftValue.b;
+                delete rightValue.a;
             }
         }
-
-        return value.a || value.b;
-
-    });
+    }
 }
 
 function compareFingerprints(a, b, cb) {
@@ -187,7 +194,7 @@ function processImages(a, b, cb) {
         domB = JSON.parse(b.domTree);
 
         compare(domA.nodes[0], domB.nodes[0]);
-        cleanUpDiff(diff);
+        cleanUpDiff();
         cb(diff);
 
     }

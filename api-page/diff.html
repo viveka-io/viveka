@@ -130,8 +130,10 @@
                 $B      = $('#contB'),
                 $imgA   = $('#imgA'),
                 $imgB   = $('#imgB'),
-                ratioA = $imgA.width() / $imgA[0].naturalWidth,
-                ratioB = $imgB.width() / $imgB[0].naturalWidth;
+                widthA  = $imgA[0].naturalWidth,
+                widthB  = $imgB[0].naturalWidth,
+                heightA = $imgA[0].naturalHeight,
+                heightB = $imgB[0].naturalHeight;
 
             $.ajax({
                 url: '/differences-json/' + idA + '/' + idB,
@@ -143,19 +145,19 @@
                         if (item.a) {
                             area = $('<div title="' + item.a.name + '" class="diff ' + classNames + '"><span><b><i></i></b></span></div>').appendTo($A);
                             area.css({
-                                top: item.a.offset.top * ratioA,
-                                left: item.a.offset.left * ratioA,
-                                width: item.a.offset.width * ratioA,
-                                height: item.a.offset.height * ratioA
+                                top: (item.a.offset.top / heightA * 100) + '%',
+                                left: (item.a.offset.left / widthA * 100) + '%',
+                                width: (item.a.offset.width / widthA * 100) + '%',
+                                height: (item.a.offset.height / heightA * 100) + '%'
                             });
                         }
                         if (item.b) {
                             area = $('<div title="' + item.b.name + '" class="diff ' + classNames + '"><span><b><i></i></b></span></div>').appendTo($B);
                             area.css({
-                                top: item.b.offset.top * ratioB,
-                                left: item.b.offset.left * ratioB,
-                                width: item.b.offset.width * ratioB,
-                                height: item.b.offset.height * ratioB
+                                top: (item.b.offset.top / heightB * 100) + '%',
+                                left: (item.b.offset.left / widthB * 100) + '%',
+                                width: (item.b.offset.width / widthB * 100) + '%',
+                                height: (item.b.offset.height / heightB * 100) + '%'
                             });
                         }
                     });
