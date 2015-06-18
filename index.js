@@ -220,7 +220,7 @@ function generateDifference(req, res, next) {
 
                     if (a && b) {
                         log.info('Generate difference');
-                        diff.diff = JSON.stringify(differ.diff(JSON.parse(a.domTree), JSON.parse(b.domTree)));
+                        diff.diff = JSON.stringify(differ.diff(JSON.parse(a), JSON.parse(b)));
                         diff.save(function (err, diff) {
                             if (err) {
                                 return next(new VError(err, 'Failed to save difference to db'));
@@ -250,11 +250,12 @@ function generateDifferenceJSON(req, res, next) {
 
             if (a && b) {
                 log.info('Generate difference JSON');
-                diff = differ.diff(JSON.parse(a.domTree), JSON.parse(b.domTree));
-                return res.send(diff);
+                diff = differ.diff(a, b, function(diff) {
+                    res.send(diff);
+                });
+            } else {
+                next(new VError('Missing fingerprint'));
             }
-
-            next(new VError('Missing fingerprint'));
         });
     })
 }

@@ -5,7 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>DIFFY</title>
     <meta name="description" content="">
-    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         html,body {
             margin: 0;
@@ -86,7 +87,22 @@
         button.not_matching_hash i  { background: rgba(33, 150, 243, 1); }
         button.offset_width i       { background: rgba(233, 30, 99, 1); }
         button.offset_height i      { background: rgba(156, 39, 176, 1); }
-
+        button.offset_x i           {
+            vertical-align: -3px;
+            width: 0;
+            height: 0;
+            margin-right: 0;
+            border: 7px solid transparent;
+            border-left-color: rgba(0, 0, 0, .6);
+        }
+        button.offset_y i {
+            vertical-align: 8px;
+            width: 0;
+            height: 0;
+            margin: 0 5px -14px 0;
+            border: 7px solid transparent;
+            border-top-color: rgba(0, 0, 0, .6);
+        }
 
         .node_removed .node_removed                     { background: rgba(244, 67, 54, .2); }
         .node_added .node_added                         { background: rgba(76, 175, 80, .2); }
@@ -96,8 +112,6 @@
         .offset_width .offset_width_higher              { background: rgba(233, 30, 99, .05); }
         .offset_height .offset_height_lower             { background: rgba(156, 39, 176, .05);}
         .offset_height .offset_height_higher            { background: rgba(156, 39, 176, .05);}
-        /*.offset_height .offset_height_lower             { border-bottom: 5px solid rgba(255,0,0,.2);}*/
-        /*.offset_height .offset_height_higher            { border-bottom: 5px solid rgba(0,255,0,.2);}*/
         .offset_x .offset_x_lower:after,
         .offset_x .offset_x_higher:after,
         .offset_x .offset_y_lower:after,
@@ -114,6 +128,43 @@
         .offset_y .offset_y_lower:after                 { left: 50%; top: 0; border-bottom-color: rgba(0, 0, 0, .4); margin-top: -10px; }
         .offset_y .offset_y_higher:after                { left: 50%; top: 0; border-top-color: rgba(0, 0, 0, .4); }
 
+        #overlay {
+            position: fixed;
+            top: 0;
+            left:0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, .7);
+        }
+
+        #overlay span {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,.4);
+            font-weight: bold;
+            padding: 10px 20px;
+            line-height: 2em;
+        }
+
+        #overlay .material-icons {
+            vertical-align: middle;
+            font-size: 1.5em;
+            margin-right: 10px;
+            animation: 1s rotate infinite linear;
+        }
+
+        @keyframes rotate{
+            from{
+                transform:rotate(-360deg) translate(-4px) rotate(360deg);
+            }
+            to{
+                transform:rotate(0deg) translate(-4px) rotate(0deg);
+            }
+        }
 
     </style>
     <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
@@ -130,8 +181,10 @@
                 $B      = $('#contB'),
                 $imgA   = $('#imgA'),
                 $imgB   = $('#imgB'),
-                ratioA = $imgA.width() / $imgA[0].naturalWidth,
-                ratioB = $imgB.width() / $imgB[0].naturalWidth;
+                widthA  = $imgA[0].naturalWidth,
+                widthB  = $imgB[0].naturalWidth,
+                heightA = $imgA[0].naturalHeight,
+                heightB = $imgB[0].naturalHeight;
 
             $.ajax({
                 url: '/differences-json/' + idA + '/' + idB,
@@ -143,22 +196,23 @@
                         if (item.a) {
                             area = $('<div title="' + item.a.name + '" class="diff ' + classNames + '"><span><b><i></i></b></span></div>').appendTo($A);
                             area.css({
-                                top: item.a.offset.top * ratioA,
-                                left: item.a.offset.left * ratioA,
-                                width: item.a.offset.width * ratioA,
-                                height: item.a.offset.height * ratioA
+                                top: (item.a.offset.top / heightA * 100) + '%',
+                                left: (item.a.offset.left / widthA * 100) + '%',
+                                width: (item.a.offset.width / widthA * 100) + '%',
+                                height: (item.a.offset.height / heightA * 100) + '%'
                             });
                         }
                         if (item.b) {
                             area = $('<div title="' + item.b.name + '" class="diff ' + classNames + '"><span><b><i></i></b></span></div>').appendTo($B);
                             area.css({
-                                top: item.b.offset.top * ratioB,
-                                left: item.b.offset.left * ratioB,
-                                width: item.b.offset.width * ratioB,
-                                height: item.b.offset.height * ratioB
+                                top: (item.b.offset.top / heightB * 100) + '%',
+                                left: (item.b.offset.left / widthB * 100) + '%',
+                                width: (item.b.offset.width / widthB * 100) + '%',
+                                height: (item.b.offset.height / heightB * 100) + '%'
                             });
                         }
                     });
+                    $('#overlay').hide();
                 }
             });
         }
@@ -226,6 +280,8 @@
             <img id="imgB">
         </div>
     </div>
+
+    <div id="overlay"><span><i class="material-icons">search</i> Looking for differences...</span></div>
 
 </body>
 </html>

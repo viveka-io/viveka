@@ -10,48 +10,6 @@ var fs = require('fs'),
         SENSE: require('./generators/sense.js')
     };
 
-
-function createHash(node, png) {
-    var top      = node.offset.top,
-        left     = node.offset.left,
-        width    = node.offset.width,
-        height   = node.offset.height,
-        onScreen = (0 <= top && top < png.height) &&
-                   (0 <= left && left < png.width) &&
-                   (left + width <= png.width) &&
-                   (top + height <= png.height) &&
-                    width > 0 &&
-                    height > 0,
-        hash     = -1,
-        tempPNG;
-
-    if (onScreen) {
-        tempPNG = new PNG({
-            width: width,
-            height: height,
-            filterType: 4
-        });
-
-        png.bitblt(tempPNG, left, top, width, height, 0, 0);
-
-        if (tempPNG.data) {
-            hash = crypto.createHash("md5").update(tempPNG.data).digest("hex");
-        }
-    }
-
-    return hash;
-}
-
-function processNodes(nodes, png) {
-    nodes.forEach(function(node) {
-        if (node.nodes) {
-            processNodes(node.nodes, png);
-        } else {
-            node.hash = createHash(node, png);
-        }
-    });
-}
-
 function createFingerPrint(config, saveToFile) {
     var response = {};
 
@@ -79,8 +37,6 @@ function createFingerPrint(config, saveToFile) {
             response.imageFingerPrint = image;
 
             screenshot.parse(imageBuffer).on('parsed', function() {
-                log.info("Create hash codes...");
-                processNodes(response.jsonFingerPrint.nodes, this);
                 defer.fulfill(response);
             });
 
