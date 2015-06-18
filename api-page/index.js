@@ -1,4 +1,5 @@
-var source      = $("#request-template").html(),
+var socket = io(),
+    source      = $("#request-template").html(),
     template    = Handlebars.compile(source),
     requests    = [
         {
@@ -65,6 +66,13 @@ var source      = $("#request-template").html(),
             ]
         }
     ];
+
+socket.on('test/list', function(tests){
+    console.log(tests);
+});
+socket.emit('test/list');
+
+
 
 $.each(requests, function (i, request) {
     var html = template(request);

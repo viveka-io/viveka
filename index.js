@@ -1,13 +1,16 @@
-var fs          = require('fs'),
-    express     = require('express'),
+var fs                 = require('fs'),
+    express            = require('express'),
+    http               = require('http'),
+    app                = express(),
+    server             = http.createServer(app),
+    io                 = require('socket.io')(server),
     connect_handlebars = require('connect-handlebars'),
-    log         = require('bunyan').createLogger({name: "viveka-server"}),
-    VError      = require('verror'),
-    generator   = require('./fingerprint-generator'),
-    differ      = require('./difference-generator'),
-    bodyParser  = require('body-parser'),
-    app         = express(),
-    db          = require('./database.js');
+    log                = require('bunyan').createLogger({name: "viveka-server"}),
+    VError             = require('verror'),
+    generator          = require('./fingerprint-generator'),
+    differ             = require('./difference-generator'),
+    bodyParser         = require('body-parser'),
+    db                 = require('./database.js');
 
 function createTest(req, res, next) {
     // - create test with given config
@@ -284,6 +287,21 @@ app.use(bodyParser.json());
 app.get('/', function(req, res) {
     res.redirect('/apipage');
 });
+
+io.on('connection', function(socket){
+  console.log('a user connected');
+
+  socket.on('test/list', function() {
+    db.models.Test.find(function (err, tests) {
+        if (err) {
+            throw new VError(err, 'Failed to get tests from db');
+        }
+
+        socket.emit('test/list', tests);
+    });
+  });
+});
+
 app.post('/tests', createTest);
 app.get('/tests', getTests);
 app.get('/tests/:id', getTest);
@@ -303,7 +321,7 @@ db.init(process.env.DB_URI, function(err) {
         throw new VError(err, "Failed to start the server.");
     }
 
-    var server = app.listen(5555, function() {
+    server.listen(5555, function() {
         log.info('Viveka server is listening at %s', server.address().port);
         log.info('Database URI: %s', process.env.DB_URI);
     });
