@@ -2,3 +2,4 @@
 node_modules
 public/images/fingerprints/*.png
 .idea
+galen/htmlreport-dir/

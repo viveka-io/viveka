@@ -18,7 +18,7 @@ firefox:
   net: container:web
   environment:
     - DISPLAY=:98.0
-    - JAVA_TOOL_OPTIONS="-Dselenium.port=4445"
+    - JAVA_TOOL_OPTIONS="-Dselenium.port=4444"
 chrome:
   image: selenium/standalone-chrome:2.46.0
   net: container:web
@@ -27,6 +27,7 @@ chrome:
     - JAVA_TOOL_OPTIONS="-Dselenium.port=4446"
 galen:
   build: galen
-  volumes: .:/usr/src/galen
-  working_dir: /usr/src/galen
-  command: galen -v
+  volumes:
+    - galen:/opt/galen
+  working_dir: /opt/galen
+  command: sleep 5 && galen check homepage.spec --url "http://localhost:5555/testpage/#/element-added/baseline-view/no-header" --size "640x480" --include "mobile,all" --htmlreport "htmlreport-dir"
