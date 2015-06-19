@@ -28,7 +28,7 @@ models.Difference   = mongoose.model('Difference', schemas.Difference);
 
 function init(link, callback) {
     log.info('Connecting to database ..')
-    mongoose.connect(link);
+    mongoose.connect(link, { server: { socketOptions: { connectTimeoutMS: 5000 }}});
     db = mongoose.connection;
     db.on('error', function (err) {
         var werr = new VError(err, 'Connection to "%s" failed', link);
