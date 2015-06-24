@@ -225,7 +225,7 @@ function generateDifference(socket, message, params) {
 
                     if (a && b) {
                         log.info('Generate difference');
-                        diff.diff = JSON.stringify(differ.diff(JSON.parse(a.domTree), JSON.parse(b.domTree)));
+                        diff.diff = JSON.stringify(differ.diff(JSON.parse(a), JSON.parse(b)));
                         diff.save(function (err, diff) {
                             if (err) {
                                 return handleError(socket, new VError(err, 'Failed to save difference to db'));
@@ -255,11 +255,12 @@ function generateDifferenceJSON(socket, message, params) {
 
             if (a && b) {
                 log.info('Generate difference JSON');
-                diff = differ.diff(JSON.parse(a.domTree), JSON.parse(b.domTree));
-                return socket.emit(message, diff);
+                differ.diff(a, b, function(diff) {
+                    socket.emit(message, diff);
+                });
+            } else {
+                handleError(socket, new VError('Missing fingerprint'));
             }
-
-            handleError(socket, new VError('Missing fingerprint'));
         });
     })
 }

@@ -35,10 +35,6 @@ pre {
     padding-left: 0;
 }
 
-.request:hover {
-    cursor: pointer;
-}
-
 .request .url {
     line-height: 40px;
     height: 40px;
@@ -58,6 +54,7 @@ pre {
     padding: 10px;
     line-height: 20px;
     margin-right: 10px;
+    cursor: pointer;
 }
 
 .request .content {
