@@ -4,12 +4,35 @@ body {
     margin: 0;
 }
 
-.request {
-    width: 100%;
-    box-sizing: border-box;
-    border: 1px solid black;
-    margin-bottom: 10px;
-    float: left;
+.navbar-nav>li {
+  float: none
+}
+
+.navbar-nav {
+  float: none;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 300px;
+    margin: 0;
+    text-align: center;
+}
+
+#messages {
+    margin-left: 302px;
+}
+
+pre {
+    max-height: 300px;
+}
+
+.sidebar .sidebar-nav.navbar-collapse {
+    padding-right: 0;
+    padding-left: 0;
 }
 
 .request:hover {
@@ -35,10 +58,6 @@ body {
     padding: 10px;
     line-height: 20px;
     margin-right: 10px;
-}
-.get {
-    background-color: #e7f0f7;
-    border-color: #c3d9ec;
 }
 
 .get .url::before {
@@ -77,8 +96,8 @@ body {
 }
 
 .request .content {
+    color: rgba(0,0,0,.84);
     width: 100%;
-    min-height: 100px;
     clear: both;
     padding: 10px;
     display: none;
@@ -101,18 +120,12 @@ body {
 }
 
 .request .content input[type="text"] {
+    width: 100%;
     border: none;
     padding: 5px 10px;
     display: block;
+    border: none;
     margin-bottom: 10px;
-}
-
-.submit {
-    display: block;
-    border: none;
-    padding: 5px 10px;
-    background-color: black;
-    color: white;
 }
 
 .missing .submit {

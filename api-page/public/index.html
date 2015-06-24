@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Viveka</title>
+        <meta name="description" content="Viveka">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="bower_components/bootstrap-material-design/dist/css/roboto.min.css" rel="stylesheet">
+        <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="bower_components/bootstrap-material-design/dist/css/material.min.css" rel="stylesheet">
+        <link href="bower_components/bootstrap-material-design/dist/css/ripples.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="main.css">
+    </head>
+    <body>
+        <section class="navbar navbar-default sidebar">
+            <div class="sidebar-nav navbar-collapse collapse navbar-responsive-collapse">
+                <ul class="nav navbar-nav" id="side-menu"></ul>
+            </div>
+        </section>
+        <section id="messages">
+        </section>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="bower_components/lodash/lodash.min.js"></script>
+        <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="bower_components/handlebars/handlebars.runtime.min.js"></script>
+        <script src="bower_components/director/build/director.min.js"></script>
+        <script src="bower_components/bootstrap-material-design/dist/js/ripples.min.js"></script>
+        <script src="bower_components/bootstrap-material-design/dist/js/material.min.js"></script>
+        <script>
+        $(document).ready(function() {
+            $.material.init();
+        });
+        </script>
+        <script src="js/templates.js"></script>
+        <script src="index.js"></script>
+    </body>
+</html>
