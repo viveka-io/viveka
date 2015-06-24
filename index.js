@@ -1,16 +1,17 @@
-var fs                 = require('fs'),
-    express            = require('express'),
-    http               = require('http'),
-    app                = express(),
-    server             = http.createServer(app),
-    io                 = require('socket.io')(server),
-    connect_handlebars = require('connect-handlebars'),
-    log                = require('bunyan').createLogger({name: "viveka-server"}),
-    VError             = require('verror'),
-    generator          = require('./fingerprint-generator'),
-    differ             = require('./difference-generator'),
-    bodyParser         = require('body-parser'),
-    db                 = require('./database.js');
+var fs                   = require('fs'),
+    express              = require('express'),
+    http                 = require('http'),
+    app                  = express(),
+    server               = http.createServer(app),
+    io                   = require('socket.io')(server),
+    handlebarsMiddleware = require('connect-handlebars'),
+    sassMiddleware       = require('node-sass-middleware'),
+    log                  = require('bunyan').createLogger({name: "viveka-server"}),
+    VError               = require('verror'),
+    generator            = require('./fingerprint-generator'),
+    differ               = require('./difference-generator'),
+    bodyParser           = require('body-parser'),
+    db                   = require('./database.js');
 
 function createTest(socket, message, params) {
     // - create test with given config
@@ -266,10 +267,22 @@ function generateDifferenceJSON(socket, message, params) {
 }
 
 app.use('/testpage/bower_components',  express.static(__dirname + '/../bower_components'));
-app.use('/testpage/js/templates.js', connect_handlebars(__dirname + '/test-page/templates'));
+app.use('/testpage/js/templates.js', handlebarsMiddleware(__dirname + '/test-page/templates', {cache: false}));
+app.use('/testpage/css', sassMiddleware({
+    src: __dirname + '/test-page/styles',
+    dest: __dirname + '/test-page/public/css',
+    debug: true,
+    outputStyle: 'compressed'
+}));
 app.use('/testpage', express.static(__dirname + '/test-page/public'));
 app.use('/apipage/bower_components',  express.static(__dirname + '/../bower_components'));
-app.use('/apipage/js/templates.js', connect_handlebars(__dirname + '/api-page/templates'));
+app.use('/apipage/js/templates.js', handlebarsMiddleware(__dirname + '/api-page/templates', {cache: false}));
+app.use('/apipage/css', sassMiddleware({
+    src: __dirname + '/api-page/styles',
+    dest: __dirname + '/api-page/public/css',
+    debug: true,
+    outputStyle: 'compressed'
+}));
 app.use('/apipage', express.static(__dirname + '/api-page/public'));
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: true }));
