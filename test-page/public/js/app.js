@@ -3,7 +3,7 @@
 
     var router = new Router(),
         header = {
-            title: 'Viveka test page',
+            title: 'Test page',
             views: [
                 {id: 'side-by-side-view', name: 'Side by side'},
                 {id: 'baseline-view', name: 'Baseline'},
