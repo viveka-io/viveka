@@ -9,6 +9,8 @@ The system uses selenium-webdriver and mongoose.
 
 ### Prerequisites
 
+[MongoDB](https://www.mongodb.org/)
+
     npm install -g bower nodemon bunyan
     
 ### Running
