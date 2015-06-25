@@ -12,6 +12,10 @@ var fs                   = require('fs'),
     differ               = require('./difference-generator'),
     bodyParser           = require('body-parser'),
     db                   = require('./database.js');
+    
+if (!process.env.DB_URI) {
+    process.env.DB_URI = 'mongodb://localhost:27017/viveka';
+}
 
 function createTest(socket, message, params) {
     // - create test with given config
@@ -266,8 +270,8 @@ function generateDifferenceJSON(socket, message, params) {
     })
 }
 
-app.use('/testpage/bower_components',  express.static(__dirname + '/../bower_components'));
-app.use('/testpage/js/templates.js', handlebarsMiddleware(__dirname + '/test-page/templates', {cache: false}));
+app.use('/testpage/bower_components',  express.static(__dirname + '/bower_components'));
+app.use('/testpage/js/templates.js', handlebarsMiddleware(__dirname + '/test-page/templates'));
 app.use('/testpage/css', sassMiddleware({
     src: __dirname + '/test-page/styles',
     dest: __dirname + '/test-page/public/css',
@@ -275,8 +279,8 @@ app.use('/testpage/css', sassMiddleware({
     outputStyle: 'compressed'
 }));
 app.use('/testpage', express.static(__dirname + '/test-page/public'));
-app.use('/apipage/bower_components',  express.static(__dirname + '/../bower_components'));
-app.use('/apipage/js/templates.js', handlebarsMiddleware(__dirname + '/api-page/templates', {cache: false}));
+app.use('/apipage/bower_components',  express.static(__dirname + '/bower_components'));
+app.use('/apipage/js/templates.js', handlebarsMiddleware(__dirname + '/api-page/templates'));
 app.use('/apipage/css', sassMiddleware({
     src: __dirname + '/api-page/styles',
     dest: __dirname + '/api-page/public/css',

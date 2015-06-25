@@ -1,6 +1,6 @@
 $primary: #78909C;
 
-@import '../../../bower_components/bootstrap-material-design/sass/material.scss';
+@import '../../bower_components/bootstrap-material-design/sass/material.scss';
 
 body {
     font-family: 'Source Sans Pro', sans-serif;
@@ -21,6 +21,7 @@ body {
     top: 0;
     left: 0;
     bottom: 0;
+    overflow: auto;
     width: 300px;
     margin: 0;
     text-align: center;
