@@ -38,7 +38,7 @@ var Sense = (function () {
             if (point.offset && isVisible) {
                 setParentBoundaries(point, t);
             }
-            if (t.offset.height === 0) {
+            if (t.offset.width === 0 || t.offset.height === 0) {
                 point.nodes.pop();
             } else if (t.nodes.length === 0) {
                 delete t.nodes;
@@ -95,10 +95,10 @@ var Sense = (function () {
         var $node = jQuery(node);
 
         return {
-            top: Math.round($node.offset().top),
-            left: Math.round($node.offset().left),
-            width: Math.round($node.outerWidth()),
-            height: Math.round($node.outerHeight()),
+            top: Math.floor($node.offset().top),
+            left: Math.floor($node.offset().left),
+            width: Math.ceil($node.outerWidth()),
+            height: Math.ceil($node.outerHeight()),
             visible: $node.is(':visible')
         }
     }

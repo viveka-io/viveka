@@ -19,6 +19,7 @@
 
         button {
             background: transparent;
+            color: inherit;
             border: 0;
             border-radius: 3px;
             padding: 10px;
@@ -32,7 +33,7 @@
 
         button[data-pushed="true"] {
             box-shadow: 0 1px 5px rgba(0, 0, 0, .25);
-            color: #999;
+            color: rgba(255,255,255,.5);
         }
         button[data-pushed="true"] i {
             background: transparent!important;
@@ -48,24 +49,113 @@
             line-height: 0;
         }
 
-        img {
+        .container img {
             width: 100%;
             vertical-align: top;
         }
 
+        #viveka-logo {
+            float: left;
+            width: auto;
+            height: 34px;
+        }
+
+        #json {
+            position: fixed;
+            top: 54px;
+            left: 0;
+            bottom: 0;
+            width: 30%;
+            font-size: 13px;
+            background: #fff;
+            overflow: auto;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        #json ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #json ul li {
+            margin: 0;
+            padding: 10px 20px 0;
+            border-bottom: 1px solid #ddd;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all .3s ease;
+        }
+
+        #json ul li:nth-child(2n) {
+            background: #fafafa;
+        }
+
+        #json ul li:hover {
+            background: #ECEFF1;
+        }
+
+        #json strong {
+            display: block;
+            float: left;
+            font-size: 2em;
+            clear: left;
+            color: #999;
+        }
+        #json strong.delete {
+            color: red;
+        }
+
+        #json dl {
+            overflow: hidden;
+            margin: 0 0 10px 30px;
+            line-height: 1.3;
+        }
+
+        #json dt {
+            float: left;
+            clear: left;
+            width: 4em;
+            font-weight: bold;
+        }
+
+        #json dd {
+            overflow: hidden;
+        }
+
+        #wrapper {
+            margin: 60px 0.333% 0 30.333%;
+        }
+
+        .diffmarker {
+            border: 1px solid transparent;
+            box-sizing: border-box;
+            position: absolute;
+            transition: all .2s ease;
+        }
+        #json:hover + #wrapper .diffmarker {
+            border-color: red;
+        }
+
         .container {
-            width:46%;
-            margin: 2%;
+            width:50%;
             position: relative;
             float: left;
             border: 1px solid #e0e0e0;
             box-sizing: border-box;
+            overflow: hidden;
         }
 
         .buttons {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
             text-align: center;
             padding: 10px;
-            background: #fff;
+            background: #78909C;
+            color: #fff;
             box-shadow: 0 1px 5px rgba(0, 0, 0, .2);
         }
 
@@ -114,8 +204,8 @@
         .offset_height .offset_height_higher            { background: rgba(156, 39, 176, .05);}
         .offset_x .offset_x_lower:after,
         .offset_x .offset_x_higher:after,
-        .offset_x .offset_y_lower:after,
-        .offset_x .offset_y_higher:after {
+        .offset_y .offset_y_lower:after,
+        .offset_y .offset_y_higher:after {
             content: '';
             position: absolute;
             width: 0;
@@ -134,6 +224,7 @@
             left:0;
             right: 0;
             bottom: 0;
+            z-index: 9999;
             background: rgba(255, 255, 255, .7);
         }
 
@@ -176,6 +267,19 @@
             return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
         }
 
+        function getFormattedJSON(node) {
+            var htmlFragment = '';
+
+            htmlFragment += '<dl>';
+            htmlFragment += '<dt>name:</dt><dd>' + node.name + '</dd>';
+            htmlFragment += '<dt>path:</dt><dd>' + node.path + '</dd>';
+            htmlFragment += '<dt>offset:</dt><dd> top: ' + node.offset.top + ' / left: ' + node.offset.left + ' / width: ' + node.offset.width + ' / height: ' + node.offset.height + '</dd>';
+            htmlFragment += '<dt>hash:</dt><dd>' + node.hash + '</dd>';
+            htmlFragment += '</dl>';
+
+            return htmlFragment;
+        }
+
         function getDiffs(idA, idB) {
             var $A      = $('#contA'),
                 $B      = $('#contB'),
@@ -189,9 +293,16 @@
             $.ajax({
                 url: '/differences-json/' + idA + '/' + idB,
                 success: function(data) {
-                    $(data).each(function(index, item) {
+
+                    var $data = $(data),
+                        $listItems,
+                        formattedJSON = '<ul>';
+
+                    $data.each(function(index, item) {
                         var area,
                             classNames = item.differences.join(' ').toLowerCase();
+
+                        formattedJSON += '<li>' + index;
 
                         if (item.a) {
                             area = $('<div title="' + item.a.name + '" class="diff ' + classNames + '"><span><b><i></i></b></span></div>').appendTo($A);
@@ -201,6 +312,10 @@
                                 width: (item.a.offset.width / widthA * 100) + '%',
                                 height: (item.a.offset.height / heightA * 100) + '%'
                             });
+
+                            formattedJSON += '<strong'+ (item.deleteA ? ' class="delete"' : '') + '>A</strong>';
+                            formattedJSON += getFormattedJSON(item.a);
+
                         }
                         if (item.b) {
                             area = $('<div title="' + item.b.name + '" class="diff ' + classNames + '"><span><b><i></i></b></span></div>').appendTo($B);
@@ -210,8 +325,59 @@
                                 width: (item.b.offset.width / widthB * 100) + '%',
                                 height: (item.b.offset.height / heightB * 100) + '%'
                             });
+
+                            formattedJSON += '<strong'+ (item.deleteB ? ' class="delete"' : '') + '>B</strong>';
+                            formattedJSON += getFormattedJSON(item.b);
+
                         }
+
+                        formattedJSON += '<dl><dt>A Copy:</dt><dd>' + item.aHasCopy + '</dd></dl>';
+                        formattedJSON += '<dl><dt>B Copy:</dt><dd>' + item.bHasCopy + '</dd></dl>';
+                        formattedJSON += '<dl><dt>delete A:</dt><dd>' + item.deleteA + '</dd></dl>';
+                        formattedJSON += '<dl><dt>delete B:</dt><dd>' + item.deleteB + '</dd></dl>';
+                        formattedJSON += '<dl><dt>DIFFS:</dt><dd>' + item.differences.join('<br>') + '</dd></dl>';
+
+                        formattedJSON += '</li>';
+
                     });
+
+                    formattedJSON += '</ul>';
+
+                    $('#json').html(formattedJSON);
+
+                    $listItems = $('#json li');
+
+                    $listItems.on('mouseover', function() {
+                        var index = $listItems.index(this),
+                            offsetA = $data[index].a && $data[index].a.offset,
+                            offsetB = $data[index].b && $data[index].b.offset,
+                            $markerA = $('.diffmarker', $A),
+                            $markerB = $('.diffmarker', $B);
+
+                        if (offsetA) {
+                            $markerA.css({
+                                top: (offsetA.top / heightA * 100) + '%',
+                                left: (offsetA.left / widthA * 100) + '%',
+                                width: (offsetA.width / widthA * 100) + '%',
+                                height: (offsetA.height / heightA * 100) + '%'
+                            });
+                        } else {
+                            $markerA.css('top', '300%');
+                        }
+
+                        if (offsetB) {
+                            $markerB.css({
+                                top: (offsetB.top / heightB * 100) + '%',
+                                left: (offsetB.left / widthB * 100) + '%',
+                                width: (offsetB.width / widthB * 100) + '%',
+                                height: (offsetB.height / heightB * 100) + '%'
+                            });
+                        } else {
+                            $markerB.css('top', '300%');
+                        }
+
+                    });
+
                     $('#overlay').hide();
                 }
             });
@@ -262,6 +428,7 @@
 <body>
 
     <div class="buttons">
+        <img src="/images/viveka-swan.svg" id="viveka-logo">
         <button class="node_removed"><i></i>Removed</button>
         <button class="node_added"><i></i>Added</button>
         <button class="not_matching_name"><i></i>Name</button>
@@ -272,14 +439,19 @@
         <button class="offset_y" data-pushed="true"><i></i>Top</button>
     </div>
 
+    <div id="json"></div>
+
     <div id="wrapper" class="node_removed node_added not_matching_name not_matching_hash">
         <div class="container" id="contA">
             <img id="imgA">
+            <div class="diffmarker"></div>
         </div>
         <div class="container" id="contB">
             <img id="imgB">
+            <div class="diffmarker"></div>
         </div>
     </div>
+
 
     <div id="overlay"><span><i class="material-icons">search</i> Looking for differences...</span></div>
 
