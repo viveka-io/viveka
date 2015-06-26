@@ -9,14 +9,6 @@ body {
     margin: 0;
 }
 
-.navbar-nav>li {
-  float: none
-}
-
-.navbar-nav {
-  float: none;
-}
-
 .sidebar {
     position: fixed;
     top: 0;
@@ -24,37 +16,49 @@ body {
     bottom: 0;
     overflow: auto;
     width: 300px;
+    display: block;
     margin: 0;
-    text-align: center;
-    
+
     .sidebar-nav.navbar-collapse {
         padding-right: 0;
         padding-left: 0;
+    }
+
+    .navbar-nav {
+        float: none;
+
+        & > li {
+            float: none;
+
+            a {
+                width: 100%;
+            }
+
+            .content {
+                color: rgba(0, 0, 0, .84);
+                width: 100%;
+                clear: both;
+                padding: 10px;
+                display: none;
+                box-sizing: border-box;
+
+                input[type="text"] {
+                    width: 100%;
+                    border: none;
+                    padding: 5px 10px;
+                    display: block;
+                    border: none;
+                    margin-bottom: 10px;
+                }
+            }
+        }
     }
 }
 
 #messages {
     margin-left: 302px;
-}
 
-pre {
-    max-height: 300px;
-}
-
-.request .content {
-    color: rgba(0,0,0,.84);
-    width: 100%;
-    clear: both;
-    padding: 10px;
-    display: none;
-    box-sizing: border-box;
-}
-
-.request .content input[type="text"] {
-    width: 100%;
-    border: none;
-    padding: 5px 10px;
-    display: block;
-    border: none;
-    margin-bottom: 10px;
+    pre {
+        max-height: 300px;
+    }
 }
