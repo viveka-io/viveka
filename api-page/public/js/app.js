@@ -48,6 +48,13 @@ var socket = io(),
                 { name: 'baselineId'},
                 { name: 'targetId'}
             ]
+        },
+        {
+            message: 'differences create json',
+            inputs : [
+                { name: 'baselineId'},
+                { name: 'targetId'}
+            ]
         }
     ];
 
@@ -59,8 +66,8 @@ features.forEach(function (feature) {
     socket.on(feature.message, function(data){
         var message = {};
 
-        if (data.domTree) data.domTree = JSON.parse(data.domTree);
-        if (data.diff) data.diff = JSON.parse(data.diff);
+        if (data.domTree) data.domTree = data.domTree;
+        if (data.diff) data.diff = data.diff;
 
         $('#messages').prepend(Handlebars.templates.message({
             content: JSON.stringify(data, undefined, 4),

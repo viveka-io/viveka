@@ -355,8 +355,8 @@ function processImages(a, b, cb) {
     if (a.png && b.png) {
         imgA = a.png;
         imgB = b.png;
-        domA = JSON.parse(a.domTree);
-        domB = JSON.parse(b.domTree);
+        domA = a.domTree;
+        domB = b.domTree;
 
         compare(domA.nodes[0], domB.nodes[0]);
         cleanUpDiff();

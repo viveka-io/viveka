@@ -6,20 +6,20 @@ var mongoose = require('mongoose'),
     db;
 
 schemas.Test = mongoose.Schema({
-    config: String
+    config: mongoose.Schema.Types.Mixed
 });
 
 schemas.FingerPrint = mongoose.Schema({
     testId: String,
     state: String,
-    domTree: String,
+    domTree: mongoose.Schema.Types.Mixed,
     screenshot: String
 });
 
 schemas.Difference = mongoose.Schema({
     baselineId: String,
     comparedId: String,
-    diff: String
+    diff: mongoose.Schema.Types.Mixed
 });
 
 models.Test         = mongoose.model('Test', schemas.Test);
