@@ -22,12 +22,19 @@ schemas.Difference = mongoose.Schema({
     diff: mongoose.Schema.Types.Mixed
 });
 
+schemas.Approval = mongoose.Schema({
+    fingerPrint: { type: mongoose.Schema.Types.ObjectId, ref: 'FingerPrint' },
+    approval: Boolean,
+    date: Date
+});
+
 models.Test         = mongoose.model('Test', schemas.Test);
 models.FingerPrint  = mongoose.model('FingerPrint', schemas.FingerPrint);
 models.Difference   = mongoose.model('Difference', schemas.Difference);
+models.Approval     = mongoose.model('Approval', schemas.Approval);
 
 function init(link, callback) {
-    log.info('Connecting to database ..')
+    log.info('Connecting to database ..');
     mongoose.connect(link, { server: { socketOptions: { connectTimeoutMS: 5000 }}});
     db = mongoose.connection;
     db.on('error', function (err) {
