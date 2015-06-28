@@ -82,6 +82,18 @@ function getFingerPrints(socket, message, params) {
     });
 }
 
+function getFingerPrints(socket, message, params) {
+    // - get the fingerprints associated with the test
+    db.models.FingerPrint.findOne({ testId: params.id }, function (err, fingerPrints) {
+        if (err) {
+            return handleError(socket, new VError(err, 'Failed to get fingerprints of test "%s" from db', params.id));
+        }
+
+        log.info('FingerPrints: ' + fingerPrints.length);
+        socket.emit(message, {fingerPrints: fingerPrints});
+    });
+}
+
 function getFingerPrint(socket, message, params) {
     // - req.params.id
     db.models.FingerPrint.findOne({ _id: params.id }, function (err, fingerPrint) {
@@ -190,6 +202,53 @@ function createFingerPrint(socket, message, params) {
     });
 }
 
+
+function approveFingerPrint(socket, message, params) {
+    db.models.FingerPrint.findOne({ _id: params.id }, function (err, fingerPrint) {
+        if (err) {
+            return handleError(socket, new VError(err, 'Failed to get fingerprint "%s" from db', params.id));
+        }
+        
+        var approval = new db.models.Approval({
+            fingerPrint: params.id,
+            approval: true,
+            date: new Date()
+        });
+        
+        approval.save(function (err, savedApproval) {
+            if (err) {
+                return handleError(socket, new VError(err, 'Failed to save approval in db'));
+            }
+    
+            log.info('APPROVAL saved: ' + savedApproval._id);
+            socket.emit(message, savedApproval);
+        });
+    });
+}
+
+function unapproveFingerPrint(socket, message, params) {
+    db.models.FingerPrint.findOne({ _id: params.id }, function (err, fingerPrint) {
+        if (err) {
+            return handleError(socket, new VError(err, 'Failed to get fingerprint "%s" from db', params.id));
+        }
+        
+        var unapproval = new db.models.Approval({
+            fingerPrint: params.id,
+            approval: false,
+            date: new Date()
+        });
+        
+        unapproval.save(function (err, savedUnapproval) {
+            if (err) {
+                return handleError(socket, new VError(err, 'Failed to save approval in db'));
+            }
+    
+            log.info('APPROVAL saved: ' + savedUnapproval._id);
+            socket.emit(message, savedUnapproval);
+        });
+    });
+}
+
 function getDifference(socket, message, params) {
     // - get the difference
     db.models.Difference.findOne({ _id: params.id }, function (err, difference) {
@@ -261,52 +320,6 @@ function generateDifferenceJSON(socket, message, params) {
             } else {
                 handleError(socket, new VError('Missing fingerprint'));
             }
-        });
-    });
-}
-
-function approveFingerPrint(socket, message, params) {
-    db.models.FingerPrint.findOne({ _id: params.id }, function (err, fingerPrint) {
-        if (err) {
-            return handleError(socket, new VError(err, 'Failed to get fingerprint "%s" from db', params.id));
-        }
-        
-        var approval = new db.models.Approval({
-            fingerPrint: params.id,
-            approval: true,
-            date: new Date()
-        });
-        
-        approval.save(function (err, savedApproval) {
-            if (err) {
-                return handleError(socket, new VError(err, 'Failed to save approval in db'));
-            }
-    
-            log.info('APPROVAL saved: ' + savedApproval._id);
-            socket.emit(message, savedApproval);
-        });
-    });
-}
-
-function unapproveFingerPrint(socket, message, params) {
-    db.models.FingerPrint.findOne({ _id: params.id }, function (err, fingerPrint) {
-        if (err) {
-            return handleError(socket, new VError(err, 'Failed to get fingerprint "%s" from db', params.id));
-        }
-        
-        var unapproval = new db.models.Approval({
-            fingerPrint: params.id,
-            approval: false,
-            date: new Date()
-        });
-        
-        unapproval.save(function (err, savedUnapproval) {
-            if (err) {
-                return handleError(socket, new VError(err, 'Failed to save approval in db'));
-            }
-    
-            log.info('APPROVAL saved: ' + savedUnapproval._id);
-            socket.emit(message, savedUnapproval);
         });
     });
 }
