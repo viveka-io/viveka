@@ -8,7 +8,7 @@ var fs                   = require('fs'),
     sassMiddleware       = require('node-sass-middleware'),
     log                  = require('bunyan').createLogger({name: "viveka-server"}),
     VError               = require('verror'),
-    generator            = require('./fingerprint-generator.js')
+    generator            = require('./fingerprint-generator.js'),
     differ               = require('./difference-generator'),
     bodyParser           = require('body-parser'),
     db                   = require('./database.js');
@@ -240,7 +240,7 @@ function connect(socket, message, middleware) {
 function handleError(socket, error) {
     return function (err) {
         log.error(new VError(err, error));
-        socket.emit('error', error);
+        socket.emit('verror', error);
     }
 }
 

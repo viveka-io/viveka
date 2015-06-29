@@ -51,6 +51,10 @@ function getTests() {
 function getTest(id) {
     return models.Test.findOne({ _id: id }).exec()
         .then(function (test) {
+            if (!test) {
+                return (new mongoose.Promise).reject(new Error('Test with id ' + id + ' not found!'));
+            }
+            
             return(test);
         });
 }

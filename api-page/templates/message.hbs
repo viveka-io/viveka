@@ -1,4 +1,11 @@
-{{#if screenshot}}
-    <img src="{{screenshot}}">
+{{#if error}}
+    <div class="alert alert-warning">
+      <strong>Oh snap!</strong> {{error}}
+    </div>    
+{{else}}
+    {{#if screenshot}}
+        <img src="{{screenshot}}">
+    {{/if}}
+    <pre>{{content}}</pre>
 {{/if}}
-<pre>{{content}}</pre>
+
