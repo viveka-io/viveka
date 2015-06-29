@@ -84,12 +84,17 @@ function getLatestFingerPrint(socket, message, params) {
 }
 
 function createFingerPrint(socket, message, params) {
-    var testId = params.id,
+    var mode,
+        testId = params.id,
         config,
         fingerP,
         fileName;
 
-    db.getTest(testId)
+    db.getBaselineFingerPrint(testId)
+        .then(function(fingerprint){
+            mode = !fingerprint ? 'baseline' : 'latest';   
+            return db.getTest(testId);
+        }, handleError(socket, 'Failed to get baseline finerprint for test: ' + testId))
         .then(function (test) {
             config = test.config;
             log.info('Creating fingerprint for: ' + testId);
@@ -98,7 +103,7 @@ function createFingerPrint(socket, message, params) {
         .then(function (fingerPrint) {
             fingerP = fingerPrint;
             log.info('Generating fingerprint: ' + fingerPrint._id);
-            return generator.createFingerPrint(config);
+            return generator.createFingerPrint(config, mode);
         }, handleError(socket, 'Failed to create fingerPrint'))
         .then(function (response) {
             fingerP.domTree     = response.jsonFingerPrint;

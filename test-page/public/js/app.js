@@ -36,6 +36,7 @@
         activeTestCase;
 
     $('header').empty().append(Handlebars.templates.nav(header));
+    setView(readView());
 
     function activateById(prevId, newId) {
         $('[href="#' + prevId + '"]').parent().removeClass('active');
@@ -45,35 +46,56 @@
     function setTestCaseCaption(id) {
         $('header .test-case').text(_.result(_.find(header.testCases, 'id', id), 'name'));
     }
+    
+    function setView(view) {
+        activateById(activeView, view);
+        activeView = view;
+        
+        if (activeTestCase) {
+            render(activeTestCase);
+        }
+    }
 
-    function render(testCase, view, noHeader) {
-        $('#view').empty().append(Handlebars.templates[view](header));
+    function render(testCase) {
+        $('#view').empty().append(Handlebars.templates[activeView](header));
         $('.baseline').append(Handlebars.templates[testCase + '-baseline']()).removeClass('baseline');
         $('.current').append(Handlebars.templates[testCase + '-current']()).removeClass('current');
         setTestCaseCaption(testCase);
-        activateById(activeView, view);
         activeTestCase = testCase;
-        activeView = view;
+    }
+    
+    function readCookie(name) {
+        name = name.replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1');
+    
+        var regex = new RegExp('(?:^|;)\\s?' + name + '=(.*?)(?:;|$)','i'),
+            match = document.cookie.match(regex);
+    
+        return match && unescape(match[1]);
+    }
+    
+    function readView() {
+        var mode = readCookie('mode');
+        
+        if (mode === 'baseline') {
+            $('header').empty();
+            return 'baseline-view';
+        } else if (mode === 'latest') {
+            $('header').empty();
+            return 'current-view';
+        }
+        
+        return 'side-by-side-view';
     }
 
-    router.on('/:param', function(param) {
-        if (param.indexOf('-view') !== -1) {
-            router.setRoute('/' + activeTestCase + '/' + param);
-
-        } else {
-            router.setRoute('/' + param + '/' + activeView);
-        }
+    router.on('/:testCase', function (testCase) {
+        render(testCase);
     });
 
-    router.on('/:testCase/:view', function (testCase, view) {
-        render(testCase, view);
+    router.init('/element-added');
+    
+    $('.view-selector').on('click', function(event){
+        event.preventDefault();
+        setView($(event.target).attr('href').replace('#',''));
     });
-
-    router.on('/:testCase/:view/no-header', function (testCase, view) {
-        render(testCase, view, true);
-        $('header').empty();
-    });
-
-    router.init('/element-added/side-by-side-view');
 })();
 

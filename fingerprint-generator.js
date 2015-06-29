@@ -9,10 +9,12 @@ var fs              = require('fs'),
     script          = fs.readFileSync(path.join(__dirname, './sense-script.js'), 'utf8'),
     waitForJQuery   = 'return window.jQuery !== undefined';
 
-function createFingerPrint(config, saveToFile) {
-    var response    = {};
+function createFingerPrint(config, mode) {
+    var response    = {},
         driver      = driverBuilder.build(config);
-
+        
+    driver.manage().addCookie('mode', mode, undefined, '*');
+        
     return driver.get(config.url)
         .then(function() {
             return getFingerPrint(driver);
@@ -41,7 +43,7 @@ function createFingerPrint(config, saveToFile) {
                 defer.fulfill(response);
             });
 
-            driver.quit();
+            //driver.quit();
             return defer.promise;
         }, function (err) {
             return webdriver.promise.rejected(err);
