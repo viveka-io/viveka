@@ -36,7 +36,6 @@
         activeTestCase;
 
     $('header').empty().append(Handlebars.templates.nav(header));
-    setView(readView());
 
     function activateById(prevId, newId) {
         $('[href="#' + prevId + '"]').parent().removeClass('active');
@@ -97,5 +96,29 @@
         event.preventDefault();
         setView($(event.target).attr('href').replace('#',''));
     });
+    
+    var checkCookie = function() {
+
+        var lastCookie = document.cookie; // 'static' memory between function calls
+    
+        return function() {
+    
+            var currentCookie = document.cookie;
+    
+            if (currentCookie != lastCookie) {
+    
+                setView(readView());
+    
+                lastCookie = currentCookie; // store latest cookie
+    
+            }
+        };
+    }();
+    
+    window.setInterval(checkCookie, 100);
+    
 })();
+
+
+
 

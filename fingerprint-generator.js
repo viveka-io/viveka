@@ -12,11 +12,10 @@ var fs              = require('fs'),
 function createFingerPrint(config, mode) {
     var response    = {},
         driver      = driverBuilder.build(config);
-        
-    driver.manage().addCookie('mode', mode, undefined, '*');
-        
+            
     return driver.get(config.url)
         .then(function() {
+            driver.manage().addCookie('mode', mode);
             return getFingerPrint(driver);
         }, function (err) {
             console.log(err);
