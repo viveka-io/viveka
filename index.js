@@ -224,7 +224,7 @@ io.on('connection', function(socket){
     connect(socket, 'fingerprints list',    getFingerPrints);
     connect(socket, 'fingerprints create',  createFingerPrint);
     connect(socket, 'fingerprints get',     getFingerPrint);
-    // connect(socket, 'fingerprints update', refreshFingerPrint); // Not needed
+    // connect(socket, 'fingerprints update', refreshFingerPrint);
 
     connect(socket, 'differences get',          getDifference);
     connect(socket, 'differences create',       generateDifference);
