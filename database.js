@@ -19,6 +19,7 @@ schemas.FingerPrint = mongoose.Schema({
 schemas.Difference = mongoose.Schema({
     baselineId: String,
     comparedId: String,
+    state: String,
     diff: mongoose.Schema.Types.Mixed
 });
 
@@ -47,8 +48,83 @@ function init(link, callback) {
     });
 }
 
+function getTests() {
+    return models.Test.find().exec();
+}
+
+function getTest(id) {
+    return models.Test.findOne({ _id: id }).exec()
+        .then(function (test) {
+            if (!test) {
+                return (new mongoose.Promise).reject(new Error('Test with id ' + id + ' not found!'));
+            }
+            
+            return(test);
+        });
+}
+
+function createTest(data) {
+    return models.Test.create(data);
+}
+
+function deleteTest(id) {
+    // SHOULD WE REMOVE ALL THE FINGERPRINTS AND DIFFS RELATED TO THIS?
+    return models.Test.findByIdAndRemove(id).exec();
+}
+
+function getFingerPrints() {
+    return models.FingerPrint.find().exec();
+}
+
+function getFingerPrintsForTest(id) {
+    return models.FingerPrint.find({ testId: id }).exec();
+}
+
+function getFingerPrint(id) {
+    return models.FingerPrint.findOne({ _id: id }).exec()
+        .then(function (fingerPrint) {
+            return(fingerPrint);
+        });
+}
+
+function createFingerPrint(data) {
+    return models.FingerPrint.create(data);
+}
+
+function getDifference(id) {
+    return models.Difference.findOne({ _id: id }).exec();
+}
+
+function getDifferenceByIds(id1, id2) {
+    return models.Difference.findOne({baselineId: id1, comparedId: id2}).exec();
+}
+
+function createDifference(data) {
+    return models.Difference.create(data);
+}
+
+function createApproval(data) {
+    return models.Approval.create(data);
+}
+
 module.exports = {
     schemas: schemas,
     models: models,
-    init: init
+    init: init,
+
+    getTests:   getTests,
+    getTest:    getTest,
+    createTest: createTest,
+    deleteTest: deleteTest,
+
+    getFingerPrints:        getFingerPrints,
+    getFingerPrintsForTest: getFingerPrintsForTest,
+    getFingerPrint:         getFingerPrint,
+    createFingerPrint:      createFingerPrint,
+
+    getDifference:      getDifference,
+    getDifferenceByIds: getDifferenceByIds,
+    createDifference:   createDifference,
+    
+    createApproval: createApproval
 };

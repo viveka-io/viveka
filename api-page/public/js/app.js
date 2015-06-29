@@ -39,6 +39,14 @@ var socket = io(),
             inputs : [ { name: 'id'} ]
         },
         {
+           message: 'fingerprints approve',
+           inputs : [ { name: 'id'} ]
+        },
+        {
+           message: 'fingerprints unapprove',
+           inputs : [ { name: 'id'} ]
+        },
+        {
             message: 'differences get',
             inputs : [ { name: 'id'} ]
         },
@@ -75,6 +83,12 @@ features.forEach(function (feature) {
         }));
     });
 });
+
+socket.on('verror', function(error){
+    $('#messages').prepend(Handlebars.templates.message({
+        error: error
+    }));
+})
 
 $('body').on('click', '.message', function () {
     $(this).closest('.request').find('.content').toggle();
