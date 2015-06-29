@@ -2,10 +2,12 @@
     <div class="alert alert-warning">
       <strong>Oh snap!</strong> {{error}}
     </div>    
+{{else}} {{#if info}}
+    <div class="alert alert-info">{{info}}</div>   
 {{else}}
     {{#if screenshot}}
         <img src="{{screenshot}}">
     {{/if}}
     <pre>{{content}}</pre>
-{{/if}}
+{{/if}}{{/if}}
 

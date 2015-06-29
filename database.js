@@ -11,7 +11,9 @@ schemas.Test = mongoose.Schema({
 
 schemas.FingerPrint = mongoose.Schema({
     testId: String,
+    created: Date,
     state: String,
+    approved: Boolean,
     domTree: mongoose.Schema.Types.Mixed,
     screenshot: String
 });
@@ -81,10 +83,15 @@ function getFingerPrintsForTest(id) {
 }
 
 function getFingerPrint(id) {
-    return models.FingerPrint.findOne({ _id: id }).exec()
-        .then(function (fingerPrint) {
-            return(fingerPrint);
-        });
+    return models.FingerPrint.findOne({ _id: id }).exec();
+}
+
+function getBaselineFingerPrint(id) {
+    return models.FingerPrint.findOne({ testId: id, approved: true }).sort('-created').exec();
+}
+
+function getLatestFingerPrint(id) {
+    return models.FingerPrint.findOne({ testId: id}).sort('-created').exec();
 }
 
 function createFingerPrint(data) {
@@ -120,6 +127,8 @@ module.exports = {
     getFingerPrints:        getFingerPrints,
     getFingerPrintsForTest: getFingerPrintsForTest,
     getFingerPrint:         getFingerPrint,
+    getBaselineFingerPrint: getBaselineFingerPrint,
+    getLatestFingerPrint:   getLatestFingerPrint,
     createFingerPrint:      createFingerPrint,
 
     getDifference:      getDifference,

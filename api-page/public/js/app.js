@@ -35,6 +35,14 @@ var socket = io(),
             inputs : [ { name: 'id'} ]
         },
         {
+            message: 'fingerprints get baseline',
+            inputs : [ { name: 'id'} ]
+        },
+        {
+            message: 'fingerprints get latest',
+            inputs : [ { name: 'id'} ]
+        },
+        {
             message: 'fingerprints update',
             inputs : [ { name: 'id'} ]
         },
@@ -71,9 +79,7 @@ features.forEach(function (feature) {
 
     $('#side-menu').append(html);
 
-    socket.on(feature.message, function(data){
-        var message = {};
-
+    socket.on(feature.message, function(data){        
         if (data.domTree) data.domTree = data.domTree;
         if (data.diff) data.diff = data.diff;
 
@@ -88,7 +94,13 @@ socket.on('verror', function(error){
     $('#messages').prepend(Handlebars.templates.message({
         error: error
     }));
-})
+});
+
+socket.on('info', function(info){
+    $('#messages').prepend(Handlebars.templates.message({
+        info: info
+    }));
+});
 
 $('body').on('click', '.message', function () {
     $(this).closest('.request').find('.content').toggle();

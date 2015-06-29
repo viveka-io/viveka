@@ -64,6 +64,25 @@ function getFingerPrint(socket, message, params) {
         }, handleError(socket, 'Failed to get fingerprint: ' + params.id));
 }
 
+function getBaselineFingerPrint(socket, message, params) {   
+    db.getBaselineFingerPrint(params.id)
+        .then(function (fingerPrint) {
+            if (fingerPrint) {
+                socket.emit(message, fingerPrint.toObject());
+            } else {
+                socket.emit('info', 'No baseline fingerprint found!');
+            }
+            
+        }, handleError(socket, 'Failed to get fingerprint for test: ' + params.id));
+}
+
+function getLatestFingerPrint(socket, message, params) {
+    db.getLatestFingerPrint(params.id)
+        .then(function (fingerPrint) {
+            socket.emit(message, fingerPrint.toObject());
+        }, handleError(socket, 'Failed to get fingerprint for test: ' + params.id));
+}
+
 function createFingerPrint(socket, message, params) {
     var testId = params.id,
         config,
@@ -85,6 +104,7 @@ function createFingerPrint(socket, message, params) {
             fingerP.domTree     = response.jsonFingerPrint;
             fingerP.screenshot  = '/images/fingerprints/'+ fingerP.id +'.png';
             fingerP.state       = 'DONE'
+            fingerP.created     = new Date();
             fileName            = 'public' + fingerP.screenshot;
 
             return fs.writeFile(fileName, response.imageFingerPrint, 'base64');
@@ -101,13 +121,17 @@ function createFingerPrint(socket, message, params) {
 
 function approveFingerPrint(socket, message, params) {
     db.getFingerPrint(params.id)
+        .then(function(fingerPrint){
+            fingerPrint.approved = true;
+            return fingerPrint.save();
+        }, handleError(socket, 'Failed to get fingerprint: ' + params.id))
         .then(function(){
            return db.createApproval({
                 fingerPrint: params.id,
                 approval: true,
                 date: new Date()
             });                              
-        }, handleError(socket, 'Failed to get fingerprint: ' + params.id))
+        }, handleError(socket, 'Failed to save fingerprint: ' + params.id))
         .then(function(savedApproval) {
             log.info('APPROVAL saved: ' + savedApproval._id);
             socket.emit(message, savedApproval);
@@ -116,13 +140,17 @@ function approveFingerPrint(socket, message, params) {
 
 function unapproveFingerPrint(socket, message, params) {
     db.getFingerPrint(params.id)
+        .then(function(fingerPrint){
+            fingerPrint.approved = false;
+            return fingerPrint.save();
+        }, handleError(socket, 'Failed to get fingerprint: ' + params.id))
         .then(function(){
            return db.createApproval({
                 fingerPrint: params.id,
                 approval: false,
                 date: new Date()
             });                              
-        }, handleError(socket, 'Failed to get fingerprint: ' + params.id))
+        }, handleError(socket, 'Failed to save fingerprint: ' + params.id))
         .then(function(savedApproval) {
             log.info('UNAPPROVAL saved: ' + savedApproval._id);
             socket.emit(message, savedApproval);
@@ -251,16 +279,18 @@ io.on('connection', function(socket){
     connect(socket, 'tests get',    getTest);
     connect(socket, 'tests delete', deleteTest);
 
-    connect(socket, 'fingerprints list',        getFingerPrints);
-    connect(socket, 'fingerprints create',      createFingerPrint);
-    connect(socket, 'fingerprints get',         getFingerPrint);
-    connect(socket, 'fingerprints approve',     approveFingerPrint);
-    connect(socket, 'fingerprints unapprove',   unapproveFingerPrint);
+    connect(socket, 'fingerprints list',         getFingerPrints);
+    connect(socket, 'fingerprints create',       createFingerPrint);
+    connect(socket, 'fingerprints get',          getFingerPrint);
+    connect(socket, 'fingerprints get baseline', getBaselineFingerPrint);
+    connect(socket, 'fingerprints get latest',   getLatestFingerPrint);
+    connect(socket, 'fingerprints approve',      approveFingerPrint);
+    connect(socket, 'fingerprints unapprove',    unapproveFingerPrint);
     // connect(socket, 'fingerprints update', refreshFingerPrint);
 
-    connect(socket, 'differences get',          getDifference);
-    connect(socket, 'differences create',       generateDifference);
-    connect(socket, 'differences create json',  generateDifferenceJSON);
+    connect(socket, 'differences get',           getDifference);
+    connect(socket, 'differences create',        generateDifference);
+    connect(socket, 'differences create json',   generateDifferenceJSON);
 });
 
 function connect(socket, message, middleware) {
