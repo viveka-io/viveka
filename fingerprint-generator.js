@@ -42,7 +42,7 @@ function createFingerPrint(config, mode) {
                 defer.fulfill(response);
             });
 
-            //driver.quit();
+            driver.quit();
             return defer.promise;
         }, function (err) {
             return webdriver.promise.rejected(err);

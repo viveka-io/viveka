@@ -29,14 +29,14 @@
             $('#contA').find('.diff').each(function(index){
                 setPosition($(this), data[index].a && data[index].a.offset, widthA, heightA);
             });
+            
             $('#contB').append(Handlebars.templates['diff-areas-b'](data));
             $('#contB').find('.diff').each(function(index){
                 setPosition($(this), data[index].b && data[index].b.offset, widthB, heightB);
             });
+            
             $('#diff-inspector').append(Handlebars.templates['diff-inspector'](data));
-
             $listItems = $('#diff-inspector li');
-
             $listItems.on('mouseover', function() {
                 var index = $listItems.index(this),
                     offsetA = data[index].a && data[index].a.offset,
@@ -65,7 +65,6 @@
             baselineId: idA,
             targetId: idB
         });
-
     }
 
     function render(baselineId, targetId) {
