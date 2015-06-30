@@ -2,24 +2,20 @@
     'use strict';
 
     var socket = io();
-
-    function getFormattedJSON(node) {
-        var htmlFragment = '';
-
-        htmlFragment += '<dl>';
-        htmlFragment += '<dt>name:</dt><dd>' + node.name + '</dd>';
-        htmlFragment += '<dt>path:</dt><dd>' + node.path + '</dd>';
-        htmlFragment += '<dt>offset:</dt><dd> top: ' + node.offset.top + ' / left: ' + node.offset.left + ' / width: ' + node.offset.width + ' / height: ' + node.offset.height + '</dd>';
-        htmlFragment += '<dt>hash:</dt><dd>' + node.hash + '</dd>';
-        htmlFragment += '</dl>';
-
-        return htmlFragment;
+    
+    function setPosition($marker, offset, imgWidth, imgHeight) {   
+        if (offset) {
+            $marker.css({
+                top: (offset.top / imgHeight * 100) + '%',
+                left: (offset.left / imgWidth * 100) + '%',
+                width: (offset.width / imgWidth * 100) + '%',
+                height: (offset.height / imgHeight * 100) + '%'
+            });
+        }
     }
 
     function getDiffs(idA, idB) {
-        var $A      = $('#contA'),
-            $B      = $('#contB'),
-            $imgA   = $('#imgA'),
+        var $imgA   = $('#imgA'),
             $imgB   = $('#imgB'),
             widthA  = $imgA[0].naturalWidth,
             widthB  = $imgB[0].naturalWidth,
@@ -27,85 +23,35 @@
             heightB = $imgB[0].naturalHeight;
 
         socket.on('differences create json', function(data) {
-
-            var $data = $(data),
-                $listItems,
-                formattedJSON = '<ul>';
-
-            $data.each(function(index, item) {
-                var area,
-                    classNames = item.differences.join(' ').toLowerCase();
-
-                formattedJSON += '<li>' + index;
-
-                if (item.a) {
-                    area = $('<div title="' + item.a.name + '" class="diff ' + classNames + '"><span><b><i></i></b></span></div>').appendTo($A);
-                    area.css({
-                        top: (item.a.offset.top / heightA * 100) + '%',
-                        left: (item.a.offset.left / widthA * 100) + '%',
-                        width: (item.a.offset.width / widthA * 100) + '%',
-                        height: (item.a.offset.height / heightA * 100) + '%'
-                    });
-
-                    formattedJSON += '<strong'+ (item.deleteA ? ' class="delete"' : '') + '>A</strong>';
-                    formattedJSON += getFormattedJSON(item.a);
-
-                }
-                if (item.b) {
-                    area = $('<div title="' + item.b.name + '" class="diff ' + classNames + '"><span><b><i></i></b></span></div>').appendTo($B);
-                    area.css({
-                        top: (item.b.offset.top / heightB * 100) + '%',
-                        left: (item.b.offset.left / widthB * 100) + '%',
-                        width: (item.b.offset.width / widthB * 100) + '%',
-                        height: (item.b.offset.height / heightB * 100) + '%'
-                    });
-
-                    formattedJSON += '<strong'+ (item.deleteB ? ' class="delete"' : '') + '>B</strong>';
-                    formattedJSON += getFormattedJSON(item.b);
-
-                }
-
-                formattedJSON += '<dl><dt>A Copy:</dt><dd>' + item.aHasCopy + '</dd></dl>';
-                formattedJSON += '<dl><dt>B Copy:</dt><dd>' + item.bHasCopy + '</dd></dl>';
-                formattedJSON += '<dl><dt>delete A:</dt><dd>' + item.deleteA + '</dd></dl>';
-                formattedJSON += '<dl><dt>delete B:</dt><dd>' + item.deleteB + '</dd></dl>';
-                formattedJSON += '<dl><dt>DIFFS:</dt><dd>' + item.differences.join('<br>') + '</dd></dl>';
-
-                formattedJSON += '</li>';
-
+            var $listItems;
+             
+            $('#contA').append(Handlebars.templates['diff-areas-a'](data));
+            $('#contA').find('.diff').each(function(index){
+                setPosition($(this), data[index].a && data[index].a.offset, widthA, heightA);
             });
+            $('#contB').append(Handlebars.templates['diff-areas-b'](data));
+            $('#contB').find('.diff').each(function(index){
+                setPosition($(this), data[index].b && data[index].b.offset, widthB, heightB);
+            });
+            $('#diff-inspector').append(Handlebars.templates['diff-inspector'](data));
 
-            formattedJSON += '</ul>';
-
-            $('#json').html(formattedJSON);
-
-            $listItems = $('#json li');
+            $listItems = $('#diff-inspector li');
 
             $listItems.on('mouseover', function() {
                 var index = $listItems.index(this),
-                    offsetA = $data[index].a && $data[index].a.offset,
-                    offsetB = $data[index].b && $data[index].b.offset,
-                    $markerA = $('.diffmarker', $A),
-                    $markerB = $('.diffmarker', $B);
+                    offsetA = data[index].a && data[index].a.offset,
+                    offsetB = data[index].b && data[index].b.offset,
+                    $markerA = $('#contA .diffmarker'),
+                    $markerB = $('#contB .diffmarker');
 
                 if (offsetA) {
-                    $markerA.css({
-                        top: (offsetA.top / heightA * 100) + '%',
-                        left: (offsetA.left / widthA * 100) + '%',
-                        width: (offsetA.width / widthA * 100) + '%',
-                        height: (offsetA.height / heightA * 100) + '%'
-                    });
+                    setPosition($markerA, offsetA, widthA, heightA);
                 } else {
                     $markerA.css('top', '300%');
                 }
 
                 if (offsetB) {
-                    $markerB.css({
-                        top: (offsetB.top / heightB * 100) + '%',
-                        left: (offsetB.left / widthB * 100) + '%',
-                        width: (offsetB.width / widthB * 100) + '%',
-                        height: (offsetB.height / heightB * 100) + '%'
-                    });
+                    setPosition($markerB, offsetB, widthB, heightB);
                 } else {
                     $markerB.css('top', '300%');
                 }

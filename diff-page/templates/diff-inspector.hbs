@@ -1,0 +1,42 @@
+<ul>
+	{{#each this}}
+		<li>
+			{{index}}
+			<strong {{#if deleteA}}class="delete"{{/if}}>A</strong>
+		    <dl>
+				<dt>name:</dt><dd>{{a.name}}</dd>
+				<dt>path:</dt><dd>{{a.path}}</dd>
+				<dt>offset:</dt><dd> top: {{a.offset.top}} / left: {{a.offset.left}} / width: {{a.offset.width}} / height: {{a.offset.height}}</dd>
+				<dt>hash:</dt><dd>{{a.hash}}</dd>
+		    </dl>
+			<strong {{#if deleteB}}class="delete"{{/if}}>B</strong>
+		    <dl>
+				<dt>name:</dt><dd>{{a.name}}</dd>
+				<dt>path:</dt><dd>{{a.path}}</dd>
+				<dt>offset:</dt><dd> top: {{a.offset.top}} / left: {{a.offset.left}} / width: {{a.offset.width}} / height: {{a.offset.height}}</dd>
+				<dt>hash:</dt><dd>{{a.hash}}</dd>
+		    </dl>
+		    <dl>
+				<dt>A Copy:</dt><dd>{{aHasCopy}}</dd>
+		    </dl>
+		    <dl>
+				<dt>B Copy:</dt><dd>{{bHasCopy}}</dd>
+		    </dl>
+		    <dl>
+				<dt>delete A:</dt><dd>{{deleteA}}</dd>
+		    </dl>
+		    <dl>
+				<dt>delete B:</dt><dd>{{deleteB}}</dd>
+		    </dl>
+		    <dl>
+				<dt>DIFFS:</dt>
+				<dd>
+					{{#each differences}}
+						{{this}}
+						{{#unless @last}}<br>{{/unless}}
+					{{/each}}
+				</dd>
+		    </dl>
+		</li>
+	{{/each}}
+</ul>

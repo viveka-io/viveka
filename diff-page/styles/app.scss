@@ -55,7 +55,7 @@ button i {
     height: 34px;
 }
 
-#json {
+#diff-inspector {
     position: fixed;
     top: 54px;
     left: 0;
@@ -65,57 +65,62 @@ button i {
     background: #fff;
     overflow: auto;
     border-right: 1px solid #e0e0e0;
-}
-
-#json ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-#json ul li {
-    margin: 0;
-    padding: 10px 20px 0;
-    border-bottom: 1px solid #ddd;
-    overflow: hidden;
-    cursor: pointer;
-    transition: all .3s ease;
-}
-
-#json ul li:nth-child(2n) {
-    background: #fafafa;
-}
-
-#json ul li:hover {
-    background: #ECEFF1;
-}
-
-#json strong {
-    display: block;
-    float: left;
-    font-size: 2em;
-    clear: left;
-    color: #999;
-}
-#json strong.delete {
-    color: red;
-}
-
-#json dl {
-    overflow: hidden;
-    margin: 0 0 10px 30px;
-    line-height: 1.3;
-}
-
-#json dt {
-    float: left;
-    clear: left;
-    width: 4em;
-    font-weight: bold;
-}
-
-#json dd {
-    overflow: hidden;
+    
+    &:hover + #wrapper .diffmarker {
+        border-color: red;
+    }
+    
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        
+        li {
+            margin: 0;
+            padding: 10px 20px 0;
+            border-bottom: 1px solid #ddd;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all .3s ease;
+            
+            &:nth-child(2n) {
+                background: #fafafa;
+            }
+            
+            &:hover {
+                background: #ECEFF1;
+            }
+        }
+    }
+    
+    strong {
+        display: block;
+        float: left;
+        font-size: 2em;
+        clear: left;
+        color: #999;
+        
+        &.delete {
+            color: red;
+        }
+    }
+    
+    dl {
+        overflow: hidden;
+        margin: 0 0 10px 30px;
+        line-height: 1.3;
+    }
+    
+    dt {
+        float: left;
+        clear: left;
+        width: 4em;
+        font-weight: bold;
+    }
+    
+    dd {
+        overflow: hidden;
+    }
 }
 
 #wrapper {
@@ -127,9 +132,6 @@ button i {
     box-sizing: border-box;
     position: absolute;
     transition: all .2s ease;
-}
-#json:hover + #wrapper .diffmarker {
-    border-color: red;
 }
 
 .container {

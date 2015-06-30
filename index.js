@@ -4,6 +4,7 @@ var fs                   = require('fs'),
     app                  = express(),
     server               = http.createServer(app),
     io                   = require('socket.io')(server),
+    handlebars           = require('./node_modules/connect-handlebars/node_modules/handlebars/lib/index'),
     handlebarsMiddleware = require('connect-handlebars'),
     sassMiddleware       = require('node-sass-middleware'),
     log                  = require('bunyan').createLogger({name: "viveka-server"}),
@@ -12,6 +13,10 @@ var fs                   = require('fs'),
     differ               = require('./difference-generator'),
     bodyParser           = require('body-parser'),
     db                   = require('./database.js');
+    
+handlebars.registerHelper('toLowerCase', function(str) {
+  return str.toLowerCase();
+});
 
 if (!process.env.DB_URI) {
     process.env.DB_URI = 'mongodb://localhost:27017/viveka';
@@ -45,7 +50,7 @@ function deleteTest(socket, message, params) {
     db.deleteTest(params.id)
         .then(function () {
             log.info('Test with id: ' + params.id + ' deleted');
-            socket.emit(message, 'Test with id: ' + params.id + ' deleted');
+            socket.emit('info', 'Test with id: ' + params.id + ' deleted');
         }, handleError(socket, 'Failed to delete test: ' + params.id));
 }
 
