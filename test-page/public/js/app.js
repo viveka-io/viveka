@@ -32,7 +32,7 @@
                 {id: 'multiple-changes', name: 'Multiple changes'}
             ]
         },
-        activeView,
+        activeView = 'side-by-side-view',
         activeTestCase;
 
     $('header').empty().append(Handlebars.templates.nav(header));
@@ -98,19 +98,14 @@
     });
     
     var checkCookie = function() {
-
-        var lastCookie = document.cookie; // 'static' memory between function calls
-    
+        var lastCookie = document.cookie;
+        
         return function() {
-    
             var currentCookie = document.cookie;
     
             if (currentCookie != lastCookie) {
-    
                 setView(readView());
-    
-                lastCookie = currentCookie; // store latest cookie
-    
+                lastCookie = currentCookie;  
             }
         };
     }();
