@@ -3,4 +3,5 @@ node_modules
 bower_components
 public/images/fingerprints/*.png
 .idea
+.settings
 *.css

@@ -11,17 +11,7 @@
 </head>
 
 <body>
-    <header class="buttons">
-        <img src="/images/viveka-swan.svg" id="viveka-logo">
-        <button class="node_removed"><i></i>Removed</button>
-        <button class="node_added"><i></i>Added</button>
-        <button class="not_matching_name"><i></i>Name</button>
-        <button class="not_matching_hash"><i></i>Hash</button>
-        <button class="offset_width" data-pushed="true"><i></i>Width</button>
-        <button class="offset_height" data-pushed="true"><i></i>Height</button>
-        <button class="offset_x" data-pushed="true"><i></i>Left</button>
-        <button class="offset_y" data-pushed="true"><i></i>Top</button>
-    </header>
+    <header></header>
 
     <div id="diff-inspector"></div>
 
@@ -36,9 +26,7 @@
         </div>
     </div>
 
-
     <div id="overlay"><span><i class="material-icons">search</i> Looking for differences...</span></div>
-
     <script src="/socket.io/socket.io.js"></script>
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/lodash/lodash.min.js"></script>

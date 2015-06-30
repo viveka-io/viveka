@@ -91,21 +91,21 @@
                 if(this.complete) $(this).trigger('load');
             });
 
-        $('button').on('click', function() {
-            var $button = $(this),
-                $class = $button.attr('class'),
-                isDisabled = $button.attr('data-pushed') === "true";
+        $('.diff-switcher a').on('click', function(event) {
+            var $button = $(this).closest('li'),
+                $class = $button.data('diff');
+                
+            event.preventDefault();
 
-            $button.attr('data-pushed', !isDisabled);
-
+            $button.toggleClass('active');
             $('#wrapper').toggleClass($class);
-
-            return false;
         });
     }
 
     $(function(){
         var router = new Router();
+        
+         $('header').empty().append(Handlebars.templates.nav());
 
         router.on('/:baselineId/:targetId', function (baselineId, targetId) {
             render(baselineId, targetId);
