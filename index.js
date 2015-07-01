@@ -241,6 +241,9 @@ function generateDifferenceJSON(socket, message, params) {
         });
 }
 
+// Test cases
+app.use('/test_cases.json',  express.static(__dirname + '/test-cases.json'));
+
 // Test page
 app.use('/testpage/bower_components',  express.static(__dirname + '/bower_components'));
 app.use('/testpage/js/templates.js', handlebarsMiddleware(__dirname + '/test-page/templates'));

@@ -1,7 +1,39 @@
 (function () {
     'use strict';
 
-    var socket = io();
+    var socket = io(),
+        header = {
+            title: 'Test page',
+            views: [
+                {id: 'side-by-side-view', name: 'Side by side'},
+                {id: 'baseline-view', name: 'Baseline'},
+                {id: 'current-view', name: 'Current'},
+            ]
+        };
+    
+    $.getJSON('/test_cases.json')
+        .done(init);
+        
+    function init(testCases) {
+        var router = new Router();
+            
+         header.testCases = testCases;
+         $('header').empty().append(Handlebars.templates.nav(header));
+         
+        router.on('/:testCase', function (testCase) {
+            showTestCaseDiff(testCase);
+        });
+
+        router.on('/:baselineId/:targetId', function (baselineId, targetId) {
+            render(baselineId, targetId);
+        });
+
+        router.init('/' + testCases[0].id);
+    }
+    
+    function showTestCaseDiff(testCase) {
+        socket.emit('fingerprints get baseline');
+    }
     
     function setPosition($marker, offset, imgWidth, imgHeight) {   
         if (offset) {
@@ -101,49 +133,5 @@
             $('#wrapper').toggleClass($class, $button.is('.active'));
         });
     }
-
-    $(function(){
-        var router = new Router(),
-            header = {
-                title: 'Test page',
-                views: [
-                    {id: 'side-by-side-view', name: 'Side by side'},
-                    {id: 'baseline-view', name: 'Baseline'},
-                    {id: 'current-view', name: 'Current'},
-                ],
-                testCases:[
-                    {id: 'element-added', name: 'Element added'},
-                    {id: 'element-removed', name: 'Element removed'},
-                    {divider: true},
-                    {id: 'floated-element-added', name: 'Floated element added'},
-                    {id: 'floated-element-removed', name: 'Floated element removed'},
-                    {divider: true},
-                    {id: 'fixed-position-element-added', name: 'Fixed position element added'},
-                    {id: 'fixed-position-element-removed', name: 'Fixed position element removed'},
-                    {divider: true},
-                    {id: 'relative-positioned-element-added', name: 'Relative positioned element added'},
-                    {id: 'relative-positioned-element-removed', name: 'Relative positioned element removed'},
-                    {divider: true},
-                    {id: 'margin-changed', name: 'Margin changed'},
-                    {id: 'border-changed', name: 'Border changed'},
-                    {id: 'padding-changed', name: 'Padding changed'},
-                    {divider: true},
-                    {id: 'background-color-changed', name: 'Background color changed'},
-                    {id: 'color-changed', name: 'Color changed'},
-                    {divider: true},
-                    {id: 'multiple-changes', name: 'Multiple changes'}
-                ]
-            };
-        
-         $('header').empty().append(Handlebars.templates.nav(header));
-
-        router.on('/:baselineId/:targetId', function (baselineId, targetId) {
-            render(baselineId, targetId);
-        });
-
-        router.init();
-    });
-
-
 })();
 
