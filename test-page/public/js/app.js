@@ -32,10 +32,12 @@
                 {id: 'multiple-changes', name: 'Multiple changes'}
             ]
         },
-        activeView = 'side-by-side-view',
+        activeView = readView(),
         activeTestCase;
 
-    $('header').empty().append(Handlebars.templates.nav(header));
+    if(activeView === 'side-by-side-view') {
+        $('header').append(Handlebars.templates.nav(header));
+    }   
 
     function activateById(prevId, newId) {
         $('[href="#' + prevId + '"]').parent().removeClass('active');
@@ -63,23 +65,19 @@
         activeTestCase = testCase;
     }
     
-    function readCookie(name) {
-        name = name.replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1');
-    
-        var regex = new RegExp('(?:^|;)\\s?' + name + '=(.*?)(?:;|$)','i'),
-            match = document.cookie.match(regex);
-    
-        return match && unescape(match[1]);
+    function getQueryParam(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
     
     function readView() {
-        var mode = readCookie('mode');
+        var mode = getQueryParam('viveka_mode');
         
         if (mode === 'baseline') {
-            $('header').empty();
             return 'baseline-view';
         } else if (mode === 'latest') {
-            $('header').empty();
             return 'current-view';
         }
         
@@ -96,22 +94,6 @@
         event.preventDefault();
         setView($(event.target).attr('href').replace('#',''));
     });
-    
-    var checkCookie = function() {
-        var lastCookie = document.cookie;
-        
-        return function() {
-            var currentCookie = document.cookie;
-    
-            if (currentCookie != lastCookie) {
-                setView(readView());
-                lastCookie = currentCookie;  
-            }
-        };
-    }();
-    
-    window.setInterval(checkCookie, 100);
-    
 })();
 
 

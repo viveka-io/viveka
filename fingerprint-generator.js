@@ -5,17 +5,19 @@ var fs              = require('fs'),
     webdriver       = require('selenium-webdriver'),
     PNG             = require('node-png').PNG,
     crypto          = require('crypto'),
+    appendQuery     = require('append-query'),
     driverBuilder   = require('./driver-builder.js'),
     script          = fs.readFileSync(path.join(__dirname, './sense-script.js'), 'utf8'),
     waitForJQuery   = 'return window.jQuery !== undefined';
 
 function createFingerPrint(config, mode) {
     var response    = {},
-        driver      = driverBuilder.build(config);
-            
-    return driver.get(config.url)
+        driver      = driverBuilder.build(config),
+        url         = mode ? appendQuery(config.url, {viveka_mode: mode}) : config.url;
+     
+    log.info('Creating fingerprint on page: ' + url);   
+    return driver.get(url)
         .then(function() {
-            driver.manage().addCookie('mode', mode);
             return getFingerPrint(driver);
         }, function (err) {
             console.log(err);
