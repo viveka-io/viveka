@@ -46,6 +46,17 @@
             
          header.testCases = testCases;
          $('header').append(Handlebars.templates.nav(header));
+         
+         $('.diff-switcher a').on('click', function(event) {
+            var $button = $(this).closest('li'),
+                $class = $button.data('diff');
+                
+            event.preventDefault();
+
+            $button.toggleClass('active');
+            $('#wrapper').toggleClass($class, $button.is('.active'));
+        });
+         
          $('#create-diff-by-fingerprints').on('click', function(event) {
              event.preventDefault();
              router.setRoute($('#baseline-id').val() + '/' + $('#target-id').val());
@@ -203,16 +214,6 @@
                 //Cache fix for browsers that don't trigger .load()
                 if(this.complete) $(this).trigger('load');
             });
-
-        $('.diff-switcher a').on('click', function(event) {
-            var $button = $(this).closest('li'),
-                $class = $button.data('diff');
-                
-            event.preventDefault();
-
-            $button.toggleClass('active');
-            $('#wrapper').toggleClass($class, $button.is('.active'));
-        });
     }
 })();
 
