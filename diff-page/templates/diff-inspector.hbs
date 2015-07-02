@@ -1,7 +1,8 @@
 <ul>
 	{{#each this}}
 		<li>
-			{{index}}
+			{{@index}}
+            {{#if a}}
 			<strong {{#if deleteA}}class="delete"{{/if}}>A</strong>
 		    <dl>
 				<dt>name:</dt><dd>{{a.name}}</dd>
@@ -9,13 +10,16 @@
 				<dt>offset:</dt><dd> top: {{a.offset.top}} / left: {{a.offset.left}} / width: {{a.offset.width}} / height: {{a.offset.height}}</dd>
 				<dt>hash:</dt><dd>{{a.hash}}</dd>
 		    </dl>
-			<strong {{#if deleteB}}class="delete"{{/if}}>B</strong>
+            {{/if}}
+            {{#if b}}
+            <strong {{#if deleteB}}class="delete"{{/if}}>B</strong>
 		    <dl>
-				<dt>name:</dt><dd>{{a.name}}</dd>
-				<dt>path:</dt><dd>{{a.path}}</dd>
-				<dt>offset:</dt><dd> top: {{a.offset.top}} / left: {{a.offset.left}} / width: {{a.offset.width}} / height: {{a.offset.height}}</dd>
-				<dt>hash:</dt><dd>{{a.hash}}</dd>
+				<dt>name:</dt><dd>{{b.name}}</dd>
+				<dt>path:</dt><dd>{{b.path}}</dd>
+				<dt>offset:</dt><dd> top: {{b.offset.top}} / left: {{b.offset.left}} / width: {{b.offset.width}} / height: {{b.offset.height}}</dd>
+				<dt>hash:</dt><dd>{{b.hash}}</dd>
 		    </dl>
+            {{/if}}
 		    <dl>
 				<dt>A Copy:</dt><dd>{{aHasCopy}}</dd>
 		    </dl>

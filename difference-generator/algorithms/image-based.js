@@ -5,7 +5,7 @@ var fs          = require('fs'),
     domB        = {},
     imgA        = [],
     imgB        = [],
-    threshold   = 40,
+    threshold   = 15,
     diff;
 
 function getImageSlice(node, png) {
@@ -234,7 +234,7 @@ function isMatchingOffset(a, b) {
 function isMatchingSize(a, b) {
     a = a.offset;
     b = b.offset;
-    return (a.width === b.width && a.height === b.height);
+    return (Math.abs(a.width - b.width) < 2 && Math.abs(a.height - b.height) < 2);
 }
 
 function sameNodes(a, b) {
@@ -302,6 +302,7 @@ function cleanUpDiff() {
         if (!diff[i].a && !diff[i].b) {
             return false;
         }
+
 
         return true;
     });
