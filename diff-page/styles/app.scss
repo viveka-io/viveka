@@ -1,47 +1,15 @@
 $primary: #78909C;
+$material-font-path: '../../bower_components/bootstrap-material-design/fonts';
 
 @import '../../bower_components/bootstrap-material-design/sass/roboto.scss';
 @import '../../bower_components/bootstrap-material-design/sass/material.scss';
 
-html,body {
-    margin: 0;
-    padding: 0;
-}
-body {
-    background: #fafafa;
-    font: normal 16px/1 'Roboto', Arial, Helvetica, sans-serif;
+nav {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.26);
 }
 
-button {
-    background: transparent;
-    color: inherit;
-    border: 0;
-    border-radius: 3px;
-    padding: 10px;
-    font-weight: bold;
-    font-size: 11px;
-    outline: 0;
-    margin: 0 5px;
-    text-transform: uppercase;
-    cursor: pointer;
-}
-
-button[data-pushed="true"] {
-    box-shadow: 0 1px 5px rgba(0, 0, 0, .25);
-    color: rgba(255,255,255,.5);
-}
-button[data-pushed="true"] i {
-    background: transparent!important;
-}
-
-button i {
-    display: inline-block;
-    border: 1px solid rgba(0, 0, 0, .2);
-    width: 10px;
-    height: 10px;
-    margin-right: 5px;
-    vertical-align: -1px;
-    line-height: 0;
+.logo {
+      height: 60px;
 }
 
 .container img {
@@ -49,77 +17,89 @@ button i {
     vertical-align: top;
 }
 
-#viveka-logo {
-    float: left;
-    width: auto;
-    height: 34px;
-}
 
-#json {
+#diff-inspector {
     position: fixed;
-    top: 54px;
+    top: 60px;
     left: 0;
     bottom: 0;
-    width: 30%;
+    width: 26%;
     font-size: 13px;
     background: #fff;
     overflow: auto;
     border-right: 1px solid #e0e0e0;
-}
-
-#json ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-#json ul li {
-    margin: 0;
-    padding: 10px 20px 0;
-    border-bottom: 1px solid #ddd;
-    overflow: hidden;
-    cursor: pointer;
-    transition: all .3s ease;
-}
-
-#json ul li:nth-child(2n) {
-    background: #fafafa;
-}
-
-#json ul li:hover {
-    background: #ECEFF1;
-}
-
-#json strong {
-    display: block;
-    float: left;
-    font-size: 2em;
-    clear: left;
-    color: #999;
-}
-#json strong.delete {
-    color: red;
-}
-
-#json dl {
-    overflow: hidden;
-    margin: 0 0 10px 30px;
-    line-height: 1.3;
-}
-
-#json dt {
-    float: left;
-    clear: left;
-    width: 4em;
-    font-weight: bold;
-}
-
-#json dd {
-    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.26);
+    
+    &:hover + #wrapper .diffmarker {
+        border-color: red;
+    }
+    
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        
+        li {
+            margin: 0;
+            padding: 10px 20px 0;
+            border-bottom: 1px solid #ddd;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all .3s ease;
+            
+            &:nth-child(2n) {
+                background: #fafafa;
+            }
+            
+            &:hover {
+                background: #ECEFF1;
+            }
+        }
+    }
+    
+    strong {
+        display: block;
+        float: left;
+        font-size: 2em;
+        clear: left;
+        color: #999;
+        
+        &.delete {
+            color: red;
+        }
+    }
+    
+    dl {
+        overflow: hidden;
+        margin: 0 0 10px 30px;
+        line-height: 1.3;
+    }
+    
+    dt {
+        float: left;
+        clear: left;
+        width: 4em;
+        font-weight: bold;
+    }
+    
+    dd {
+        overflow: hidden;
+    }
 }
 
 #wrapper {
-    margin: 60px 0.333% 0 30.333%;
+    margin: 20px 0.333% 0 26.333%;
+    
+    .container {
+        width:50%;
+        position: relative;
+        float: left;
+        border: 1px solid #e0e0e0;
+        box-sizing: border-box;
+        overflow: hidden;
+        padding: 0;
+        margin: 0;
+    }
 }
 
 .diffmarker {
@@ -127,31 +107,6 @@ button i {
     box-sizing: border-box;
     position: absolute;
     transition: all .2s ease;
-}
-#json:hover + #wrapper .diffmarker {
-    border-color: red;
-}
-
-.container {
-    width:50%;
-    position: relative;
-    float: left;
-    border: 1px solid #e0e0e0;
-    box-sizing: border-box;
-    overflow: hidden;
-}
-
-.buttons {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
-    text-align: center;
-    padding: 10px;
-    background: #78909C;
-    color: #fff;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, .2);
 }
 
 .diff {
@@ -166,28 +121,67 @@ button i {
     box-sizing: border-box;
 }
 
-button.node_removed i       { background: rgba(244, 67, 54, 1); }
-button.node_added i         { background: rgba(76, 175, 80, 1); }
-button.not_matching_name i  { background: rgba(255, 235, 59, 1); }
-button.not_matching_hash i  { background: rgba(33, 150, 243, 1); }
-button.offset_width i       { background: rgba(233, 30, 99, 1); }
-button.offset_height i      { background: rgba(156, 39, 176, 1); }
-button.offset_x i           {
-    vertical-align: -3px;
-    width: 0;
-    height: 0;
-    margin-right: 0;
-    border: 7px solid transparent;
-    border-left-color: rgba(0, 0, 0, .6);
+.navbar {
+    .navbar-form {
+        i {
+            color: rgba(255,255,255,0.84);
+        }
+    }
+    
+    .navbar-nav.diff-switcher {         
+        &>li>a {
+            /*border: 0;
+            border-radius: 3px;
+            margin: 9px 5px;
+            padding: 5px;
+            font-weight: bold;
+            font-size: 11px;
+            outline: 0;
+            text-transform: uppercase;  
+            box-shadow: 0 1px 5px rgba(0, 0, 0, .25); */
+        }
+        
+        &>.active>a {
+            box-shadow: none;
+            //background-color: inherit;
+        }
+        
+        li i {
+            display: inline-block;
+            border: 1px solid rgba(0, 0, 0, .2);
+            width: 10px;
+            height: 10px;
+            margin-right: 5px;
+            vertical-align: -1px;
+            line-height: 0;
+        }
+        li[data-diff='node_removed'] i       { background: rgba(244, 67, 54, 1); }
+        li[data-diff='node_added'] i         { background: rgba(76, 175, 80, 1); }
+        li[data-diff='not_matching_name'] i  { background: rgba(255, 235, 59, 1); }
+        li[data-diff='not_matching_hash'] i  { background: rgba(33, 150, 243, 1); }
+        li[data-diff='offset_width'] i       { background: rgba(233, 30, 99, 1); }
+        li[data-diff='offset_height'] i      { background: rgba(156, 39, 176, 1); }
+        li[data-diff='offset_x'] i           {
+            vertical-align: -3px;
+            width: 0;
+            height: 0;
+            margin-right: 0;
+            border: 7px solid transparent;
+            border-left-color: rgba(0, 0, 0, .6);
+        }
+        li[data-diff='offset_y'] i {
+            vertical-align: 8px;
+            width: 0;
+            height: 0;
+            margin: 0 5px -14px 0;
+            border: 7px solid transparent;
+            border-top-color: rgba(0, 0, 0, .6);
+        }
+    }
 }
-button.offset_y i {
-    vertical-align: 8px;
-    width: 0;
-    height: 0;
-    margin: 0 5px -14px 0;
-    border: 7px solid transparent;
-    border-top-color: rgba(0, 0, 0, .6);
-}
+
+
+
 
 .node_removed .node_removed                     { background: rgba(244, 67, 54, .2); }
 .node_added .node_added                         { background: rgba(76, 175, 80, .2); }
@@ -214,6 +208,7 @@ button.offset_y i {
 .offset_y .offset_y_higher:after                { left: 50%; top: 0; border-top-color: rgba(0, 0, 0, .4); }
 
 #overlay {
+    display: none;
     position: fixed;
     top: 0;
     left:0;

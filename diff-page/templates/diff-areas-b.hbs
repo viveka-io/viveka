@@ -1,0 +1,5 @@
+{{#each this}}
+	<div title="{{b.name}}" class="diff {{#each differences}}{{toLowerCase this}}{{#unless @last}} {{/unless}}{{/each}}">
+		<span><b><i></i></b></span>
+	</div>
+{{/each}}

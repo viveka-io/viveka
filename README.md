@@ -15,6 +15,8 @@ The system uses selenium-webdriver and mongoose.
     
 ### Running
 
+Start MongoDB
+
     git clone git@github.com:viveka-io/viveka.git
     cd viveka
     npm install
