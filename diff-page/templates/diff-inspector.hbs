@@ -1,7 +1,7 @@
 <ul>
 	{{#each this}}
-		<li>
-			{{index}}
+		<li data-diff-index="{{@index}}">
+			{{@index}}
 			<strong {{#if deleteA}}class="delete"{{/if}}>A</strong>
 		    <dl>
 				<dt>name:</dt><dd>{{a.name}}</dd>

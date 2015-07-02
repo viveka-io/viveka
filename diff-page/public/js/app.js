@@ -160,6 +160,14 @@
                 $('#contB').find('.diff').each(function(index){
                     setPosition($(this), data.result[index].b && data.result[index].b.offset, widthB, heightB);
                 });
+                $('#contA .diff,#contB .diff').on('click', function(event){
+                    var diffIndex = $(event.target).closest('.diff').data('diff-index'),
+                        offset = $('#diff-inspector').find('li[data-diff-index="' + diffIndex + '"]').offset().top;
+                            
+                    event.stopPropagation();
+                        
+                    $('#diff-inspector').scrollTop(offset);
+                });
                 
                 $('#diff-inspector').append(Handlebars.templates['diff-inspector'](data.result));
                 $listItems = $('#diff-inspector li');
