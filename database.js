@@ -128,6 +128,7 @@ function populateTestCases() {
         .then(function() {
             return Promise.map(testCases, function(testCase) {
                 return createTest({
+                    _id: testCase.id,
                     config: {
                         testCase: true,
                         browserWidth: 1280,
@@ -137,9 +138,6 @@ function populateTestCases() {
                         browser: 'FIREFOX'
                     }
                 })
-                .then(function(savedTestCase) {
-                    testCase.id = savedTestCase._id;
-                });
             });
         })
         .then(function() {

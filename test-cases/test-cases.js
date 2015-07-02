@@ -1,13 +1,17 @@
 module.exports = [{
+    id: '5595663e9c5d719811f1659a',
     textId: "element-added",
     name: "Element added"
 }, {
+    id: '5595663e9c5d719811f1659b',
     textId: "element-removed",
     name: "Element removed"
-}, {
+}/*, {
+    id: '5595663e9c5d719811f1659c',
     textId: "floated-element-added",
     name: "Floated element added"
 }, {
+    id: '5595663e9c5d719811f1659d',
     textId: "floated-element-removed",
     name: "Floated element removed"
 }, {
@@ -40,4 +44,4 @@ module.exports = [{
 }, {
     textId: "multiple-changes",
     name: "Multiple changes"
-}];
+}*/];
