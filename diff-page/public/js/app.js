@@ -10,6 +10,18 @@
                 {id: 'current-view', name: 'Current'},
             ]
         };
+        
+    Promise.promisify(socket.emit, {promisifier: function (originalMethod) {
+        return function promisified() {
+            var args = [].slice.call(arguments),
+                self = this;
+                
+            return new Promise(function(resolve, reject) {
+                args.push(resolve);
+                originalMethod.apply(self, args);
+            });
+        };
+    }});
     
     $.getJSON('/test_cases.json')
         .done(init);
@@ -54,48 +66,47 @@
             heightA = $imgA[0].naturalHeight,
             heightB = $imgB[0].naturalHeight;
 
-        socket.on('differences create json', function(data) {
-            var $listItems;
-             
-            $('#contA').append(Handlebars.templates['diff-areas-a'](data));
-            $('#contA').find('.diff').each(function(index){
-                setPosition($(this), data[index].a && data[index].a.offset, widthA, heightA);
-            });
-            
-            $('#contB').append(Handlebars.templates['diff-areas-b'](data));
-            $('#contB').find('.diff').each(function(index){
-                setPosition($(this), data[index].b && data[index].b.offset, widthB, heightB);
-            });
-            
-            $('#diff-inspector').append(Handlebars.templates['diff-inspector'](data));
-            $listItems = $('#diff-inspector li');
-            $listItems.on('mouseover', function() {
-                var index = $listItems.index(this),
-                    offsetA = data[index].a && data[index].a.offset,
-                    offsetB = data[index].b && data[index].b.offset,
-                    $markerA = $('#contA .diffmarker'),
-                    $markerB = $('#contB .diffmarker');
-
-                if (offsetA) {
-                    setPosition($markerA, offsetA, widthA, heightA);
-                } else {
-                    $markerA.css('top', '300%');
-                }
-
-                if (offsetB) {
-                    setPosition($markerB, offsetB, widthB, heightB);
-                } else {
-                    $markerB.css('top', '300%');
-                }
-
+        socket.emitAsync('differences create json', {
+            baselineId: idA,
+            targetId: idB
+        })
+            .then(function(data) {
+                var $listItems;
+                 
+                $('#contA').append(Handlebars.templates['diff-areas-a'](data.result));
+                $('#contA').find('.diff').each(function(index){
+                    setPosition($(this), data.result[index].a && data.result[index].a.offset, widthA, heightA);
+                });
+                
+                $('#contB').append(Handlebars.templates['diff-areas-b'](data.result));
+                $('#contB').find('.diff').each(function(index){
+                    setPosition($(this), data.result[index].b && data.result[index].b.offset, widthB, heightB);
+                });
+                
+                $('#diff-inspector').append(Handlebars.templates['diff-inspector'](data.result));
+                $listItems = $('#diff-inspector li');
+                $listItems.on('mouseover', function() {
+                    var index = $listItems.index(this),
+                        offsetA = data.result[index].a && data.result[index].a.offset,
+                        offsetB = data.result[index].b && data.result[index].b.offset,
+                        $markerA = $('#contA .diffmarker'),
+                        $markerB = $('#contB .diffmarker');
+    
+                    if (offsetA) {
+                        setPosition($markerA, offsetA, widthA, heightA);
+                    } else {
+                        $markerA.css('top', '300%');
+                    }
+    
+                    if (offsetB) {
+                        setPosition($markerB, offsetB, widthB, heightB);
+                    } else {
+                        $markerB.css('top', '300%');
+                    }
+    
             });
 
             $('#overlay').hide();
-        });
-
-        socket.emit('differences create json', {
-            baselineId: idA,
-            targetId: idB
         });
     }
 

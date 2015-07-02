@@ -22,73 +22,73 @@ if (!process.env.DB_URI) {
     process.env.DB_URI = 'mongodb://localhost:27017/viveka';
 }
 
-function getTests(socket, message) {
+function getTests(params, respond) {
     db.getTests()
         .then(function (tests) {
             log.info('Tests size: ' + tests.length);
-            socket.emit(message, {tests: tests});
-        }, handleError(socket, 'Failed to get tests'));
+            respond({result: tests});
+        }, handleError(respond, 'Failed to get tests'));
 }
 
-function getTest(socket, message, params) {
+function getTest(params, respond) {
     db.getTest(params.id)
         .then(function (test) {
             log.info('Test: ' + test.toObject());
-            socket.emit(message, test.toObject());
-        }, handleError(socket, 'Failed to get test: ' + params.id));
+            respond({result: test.toObject()});
+        }, handleError(respond, 'Failed to get test: ' + params.id));
 }
 
-function createTest(socket, message, params) {
+function createTest(params, respond) {
     db.createTest({ config: params })
         .then(function (test) {
             log.info('Test saved: ' + test._id);
-            socket.emit(message, test);
-        }, handleError(socket, 'Failed to create test'));
+            respond({result: test});
+        }, handleError(respond, 'Failed to create test'));
 }
 
-function deleteTest(socket, message, params) {
+function deleteTest(params, respond) {
     db.deleteTest(params.id)
         .then(function () {
             log.info('Test with id: ' + params.id + ' deleted');
-            socket.emit('info', 'Test with id: ' + params.id + ' deleted');
-        }, handleError(socket, 'Failed to delete test: ' + params.id));
+            respond({info: 'Test with id: ' + params.id + ' deleted'});
+        }, handleError(respond, 'Failed to delete test: ' + params.id));
 }
 
-function getFingerPrints(socket, message, params) {
+function getFingerPrints(params, respond) {
     db.getFingerPrintsForTest(params.id)
         .then(function (fingerPrints) {
             log.info('FingerPrints: ' + fingerPrints.length);
-            socket.emit(message, {fingerPrints: fingerPrints});
-        }, handleError(socket, 'Failed to get fingerprints of test: ' + params.id));
+            respond({result: fingerPrints});
+        }, handleError(respond, 'Failed to get fingerprints of test: ' + params.id));
 }
 
-function getFingerPrint(socket, message, params) {
+function getFingerPrint(params, respond) {
     db.getFingerPrint(params.id)
         .then(function (fingerPrint) {
-            socket.emit(message, fingerPrint.toObject());
-        }, handleError(socket, 'Failed to get fingerprint: ' + params.id));
+            respond({result: fingerPrint.toObject()});
+        }, handleError(respond, 'Failed to get fingerprint: ' + params.id));
 }
 
-function getBaselineFingerPrint(socket, message, params) {   
+function getBaselineFingerPrint(params, respond) {   
     db.getBaselineFingerPrint(params.id)
         .then(function (fingerPrint) {
             if (fingerPrint) {
-                socket.emit(message, fingerPrint.toObject());
+                respond({result: fingerPrint.toObject()});
             } else {
-                socket.emit('info', 'No baseline fingerprint found!');
+                respond({info: 'No baseline fingerprint found!'});
             }
             
-        }, handleError(socket, 'Failed to get fingerprint for test: ' + params.id));
+        }, handleError(respond, 'Failed to get fingerprint for test: ' + params.id));
 }
 
-function getLatestFingerPrint(socket, message, params) {
+function getLatestFingerPrint(params, respond) {
     db.getLatestFingerPrint(params.id)
         .then(function (fingerPrint) {
-            socket.emit(message, fingerPrint.toObject());
-        }, handleError(socket, 'Failed to get fingerprint for test: ' + params.id));
+            respond({result: fingerPrint.toObject()});
+        }, handleError(respond, 'Failed to get fingerprint for test: ' + params.id));
 }
 
-function createFingerPrint(socket, message, params) {
+function createFingerPrint(params, respond) {
     var mode,
         testId = params.id,
         config,
@@ -99,17 +99,17 @@ function createFingerPrint(socket, message, params) {
         .then(function(fingerprint){
             mode = !fingerprint ? 'baseline' : 'latest';   
             return db.getTest(testId);
-        }, handleError(socket, 'Failed to get baseline finerprint for test: ' + testId))
+        }, handleError(respond, 'Failed to get baseline finerprint for test: ' + testId))
         .then(function (test) {
             config = test.config;
             log.info('Creating fingerprint for: ' + testId);
             return db.createFingerPrint({ testId: testId, state: 'NEW' });
-        }, handleError(socket, 'Failed to get test: ' + testId))
+        }, handleError(respond, 'Failed to get test: ' + testId))
         .then(function (fingerPrint) {
             fingerP = fingerPrint;
             log.info('Generating fingerprint: ' + fingerPrint._id);
             return generator.createFingerPrint(config, mode);
-        }, handleError(socket, 'Failed to create fingerPrint'))
+        }, handleError(respond, 'Failed to create fingerPrint'))
         .then(function (response) {
             fingerP.domTree     = response.jsonFingerPrint;
             fingerP.screenshot  = '/images/fingerprints/'+ fingerP.id +'.png';
@@ -118,64 +118,64 @@ function createFingerPrint(socket, message, params) {
             fileName            = 'public' + fingerP.screenshot;
 
             return fs.writeFile(fileName, response.imageFingerPrint, 'base64');
-        }, handleError(socket, 'Failed to generate fingerPrint'))
+        }, handleError(respond, 'Failed to generate fingerPrint'))
         .then(function () {
             log.info('Screenshot saved to drive');
             return fingerP.save();
-        }, handleError(socket, 'Failed to save screenshot'))
+        }, handleError(respond, 'Failed to save screenshot'))
         .then(function () {
             log.info('Fingerprint saved to db');
-            socket.emit(message, fingerP.toObject());
-        }, handleError(socket, 'Failed to save fingerPrint'));
+            respond({result: fingerP.toObject()});
+        }, handleError(respond, 'Failed to save fingerPrint'));
 }
 
-function approveFingerPrint(socket, message, params) {
+function approveFingerPrint(params, respond) {
     db.getFingerPrint(params.id)
         .then(function(fingerPrint){
             fingerPrint.approved = true;
             return fingerPrint.save();
-        }, handleError(socket, 'Failed to get fingerprint: ' + params.id))
+        }, handleError(respond, 'Failed to get fingerprint: ' + params.id))
         .then(function(){
            return db.createApproval({
                 fingerPrint: params.id,
                 approval: true,
                 date: new Date()
             });                              
-        }, handleError(socket, 'Failed to save fingerprint: ' + params.id))
+        }, handleError(respond, 'Failed to save fingerprint: ' + params.id))
         .then(function(savedApproval) {
             log.info('APPROVAL saved: ' + savedApproval._id);
-            socket.emit(message, savedApproval);
-        }, handleError(socket, 'Failed to save approval in db'));
+            respond({result: savedApproval});
+        }, handleError(respond, 'Failed to save approval in db'));
 }
 
-function unapproveFingerPrint(socket, message, params) {
+function unapproveFingerPrint(params, respond) {
     db.getFingerPrint(params.id)
         .then(function(fingerPrint){
             fingerPrint.approved = false;
             return fingerPrint.save();
-        }, handleError(socket, 'Failed to get fingerprint: ' + params.id))
+        }, handleError(respond, 'Failed to get fingerprint: ' + params.id))
         .then(function(){
            return db.createApproval({
                 fingerPrint: params.id,
                 approval: false,
                 date: new Date()
             });                              
-        }, handleError(socket, 'Failed to save fingerprint: ' + params.id))
+        }, handleError(respond, 'Failed to save fingerprint: ' + params.id))
         .then(function(savedApproval) {
             log.info('UNAPPROVAL saved: ' + savedApproval._id);
-            socket.emit(message, savedApproval);
-        }, handleError(socket, 'Failed to save unapproval in db'));
+            respond({result: savedApproval});
+        }, handleError(respond, 'Failed to save unapproval in db'));
 }
 
-function getDifference(socket, message, params) {
+function getDifference(params, respond) {
     db.getDifference(params.id)
         .then(function (difference) {
             log.info('Difference: ' + difference.toObject());
-            socket.emit(message, difference.toObject());
-        }, handleError(socket, 'Failed to get difference ' + params.id));
+            respond({result: difference.toObject()});
+        }, handleError(respond, 'Failed to get difference ' + params.id));
 }
 
-function generateDifference(socket, message, params) {
+function generateDifference(params, respond) {
     var baselineId = params.baselineId,
         targetId = params.targetId,
         diff, a, b;
@@ -183,7 +183,7 @@ function generateDifference(socket, message, params) {
     db.getDifferenceByIds(baselineId, targetId)
         .then(function (difference) {
             if (difference) { // Diff found, resolving promise
-                socket.emit(message, diff.toObject());
+                respond({result: diff.toObject()});
                 this.resolve();
             }
             return difference;
@@ -194,7 +194,7 @@ function generateDifference(socket, message, params) {
         .then(function (difference) {
             diff = difference;
             return db.getFingerPrint(baselineId);
-        }, handleError(socket, 'Failed to create diff'))
+        }, handleError(respond, 'Failed to create diff'))
         .then(function (fingerPrint) {
             a = fingerPrint;
             return db.getFingerPrint(targetId);
@@ -210,16 +210,16 @@ function generateDifference(socket, message, params) {
                     return diff.save();
                 });
             } else {
-                handleError(socket, new VError('Missing fingerprint'));
+                handleError(respond, new VError('Missing fingerprint'));
             }
         })
         .then(function (savedDiff) {
             log.info('DIFF saved: ' + savedDiff._id);
-            socket.emit(message, savedDiff.toObject());
-        }, handleError(socket, 'Failed to save diff'));
+            respond({result: savedDiff.toObject()});
+        }, handleError(respond, 'Failed to save diff'));
 }
 
-function generateDifferenceJSON(socket, message, params) {
+function generateDifferenceJSON(params, respond) {
     var a, b;
 
     db.getFingerPrint(params.baselineId)
@@ -233,19 +233,22 @@ function generateDifferenceJSON(socket, message, params) {
             if (a && b) {
                 log.info('Generate difference JSON');
                 differ.diff(a.toObject(), b.toObject(), function(diff) {
-                    socket.emit(message, diff);
+                    respond({result: diff});
                 });
             } else {
-                handleError(socket, new VError('Missing fingerprint'));
+                handleError(respond, new VError('Missing fingerprint'));
             }
         });
 }
+
+
+//Bower
+app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 
 // Test cases
 app.use('/test_cases.json',  express.static(__dirname + '/test-cases.json'));
 
 // Test page
-app.use('/testpage/bower_components',  express.static(__dirname + '/bower_components'));
 app.use('/testpage/js/templates.js', handlebarsMiddleware(__dirname + '/test-page/templates'));
 app.use('/testpage/css', sassMiddleware({
     src: __dirname + '/test-page/styles',
@@ -256,7 +259,6 @@ app.use('/testpage/css', sassMiddleware({
 app.use('/testpage', express.static(__dirname + '/test-page/public'));
 
 // API page
-app.use('/apipage/bower_components',  express.static(__dirname + '/bower_components'));
 app.use('/apipage/js/templates.js', handlebarsMiddleware(__dirname + '/api-page/templates'));
 app.use('/apipage/css', sassMiddleware({
     src: __dirname + '/api-page/styles',
@@ -267,7 +269,6 @@ app.use('/apipage/css', sassMiddleware({
 app.use('/apipage', express.static(__dirname + '/api-page/public'));
 
 // Diff page
-app.use('/diffpage/bower_components',  express.static(__dirname + '/bower_components'));
 app.use('/diffpage/js/templates.js', handlebarsMiddleware(__dirname + '/diff-page/templates'));
 app.use('/diffpage/css', sassMiddleware({
     src: __dirname + '/diff-page/styles',
@@ -287,36 +288,30 @@ app.get('/', function(req, res) {
 });
 
 io.on('connection', function(socket){
-    connect(socket, 'tests create', createTest);
-    connect(socket, 'tests list',   getTests);
-    connect(socket, 'tests get',    getTest);
-    connect(socket, 'tests delete', deleteTest);
+    socket.on('tests create', createTest);
+    socket.on('tests list',   getTests);
+    socket.on('tests get',    getTest);
+    socket.on('tests delete', deleteTest);
 
-    connect(socket, 'fingerprints list',         getFingerPrints);
-    connect(socket, 'fingerprints create',       createFingerPrint);
-    connect(socket, 'fingerprints get',          getFingerPrint);
-    connect(socket, 'fingerprints get baseline', getBaselineFingerPrint);
-    connect(socket, 'fingerprints get latest',   getLatestFingerPrint);
-    connect(socket, 'fingerprints approve',      approveFingerPrint);
-    connect(socket, 'fingerprints unapprove',    unapproveFingerPrint);
-    // connect(socket, 'fingerprints update', refreshFingerPrint);
+    socket.on('fingerprints list',         getFingerPrints);
+    socket.on('fingerprints create',       createFingerPrint);
+    socket.on('fingerprints get',          getFingerPrint);
+    socket.on('fingerprints get baseline', getBaselineFingerPrint);
+    socket.on('fingerprints get latest',   getLatestFingerPrint);
+    socket.on('fingerprints approve',      approveFingerPrint);
+    socket.on('fingerprints unapprove',    unapproveFingerPrint);
+    // socket.on('fingerprints update', refreshFingerPrint);
 
-    connect(socket, 'differences get',           getDifference);
-    connect(socket, 'differences create',        generateDifference);
-    connect(socket, 'differences create json',   generateDifferenceJSON);
+    socket.on('differences get',           getDifference);
+    socket.on('differences create',        generateDifference);
+    socket.on('differences create json',   generateDifferenceJSON);
 });
 
-function connect(socket, message, middleware) {
-    socket.on(message, function(params) {
-        middleware(socket, message, params);
-    });
-}
-
-function handleError(socket, error) {
+function handleError(respond, error) {
     return function (err) {
         log.error(new VError(err, error));
-        socket.emit('verror', error);
-    }
+        respond({error: error});
+    };
 }
 
 db.init(process.env.DB_URI, function(err) {
