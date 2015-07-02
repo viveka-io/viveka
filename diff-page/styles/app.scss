@@ -121,6 +121,11 @@ nav {
     box-sizing: border-box;
 }
 
+#baseline-id,
+#target-id {
+    width: 170px;
+}
+
 .navbar {
     .navbar-form {
         i {

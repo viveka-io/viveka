@@ -31,6 +31,15 @@
         $('#wrapper').empty();
         $('#diff-inspector').empty();
     }
+    
+    function setTestCaseCaption(id) {
+        $('header .test-case').text(_.result(_.find(header.testCases, 'id', id), 'name'));
+    }
+    
+    function setFingerprintIds(baselineId, targetId) {
+        $('#baseline-id').val(baselineId);
+        $('#target-id').val(targetId);
+    }
         
     function init(testCases) {
         var router = new Router();
@@ -39,16 +48,20 @@
          $('header').append(Handlebars.templates.nav(header));
          
         router.on('/:testCase', function (testCase) {
+            setTestCaseCaption(testCase);
             prepareProcessing();
             showTestCaseDiff(testCase);
+            
         });
 
         router.on('/:baselineId/:targetId', function (baselineId, targetId) {
+            setFingerprintIds(baselineId, targetId);
             prepareProcessing();
             render(baselineId, targetId);
         });
 
         router.init('/' + testCases[0].id);
+        setTestCaseCaption(testCases[0].id);
     }
     
     function showTestCaseDiff(testCase) {
