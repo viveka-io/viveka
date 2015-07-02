@@ -28,7 +28,7 @@
             render(testCase);
         });
     
-        router.init('/' + testCases[0].id);
+        router.init('/' + testCases[0].textId);
         
         $('.view-selector').on('click', function(event){
             event.preventDefault();
@@ -42,7 +42,7 @@
     }
 
     function setTestCaseCaption(id) {
-        $('header .test-case').text(_.result(_.find(header.testCases, 'id', id), 'name'));
+        $('header .test-case').text(_.result(_.find(header.testCases, 'textId', id), 'name'));
     }
     
     function setView(view) {

@@ -5,3 +5,4 @@ public/images/fingerprints/*.png
 .idea
 .settings
 *.css
+public/test_cases.json

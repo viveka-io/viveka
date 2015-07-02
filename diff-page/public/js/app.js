@@ -33,7 +33,7 @@
     }
     
     function setTestCaseCaption(id) {
-        $('header .test-case').text(_.result(_.find(header.testCases, 'id', id), 'name'));
+        $('header .test-case').text(_.result(_.find(header.testCases, 'textId', id), 'name'));
     }
     
     function setFingerprintIds(baselineId, targetId) {
@@ -46,6 +46,10 @@
             
          header.testCases = testCases;
          $('header').append(Handlebars.templates.nav(header));
+         $('#create-diff-by-fingerprints').on('click', function(event) {
+             event.preventDefault();
+             router.setRoute($('#baseline-id').val() + '/' + $('#target-id').val());
+         });
          
         router.on('/:testCase', function (testCase) {
             setTestCaseCaption(testCase);
@@ -60,12 +64,12 @@
             render(baselineId, targetId);
         });
 
-        router.init('/' + testCases[0].id);
-        setTestCaseCaption(testCases[0].id);
+        router.init('/' + testCases[0].textId);
+        setTestCaseCaption(testCases[0].textId);
     }
     
     function showTestCaseDiff(testCase) {
-        var testId = '5592d1d9fa8fb5e424b02726',
+        var testId = _.result(_.find(header.testCases, 'textId', testCase), 'id'),
             baselineId,
             targetId;
         
@@ -82,7 +86,8 @@
                 return socket.emitAsync('fingerprints create', {id: testId})
                     .then(function(data){
                         console.log('Fingerprint created. Approving it...');
-                        return socket.emitAsync('fingerprints approve', data.result._id);
+                        baselineId = data.result._id;
+                        return socket.emitAsync('fingerprints approve', {id: data.result._id});
                     });
             })
             .then(function(){
@@ -99,7 +104,11 @@
                 console.log('Latest fingerprint not found. Creating one');
                 return socket.emitAsync('fingerprints create', {id: testId});
             })
-            .then(function(){
+            .then(function(data){
+                if (data && data.result) {
+                    targetId = data.result._id;
+                }
+                
                 console.log('Baseline and latest fingerprints are ready');
                 render(baselineId, targetId);
             });

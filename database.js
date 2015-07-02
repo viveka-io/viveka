@@ -1,9 +1,13 @@
-var mongoose = require('mongoose'),
+var fs = require('fs'),
+    Promise = require('bluebird'),
+    mongoose = require('mongoose'),
     log = require('bunyan').createLogger({name: "viveka-server"}),
     VError = require('verror'),
     schemas = {},
     models = {},
     db;
+    
+Promise.promisifyAll(fs);
 
 schemas.Test = mongoose.Schema({
     config: mongoose.Schema.Types.Mixed
@@ -114,15 +118,49 @@ function createApproval(data) {
     return models.Approval.create(data);
 }
 
+function populateTestCases() {
+    var testCases = require('./test-cases/test-cases');
+
+    log.info('Populating test cases');
+    return models.Test.remove({
+        'config.testCase': true
+    }).exec()
+        .then(function() {
+            return Promise.map(testCases, function(testCase) {
+                return createTest({
+                    config: {
+                        testCase: true,
+                        browserWidth: 1280,
+                        browserHeight: 720,
+                        url: 'http://localhost:5555/testpage/#/' + testCase.textId,
+                        generator: 'SENSE',
+                        browser: 'FIREFOX'
+                    }
+                })
+                .then(function(savedTestCase) {
+                    testCase.id = savedTestCase._id;
+                });
+            });
+        })
+        .then(function() {
+            return fs.writeFileAsync(__dirname + '/public/test_cases.json', JSON.stringify(testCases, null, 4));
+        })
+        .then(function() {
+            log.info(testCases.length +  ' test cases populated');
+            return Promise.resolve();
+        });
+}
+
 module.exports = {
     schemas: schemas,
     models: models,
     init: init,
 
-    getTests:   getTests,
-    getTest:    getTest,
-    createTest: createTest,
-    deleteTest: deleteTest,
+    getTests:               getTests,
+    getTest:                getTest,
+    createTest:             createTest,
+    deleteTest:             deleteTest,
+    populateTestCases:      populateTestCases,
 
     getFingerPrints:        getFingerPrints,
     getFingerPrintsForTest: getFingerPrintsForTest,
@@ -131,9 +169,9 @@ module.exports = {
     getLatestFingerPrint:   getLatestFingerPrint,
     createFingerPrint:      createFingerPrint,
 
-    getDifference:      getDifference,
-    getDifferenceByIds: getDifferenceByIds,
-    createDifference:   createDifference,
+    getDifference:          getDifference,
+    getDifferenceByIds:     getDifferenceByIds,
+    createDifference:       createDifference,
     
-    createApproval: createApproval
+    createApproval:         createApproval
 };

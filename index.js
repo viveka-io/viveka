@@ -241,12 +241,8 @@ function generateDifferenceJSON(params, respond) {
         });
 }
 
-
 //Bower
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
-
-// Test cases
-app.use('/test_cases.json',  express.static(__dirname + '/test-cases.json'));
 
 // Test page
 app.use('/testpage/js/templates.js', handlebarsMiddleware(__dirname + '/test-page/templates'));
@@ -322,5 +318,6 @@ db.init(process.env.DB_URI, function(err) {
     server.listen(5555, function() {
         log.info('Viveka server is listening at %s', server.address().port);
         log.info('Database URI: %s', process.env.DB_URI);
+        db.populateTestCases();
     });
 });
