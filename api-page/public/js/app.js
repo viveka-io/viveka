@@ -35,8 +35,24 @@ var socket = io(),
             inputs : [ { name: 'id'} ]
         },
         {
+            message: 'fingerprints get baseline',
+            inputs : [ { name: 'id'} ]
+        },
+        {
+            message: 'fingerprints get latest',
+            inputs : [ { name: 'id'} ]
+        },
+        {
             message: 'fingerprints update',
             inputs : [ { name: 'id'} ]
+        },
+        {
+           message: 'fingerprints approve',
+           inputs : [ { name: 'id'} ]
+        },
+        {
+           message: 'fingerprints unapprove',
+           inputs : [ { name: 'id'} ]
         },
         {
             message: 'differences get',
@@ -57,23 +73,23 @@ var socket = io(),
             ]
         }
     ];
+      
+Promise.promisifyAll(socket, {promisifier: function (originalMethod) {
+    return function promisified() {
+        var args = [].slice.call(arguments),
+            self = this;
+            
+        return new Promise(function(resolve, reject) {
+            args.push(resolve);
+            originalMethod.apply(self, args);
+        });
+    };
+}});
 
 features.forEach(function (feature) {
     var html = Handlebars.templates.feature(feature);
 
     $('#side-menu').append(html);
-
-    socket.on(feature.message, function(data){
-        var message = {};
-
-        if (data.domTree) data.domTree = data.domTree;
-        if (data.diff) data.diff = data.diff;
-
-        $('#messages').prepend(Handlebars.templates.message({
-            content: JSON.stringify(data, undefined, 4),
-            screenshot: data.screenshot
-        }));
-    });
 });
 
 $('body').on('click', '.message', function () {
@@ -84,7 +100,17 @@ $('body').on('click', '.submit:not("missing")', function () {
     var $t = $(this).closest('.request'),
         message = $t.find('.message').text();
 
-    socket.emit(message, collectData($t.find('.content')));
+    socket.emitAsync(message, collectData($t.find('.content')))
+        .then(function(data){
+            if (data.error || data.info) {
+                return $('#messages').prepend(Handlebars.templates.message(data));
+            }
+    
+            $('#messages').prepend(Handlebars.templates.message({
+                content: JSON.stringify(data.result, undefined, 4),
+                screenshot: data.result.screenshot
+            }));
+        });
 });
 
 function collectData(content) {

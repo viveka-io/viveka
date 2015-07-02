@@ -4,269 +4,247 @@ var fs                   = require('fs'),
     app                  = express(),
     server               = http.createServer(app),
     io                   = require('socket.io')(server),
+    handlebars           = require('./node_modules/connect-handlebars/node_modules/handlebars/lib/index'),
     handlebarsMiddleware = require('connect-handlebars'),
     sassMiddleware       = require('node-sass-middleware'),
     log                  = require('bunyan').createLogger({name: "viveka-server"}),
     VError               = require('verror'),
-    generator            = require('./fingerprint-generator'),
+    generator            = require('./fingerprint-generator.js'),
     differ               = require('./difference-generator'),
     bodyParser           = require('body-parser'),
     db                   = require('./database.js');
     
+handlebars.registerHelper('toLowerCase', function(str) {
+  return str.toLowerCase();
+});
+
 if (!process.env.DB_URI) {
     process.env.DB_URI = 'mongodb://localhost:27017/viveka';
 }
 
-function createTest(socket, message, params) {
-    // - create test with given config
-    var test = new db.models.Test({ config: params });
-
-    test.save(function (err, savedTest) {
-        if (err) {
-
-            return handleError(socket, new VError(err, 'Failed to save test in db'));
-        }
-
-        log.info('TEST saved: ' + savedTest._id);
-        socket.emit(message, savedTest);
-    });
+function getTests(params, respond) {
+    db.getTests()
+        .then(function (tests) {
+            log.info('Tests size: ' + tests.length);
+            respond({result: tests});
+        }, handleError(respond, 'Failed to get tests'));
 }
 
-function getTests(socket, message) {
-    // - get the tests
-    db.models.Test.find(function (err, tests) {
-        if (err) {
-            return handleError(socket, new VError(err, 'Failed to get tests from db'));
-        }
-
-        log.info('Tests size: ' + tests.length);
-        socket.emit(message, tests);
-    });
+function getTest(params, respond) {
+    db.getTest(params.id)
+        .then(function (test) {
+            log.info('Test: ' + test.toObject());
+            respond({result: test.toObject()});
+        }, handleError(respond, 'Failed to get test: ' + params.id));
 }
 
-function getTest(socket, message, params) {
-    // - get test data (req.params.id)
-    console.log(params);
-    db.models.Test.findOne({ _id: params.id }, function (err, test) {
-        if (err) {
-            return handleError(socket, new VError(err, 'Failed to get test "%s" from db', params.id));
-        }
-
-        log.info('Test: ' + test.toObject());
-        socket.emit(message, test.toObject());
-    });
+function createTest(params, respond) {
+    db.createTest({ config: params })
+        .then(function (test) {
+            log.info('Test saved: ' + test._id);
+            respond({result: test});
+        }, handleError(respond, 'Failed to create test'));
 }
 
-function deleteTest(socket, message, params) {
-    // - delete test (req.params.id)
-    // SHOULD WE REMOVE ALL THE FINGERPRINTS AND DIFFS RELATED TO THIS?
-    db.models.Test.findByIdAndRemove(params.id, function (err) {
-        if (err) {
-            return handleError(socket, new VError(err, 'Failed to delete test "%s" from db', params.id));
-        }
-
-        log.info('Test with id: ' + params.id + ' deleted');
-        socket.emit(message, 'Test with id: ' + params.id + ' deleted');
-    });
+function deleteTest(params, respond) {
+    db.deleteTest(params.id)
+        .then(function () {
+            log.info('Test with id: ' + params.id + ' deleted');
+            respond({info: 'Test with id: ' + params.id + ' deleted'});
+        }, handleError(respond, 'Failed to delete test: ' + params.id));
 }
 
-function getFingerPrints(socket, message, params) {
-    // - get the fingerprints associated with the test
-    db.models.FingerPrint.find({ testId: params.id }, function (err, fingerPrints) {
-        if (err) {
-            return handleError(socket, new VError(err, 'Failed to get fingerprints of test "%s" from db', params.id));
-        }
-
-        log.info('FingerPrints: ' + fingerPrints.length);
-        socket.emit(message, {fingerPrints: fingerPrints});
-    });
+function getFingerPrints(params, respond) {
+    db.getFingerPrintsForTest(params.id)
+        .then(function (fingerPrints) {
+            log.info('FingerPrints: ' + fingerPrints.length);
+            respond({result: fingerPrints});
+        }, handleError(respond, 'Failed to get fingerprints of test: ' + params.id));
 }
 
-function getFingerPrint(socket, message, params) {
-    // - req.params.id
-    db.models.FingerPrint.findOne({ _id: params.id }, function (err, fingerPrint) {
-        if (err) {
-            return handleError(socket, new VError(err, 'Failed to get fingerprint "%s" from db', params.id));
-        }
-
-        socket.emit(message, fingerPrint.toObject());
-    });
+function getFingerPrint(params, respond) {
+    db.getFingerPrint(params.id)
+        .then(function (fingerPrint) {
+            respond({result: fingerPrint.toObject()});
+        }, handleError(respond, 'Failed to get fingerprint: ' + params.id));
 }
 
-function refreshFingerPrint(socket, message, params) {
-    var config;
-
-    db.models.FingerPrint.findOne({ _id: params.id }, function (err, fingerPrint) {
-        if (err) {
-            return handleError(socket, new VError(err, 'Failed to get fingerprint "%s" from db', params.id));
-        }
-
-        db.models.Test.findOne({ _id: fingerPrint.testId }, function (err, test) {
-            if (err) {
-                return handleError(socket, new VError(err, 'Failed to get test "%s" from db', fingerPrint.testId));
+function getBaselineFingerPrint(params, respond) {   
+    db.getBaselineFingerPrint(params.id)
+        .then(function (fingerPrint) {
+            if (fingerPrint) {
+                respond({result: fingerPrint.toObject()});
+            } else {
+                respond({info: 'No baseline fingerprint found!'});
             }
+            
+        }, handleError(respond, 'Failed to get fingerprint for test: ' + params.id));
+}
 
+function getLatestFingerPrint(params, respond) {
+    db.getLatestFingerPrint(params.id)
+        .then(function (fingerPrint) {
+            respond({result: fingerPrint.toObject()});
+        }, handleError(respond, 'Failed to get fingerprint for test: ' + params.id));
+}
+
+function createFingerPrint(params, respond) {
+    var mode,
+        testId = params.id,
+        config,
+        fingerP,
+        fileName;
+
+    db.getBaselineFingerPrint(testId)
+        .then(function(fingerprint){
+            mode = !fingerprint ? 'baseline' : 'latest';   
+            return db.getTest(testId);
+        }, handleError(respond, 'Failed to get baseline finerprint for test: ' + testId))
+        .then(function (test) {
             config = test.config;
-            log.info('Refreshing fingerprint: ' + fingerPrint._id);
-            generator.createFingerPrint(config).then(function(response) {
-                log.info('Fingerprint generation finished ..');
+            log.info('Creating fingerprint for: ' + testId);
+            return db.createFingerPrint({ testId: testId, state: 'NEW' });
+        }, handleError(respond, 'Failed to get test: ' + testId))
+        .then(function (fingerPrint) {
+            fingerP = fingerPrint;
+            log.info('Generating fingerprint: ' + fingerPrint._id);
+            return generator.createFingerPrint(config, mode);
+        }, handleError(respond, 'Failed to create fingerPrint'))
+        .then(function (response) {
+            fingerP.domTree     = response.jsonFingerPrint;
+            fingerP.screenshot  = '/images/fingerprints/'+ fingerP.id +'.png';
+            fingerP.state       = 'DONE'
+            fingerP.created     = new Date();
+            fileName            = 'public' + fingerP.screenshot;
 
-                fingerPrint.domTree = response.jsonFingerPrint;
-                fingerPrint.screenshot = '/images/fingerprints/'+ fingerPrint.id +'.png';
-                fingerPrint.state   = 'DONE';
-
-                fingerPrint.save(function (err) {
-                    if (err) {
-                        return handleError(socket, new VError(err, 'Failed to save fingerprint to db'));
-                    }
-
-                    log.info('Fingerprint saved to db ..');
-                    var fileName = 'public' + fingerPrint.screenshot;
-
-                    fs.writeFile(fileName, response.imageFingerPrint, 'base64', function(err) {
-                        if (err) {
-                            return handleError(socket, new VError(err, 'Failed to save screenshot to file "%s"', fileName));
-                        }
-
-                        log.info('Screenshot saved ..');
-                        socket.emit(message, fingerPrint.toObject());
-                    });
-                });
-            }, function(error) {
-                return handleError(socket, error);
-            });
-        });
-    });
+            return fs.writeFile(fileName, response.imageFingerPrint, 'base64');
+        }, handleError(respond, 'Failed to generate fingerPrint'))
+        .then(function () {
+            log.info('Screenshot saved to drive');
+            return fingerP.save();
+        }, handleError(respond, 'Failed to save screenshot'))
+        .then(function () {
+            log.info('Fingerprint saved to db');
+            respond({result: fingerP.toObject()});
+        }, handleError(respond, 'Failed to save fingerPrint'));
 }
 
-function createFingerPrint(socket, message, params) {
-    // - get test data (req.params.id)
-    // - create new fingerprint entry
-    // generator.createFingerPrint(config)
-    var fingerPrint;
+function approveFingerPrint(params, respond) {
+    db.getFingerPrint(params.id)
+        .then(function(fingerPrint){
+            fingerPrint.approved = true;
+            return fingerPrint.save();
+        }, handleError(respond, 'Failed to get fingerprint: ' + params.id))
+        .then(function(){
+           return db.createApproval({
+                fingerPrint: params.id,
+                approval: true,
+                date: new Date()
+            });                              
+        }, handleError(respond, 'Failed to save fingerprint: ' + params.id))
+        .then(function(savedApproval) {
+            log.info('APPROVAL saved: ' + savedApproval._id);
+            respond({result: savedApproval});
+        }, handleError(respond, 'Failed to save approval in db'));
+}
 
-    db.models.Test.findOne({ _id: params.id }, function (err, test) {
-        if (err) {
-            return handleError(socket, new VError(err, 'Failed to get test "%s" from db', params.id));
-        }
+function unapproveFingerPrint(params, respond) {
+    db.getFingerPrint(params.id)
+        .then(function(fingerPrint){
+            fingerPrint.approved = false;
+            return fingerPrint.save();
+        }, handleError(respond, 'Failed to get fingerprint: ' + params.id))
+        .then(function(){
+           return db.createApproval({
+                fingerPrint: params.id,
+                approval: false,
+                date: new Date()
+            });                              
+        }, handleError(respond, 'Failed to save fingerprint: ' + params.id))
+        .then(function(savedApproval) {
+            log.info('UNAPPROVAL saved: ' + savedApproval._id);
+            respond({result: savedApproval});
+        }, handleError(respond, 'Failed to save unapproval in db'));
+}
 
-        // SHOULD CHECK IF THERE IS AN UNFINISHED FINGERPRINT
-        // AND ABORT IF IT EXISTS
-        log.info('Generating fingerprint for: ' + test._id);
-        fingerPrint = new db.models.FingerPrint({ testId: test._id, state: 'NEW' });
+function getDifference(params, respond) {
+    db.getDifference(params.id)
+        .then(function (difference) {
+            log.info('Difference: ' + difference.toObject());
+            respond({result: difference.toObject()});
+        }, handleError(respond, 'Failed to get difference ' + params.id));
+}
 
-        fingerPrint.save(function (err, fingerPrint) {
-            if (err) {
-                return handleError(socket, new VError(err, 'Failed to save fingerprint to db'));
+function generateDifference(params, respond) {
+    var baselineId = params.baselineId,
+        targetId = params.targetId,
+        diff, a, b;
+
+    db.getDifferenceByIds(baselineId, targetId)
+        .then(function (difference) {
+            if (difference) { // Diff found, resolving promise
+                respond({result: diff.toObject()});
+                this.resolve();
             }
+            return difference;
+        })
+        .then(function () {
+            return db.createDifference({ baselineId: baselineId, comparedId: targetId, state: 'NEW' });
+        })
+        .then(function (difference) {
+            diff = difference;
+            return db.getFingerPrint(baselineId);
+        }, handleError(respond, 'Failed to create diff'))
+        .then(function (fingerPrint) {
+            a = fingerPrint;
+            return db.getFingerPrint(targetId);
+        })
+        .then(function (fingerPrint) {
+            b = fingerPrint;
 
-            generator.createFingerPrint(test.config).then(function(response) {
-                log.info('Fingerprint generation finished ..');
-
-                fingerPrint.domTree = response.jsonFingerPrint;
-                fingerPrint.screenshot = '/images/fingerprints/'+ fingerPrint.id +'.png';
-                fingerPrint.state   = 'DONE';
-
-                fingerPrint.save(function (err) {
-                    if (err) {
-                        return handleError(socket, new VError(err, 'Failed to save fingerprint to db'));
-                    }
-
-                    log.info('Fingerprint saved to db..');
-                    var fileName = 'public' + fingerPrint.screenshot;
-
-                    fs.writeFile(fileName, response.imageFingerPrint, 'base64', function(err) {
-                        if (err) {
-                            return handleError(socket, new VError(err, 'Failed to save screenshot to file "%s"', fileName));
-                        }
-
-                        log.info('Screenshot saved ..');
-                        socket.emit(message, fingerPrint.toObject());
-                    });
+            if (a && b) {
+                log.info('Generate difference');
+                differ.diff(a.toObject(), b.toObject(), function(diffJSON) {
+                    diff.diff   = diffJSON;
+                    diff.state  = 'DONE';
+                    return diff.save();
                 });
-            });
-
-        });
-    });
+            } else {
+                handleError(respond, new VError('Missing fingerprint'));
+            }
+        })
+        .then(function (savedDiff) {
+            log.info('DIFF saved: ' + savedDiff._id);
+            respond({result: savedDiff.toObject()});
+        }, handleError(respond, 'Failed to save diff'));
 }
 
-function getDifference(socket, message, params) {
-    // - get the difference
-    db.models.Difference.findOne({ _id: params.id }, function (err, difference) {
-        if (err) {
-            return handleError(socket, new VError(err, 'Failed to get difference "%s" from db', params.id));
-        }
+function generateDifferenceJSON(params, respond) {
+    var a, b;
 
-        log.info('Difference: ' + difference.toObject());
-        socket.emit(message, difference.toObject());
-    });
-}
-
-function generateDifference(socket, message, params) {
-    var a,
-        b;
-
-    db.models.Difference.findOne({ baselineId: params.baselineId, comparedId: params.targetId }, function (err, diff) {
-        if (err) {
-            return handleError(socket, new VError(err, 'Failed to get difference by baselineId "%s" and comparedId "%s" from db', params.baselineId, params.targetId));
-        }
-
-        if (diff) {
-            log.info('Difference: ' + diff.toObject());
-            socket.emit(message, diff.toObject());
-        } else {
-            diff = new db.models.Difference({ baselineId: params.baselineId, comparedId: params.targetId });
-            db.models.FingerPrint.findOne({ _id: params.baselineId }, function (err, fingerPrint) {
-                a = fingerPrint;
-
-                db.models.FingerPrint.findOne({ _id: params.targetId }, function (err, fingerPrint) {
-                    b = fingerPrint;
-
-                    if (a && b) {
-                        log.info('Generate difference');
-                        differ.diff(a.toObject(), b.toObject(), function(diffJSON) {
-                            diff.diff = diffJSON;
-                            diff.save(function (err, savedDiff) {
-                                if (err) {
-                                    return handleError(socket, new VError(err, 'Failed to save difference to db'));
-                                }
-
-                                log.info('DIFF saved: ' + savedDiff._id);
-                                socket.emit(message, savedDiff.toObject());
-                            });
-                        });
-                    } else {
-                        handleError(socket, new VError('Missing fingerprint'));
-                    }
-                });
-            })
-        }
-    });
-}
-
-function generateDifferenceJSON(socket, message, params) {
-    var a,
-        b;
-
-    db.models.FingerPrint.findOne({ _id: params.baselineId }, function (err, fingerPrint) {
-        a = fingerPrint;
-        db.models.FingerPrint.findOne({ _id: params.targetId }, function (err, fingerPrint) {
+    db.getFingerPrint(params.baselineId)
+        .then(function (fingerPrint) {
+            a = fingerPrint;
+            return db.getFingerPrint(params.targetId);
+        })
+        .then(function (fingerPrint) {
             b = fingerPrint;
 
             if (a && b) {
                 log.info('Generate difference JSON');
                 differ.diff(a.toObject(), b.toObject(), function(diff) {
-                    socket.emit(message, diff);
+                    respond({result: diff});
                 });
             } else {
-                handleError(socket, new VError('Missing fingerprint'));
+                handleError(respond, new VError('Missing fingerprint'));
             }
         });
-    })
 }
 
+//Bower
+app.use('/bower_components',  express.static(__dirname + '/bower_components'));
+
 // Test page
-app.use('/testpage/bower_components',  express.static(__dirname + '/bower_components'));
 app.use('/testpage/js/templates.js', handlebarsMiddleware(__dirname + '/test-page/templates'));
 app.use('/testpage/css', sassMiddleware({
     src: __dirname + '/test-page/styles',
@@ -277,7 +255,6 @@ app.use('/testpage/css', sassMiddleware({
 app.use('/testpage', express.static(__dirname + '/test-page/public'));
 
 // API page
-app.use('/apipage/bower_components',  express.static(__dirname + '/bower_components'));
 app.use('/apipage/js/templates.js', handlebarsMiddleware(__dirname + '/api-page/templates'));
 app.use('/apipage/css', sassMiddleware({
     src: __dirname + '/api-page/styles',
@@ -288,7 +265,6 @@ app.use('/apipage/css', sassMiddleware({
 app.use('/apipage', express.static(__dirname + '/api-page/public'));
 
 // Diff page
-app.use('/diffpage/bower_components',  express.static(__dirname + '/bower_components'));
 app.use('/diffpage/js/templates.js', handlebarsMiddleware(__dirname + '/diff-page/templates'));
 app.use('/diffpage/css', sassMiddleware({
     src: __dirname + '/diff-page/styles',
@@ -297,7 +273,6 @@ app.use('/diffpage/css', sassMiddleware({
     outputStyle: 'compressed'
 }));
 app.use('/diffpage', express.static(__dirname + '/diff-page/public'));
-
 
 // General routes
 app.use(express.static(__dirname + '/public'));
@@ -309,31 +284,30 @@ app.get('/', function(req, res) {
 });
 
 io.on('connection', function(socket){
-  connect(socket, 'tests create', createTest);
-  connect(socket, 'tests list', getTests);
-  connect(socket, 'tests get', getTest);
-  connect(socket, 'tests delete', deleteTest);
+    socket.on('tests create', createTest);
+    socket.on('tests list',   getTests);
+    socket.on('tests get',    getTest);
+    socket.on('tests delete', deleteTest);
 
-  connect(socket, 'fingerprints list', getFingerPrints);
-  connect(socket, 'fingerprints create', createFingerPrint);
-  connect(socket, 'fingerprints get', getFingerPrint);
-  connect(socket, 'fingerprints update', refreshFingerPrint);
+    socket.on('fingerprints list',         getFingerPrints);
+    socket.on('fingerprints create',       createFingerPrint);
+    socket.on('fingerprints get',          getFingerPrint);
+    socket.on('fingerprints get baseline', getBaselineFingerPrint);
+    socket.on('fingerprints get latest',   getLatestFingerPrint);
+    socket.on('fingerprints approve',      approveFingerPrint);
+    socket.on('fingerprints unapprove',    unapproveFingerPrint);
+    // socket.on('fingerprints update', refreshFingerPrint);
 
-  connect(socket, 'differences get', getDifference);
-  connect(socket, 'differences create', generateDifference);
-  connect(socket, 'differences create json', generateDifferenceJSON);
-
+    socket.on('differences get',           getDifference);
+    socket.on('differences create',        generateDifference);
+    socket.on('differences create json',   generateDifferenceJSON);
 });
 
-function connect(socket, message, middleware) {
-    socket.on(message, function(params) {
-        middleware(socket, message, params);
-    });
-}
-
-function handleError(socket, error) {
-    log.error(error);
-    socket.emit('error', error);
+function handleError(respond, error) {
+    return function (err) {
+        log.error(new VError(err, error));
+        respond({error: error});
+    };
 }
 
 db.init(process.env.DB_URI, function(err) {
@@ -344,5 +318,6 @@ db.init(process.env.DB_URI, function(err) {
     server.listen(5555, function() {
         log.info('Viveka server is listening at %s', server.address().port);
         log.info('Database URI: %s', process.env.DB_URI);
+        db.populateTestCases();
     });
 });

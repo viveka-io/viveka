@@ -18,6 +18,7 @@
     "jquery": "~2.1.4",
     "bootstrap-material-design": "https://github.com/mucsi96/bootstrap-material-design.git#793e3b874aead6d44768e3c25d20e84d4cdb7d01",
     "bootstrap": "~3.3.4",
-    "lodash": "~3.9.3"
+    "lodash": "~3.9.3",
+    "bluebird": "~2.9.30"
   }
 }

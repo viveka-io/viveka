@@ -23,6 +23,18 @@ body {
         padding-right: 0;
         padding-left: 0;
     }
+    
+    .navbar-brand {
+        height: auto;
+        
+        img {
+            margin: 0 auto;
+        }
+        
+        h3 {
+            margin-top: 0;
+        }
+    }
 
     .navbar-nav {
         float: none;
@@ -60,5 +72,10 @@ body {
 
     pre {
         max-height: 300px;
+    }
+    
+    .alert {
+        border-radius: 4px;
+        margin: 0 0 10px;
     }
 }
