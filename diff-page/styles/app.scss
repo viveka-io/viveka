@@ -208,6 +208,7 @@ nav {
 .offset_y .offset_y_higher:after                { left: 50%; top: 0; border-top-color: rgba(0, 0, 0, .4); }
 
 #overlay {
+    display: none;
     position: fixed;
     top: 0;
     left:0;

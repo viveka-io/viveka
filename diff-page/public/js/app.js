@@ -26,17 +26,25 @@
     $.getJSON('/test_cases.json')
         .done(init);
         
+    function prepareProcessing() {
+        $('#overlay').show();
+        $('#wrapper').empty();
+        $('#diff-inspector').empty();
+    }
+        
     function init(testCases) {
         var router = new Router();
             
          header.testCases = testCases;
-         $('header').empty().append(Handlebars.templates.nav(header));
+         $('header').append(Handlebars.templates.nav(header));
          
         router.on('/:testCase', function (testCase) {
+            prepareProcessing();
             showTestCaseDiff(testCase);
         });
 
         router.on('/:baselineId/:targetId', function (baselineId, targetId) {
+            prepareProcessing();
             render(baselineId, targetId);
         });
 
@@ -48,30 +56,38 @@
             baselineId,
             targetId;
         
+        console.log('Searching for baseline finerprint...');
         socket.emitAsync('fingerprints get baseline', {id: testId})
             .then(function(data){
                 if (data.result) {
                     baselineId = data.result._id;
+                    console.log('Baseline fingerprint ' + baselineId + ' found.');
                     return Promise.resolve();
                 }
                 
+                console.log('Baseline fingerprint not found. Creating new fingerprint...');
                 return socket.emitAsync('fingerprints create', {id: testId})
                     .then(function(data){
+                        console.log('Fingerprint created. Approving it...');
                         return socket.emitAsync('fingerprints approve', data.result._id);
                     });
             })
             .then(function(){
+                console.log('Searching latest fingerprint...');
                 return socket.emitAsync('fingerprints get latest', {id: testId});
             })
             .then(function(data){
-                if (data.result) {
+                if (data.result && data.result._id !== baselineId) {
                     targetId = data.result._id;
+                    console.log('Latest fingerprint ' + targetId + ' found.');
                     return Promise.resolve();
                 }
                 
+                console.log('Latest fingerprint not found. Creating one');
                 return socket.emitAsync('fingerprints create', {id: testId});
             })
             .then(function(){
+                console.log('Baseline and latest fingerprints are ready');
                 render(baselineId, targetId);
             });
     }
@@ -140,24 +156,27 @@
     }
 
     function render(baselineId, targetId) {
-        var $imgA   = $('#imgA'),
-            $imgB   = $('#imgB'),
-            loaded  = 0;
+        var loaded  = 0;
+            
+        console.log('Generating diff between ' + baselineId + ' and ' + targetId + ' ...');
+        
+        $('#wrapper').append(Handlebars.templates['containers']({
+            baselineId: baselineId,
+            targetId: targetId
+        }));
 
-        $imgA.one('load', function() {
+        $('#imgA').one('load', function() {
             loaded++;
             if (loaded == 2) getDiffs(baselineId, targetId);
         })
-            .attr('src', '/images/fingerprints/' + baselineId + '.png')
             .each(function() {
                 //Cache fix for browsers that don't trigger .load()
                 if(this.complete) $(this).trigger('load');
             });
-        $imgB.one('load', function() {
+        $('#imgB').one('load', function() {
             loaded++;
             if (loaded == 2) getDiffs(baselineId, targetId);
         })
-            .attr('src','/images/fingerprints/' + targetId + '.png')
             .each(function() {
                 //Cache fix for browsers that don't trigger .load()
                 if(this.complete) $(this).trigger('load');
