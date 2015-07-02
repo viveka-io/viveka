@@ -74,7 +74,7 @@ var socket = io(),
         }
     ];
       
-Promise.promisify(socket.emit, {promisifier: function (originalMethod) {
+Promise.promisifyAll(socket, {promisifier: function (originalMethod) {
     return function promisified() {
         var args = [].slice.call(arguments),
             self = this;

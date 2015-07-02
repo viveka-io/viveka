@@ -11,7 +11,7 @@
             ]
         };
         
-    Promise.promisify(socket.emit, {promisifier: function (originalMethod) {
+    Promise.promisifyAll(socket, {promisifier: function (originalMethod) {
         return function promisified() {
             var args = [].slice.call(arguments),
                 self = this;
@@ -44,7 +44,36 @@
     }
     
     function showTestCaseDiff(testCase) {
-        socket.emit('fingerprints get baseline');
+        var testId = '5592d1d9fa8fb5e424b02726',
+            baselineId,
+            targetId;
+        
+        socket.emitAsync('fingerprints get baseline', {id: testId})
+            .then(function(data){
+                if (data.result) {
+                    baselineId = data.result._id;
+                    return Promise.resolve();
+                }
+                
+                return socket.emitAsync('fingerprints create', {id: testId})
+                    .then(function(data){
+                        return socket.emitAsync('fingerprints approve', data.result._id);
+                    });
+            })
+            .then(function(){
+                return socket.emitAsync('fingerprints get latest', {id: testId});
+            })
+            .then(function(data){
+                if (data.result) {
+                    targetId = data.result._id;
+                    return Promise.resolve();
+                }
+                
+                return socket.emitAsync('fingerprints create', {id: testId});
+            })
+            .then(function(){
+                render(baselineId, targetId);
+            });
     }
     
     function setPosition($marker, offset, imgWidth, imgHeight) {   
