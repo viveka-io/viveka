@@ -46,6 +46,17 @@
             
          header.testCases = testCases;
          $('header').append(Handlebars.templates.nav(header));
+         
+         $('.diff-switcher a').on('click', function(event) {
+            var $button = $(this).closest('li'),
+                $class = $button.data('diff');
+                
+            event.preventDefault();
+
+            $button.toggleClass('active');
+            $('#wrapper').toggleClass($class, $button.is('.active'));
+        });
+         
          $('#create-diff-by-fingerprints').on('click', function(event) {
              event.preventDefault();
              router.setRoute($('#baseline-id').val() + '/' + $('#target-id').val());
@@ -149,6 +160,14 @@
                 $('#contB').find('.diff').each(function(index){
                     setPosition($(this), data.result[index].b && data.result[index].b.offset, widthB, heightB);
                 });
+                $('#contA .diff,#contB .diff').on('click', function(event){
+                    var diffIndex = $(event.target).closest('.diff').data('diff-index'),
+                        offset = $('#diff-inspector').find('li[data-diff-index="' + diffIndex + '"]').offset().top;
+                            
+                    event.stopPropagation();
+                        
+                    $('#diff-inspector').scrollTop(offset);
+                });
                 
                 $('#diff-inspector').append(Handlebars.templates['diff-inspector'](data.result));
                 $listItems = $('#diff-inspector li');
@@ -203,16 +222,6 @@
                 //Cache fix for browsers that don't trigger .load()
                 if(this.complete) $(this).trigger('load');
             });
-
-        $('.diff-switcher a').on('click', function(event) {
-            var $button = $(this).closest('li'),
-                $class = $button.data('diff');
-                
-            event.preventDefault();
-
-            $button.toggleClass('active');
-            $('#wrapper').toggleClass($class, $button.is('.active'));
-        });
     }
 })();
 

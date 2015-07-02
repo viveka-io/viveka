@@ -1,5 +1,5 @@
 {{#each this}}
-	<div title="{{b.name}}" class="diff {{#each differences}}{{toLowerCase this}}{{#unless @last}} {{/unless}}{{/each}}">
+	<div title="{{b.name}}" class="diff {{#each differences}}{{toLowerCase this}}{{#unless @last}} {{/unless}}{{/each}}" data-diff-index="{{@index}}">
 		<span><b><i></i></b></span>
 	</div>
 {{/each}}

@@ -1,6 +1,6 @@
 <ul>
 	{{#each this}}
-		<li>
+		<li data-diff-index="{{@index}}">
 			{{@index}}
             {{#if a}}
 			<strong {{#if deleteA}}class="delete"{{/if}}>A</strong>
