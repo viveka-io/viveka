@@ -5,94 +5,20 @@ var fs          = require('fs'),
     domB        = {},
     imgA        = [],
     imgB        = [],
-    threshold   = 10,
+    threshold   = 40,
     diff;
 
-// Fastest blur algorithm
-function blurImageSlice(pix, w, h, radius) {
-    var wm = w - 1,
-        hm = h - 1,
-        div = radius + radius + 1,
-        r = [],
-        g = [],
-        b = [],
-        rsum, gsum, bsum, x, y, i, p, p1, p2, yp, yi = 0, yw = 0,
-        vmin = [],
-        vmax = [],
-        dv = [];
-
-    for (i = 0; i < 256*div; i++){
-        dv[i] = i / div;
-    }
-
-    for (y = 0; y < h; y++) {
-        rsum = gsum = bsum = 0;
-
-        for (i = -radius; i <= radius; i++) {
-            p = pix[yi + Math.min(wm, Math.max(i, 0))];
-            rsum += (p & 0xff0000) >> 16;
-            gsum += (p & 0x00ff00) >> 8;
-            bsum += p & 0x0000ff;
-        }
-
-        for (x = 0; x < w; x++) {
-
-            r[yi] = dv[rsum];
-            g[yi] = dv[gsum];
-            b[yi] = dv[bsum];
-
-            if (y == 0) {
-                vmin[x] = Math.min(x + radius + 1, wm);
-                vmax[x] = Math.max(x - radius, 0);
-            }
-            p1 = pix[yw + vmin[x]];
-            p2 = pix[yw + vmax[x]];
-
-            rsum += ((p1 & 0xff0000) - (p2 & 0xff0000)) >> 16;
-            gsum += ((p1 & 0x00ff00) - (p2 & 0x00ff00)) >> 8;
-            bsum += (p1 & 0x0000ff) - (p2 & 0x0000ff);
-            yi++;
-        }
-        yw += w;
-    }
-
-    for (x = 0; x < w; x++) {
-        rsum = gsum = bsum = 0;
-        yp = -radius * w;
-        for (i = -radius; i <= radius; i++) {
-            yi = Math.max(0, yp) + x;
-            rsum += r[yi];
-            gsum += g[yi];
-            bsum += b[yi];
-            yp += w;
-        }
-        yi = x;
-        for (y = 0; y < h; y++) {
-            pix[yi] = 0xff000000 | (dv[rsum] << 16) | (dv[gsum] << 8) | dv[bsum];
-            if (x == 0) {
-                vmin[y] = Math.min(y + radius + 1, hm) * w;
-                vmax[y] = Math.max(y - radius, 0) * w;
-            }
-            p1 = x + vmin[y];
-            p2 = x + vmax[y];
-
-            rsum += r[p1] - r[p2];
-            gsum += g[p1] - g[p2];
-            bsum += b[p1] - b[p2];
-
-            yi += w;
-        }
-    }
-
-    return pix;
-}
-
 function getImageSlice(node, png) {
-    var top      = node.offset.top,
-        left     = node.offset.left,
-        width    = node.offset.width,
-        height   = node.offset.height,
+    var top      = node.offset.top - 1,
+        left     = node.offset.left - 1,
+        width    = node.offset.width + 2,
+        height   = node.offset.height + 2,
         tempPNG;
+
+    left   = Math.max(left, 0);
+    top    = Math.max(top, 0);
+    height = Math.min(height, png.height - top);
+    width  = Math.min(width, png.width - left);
 
     tempPNG = new PNG({
         width: width,
@@ -100,53 +26,119 @@ function getImageSlice(node, png) {
         filterType: 4
     });
 
-    left   = Math.max(left, 0);
-    top    = Math.max(top, 0);
-    height = Math.min(height, png.height - top);
-    width  = Math.min(width, png.width - left);
-
-    //console.log('crop:', node.name, top, left, width, height);
-
     png.bitblt(tempPNG, left, top, width, height, 0, 0);
+    //tempPNG.data = blurImageSlice(tempPNG.data, width, height);
+    //tempPNG.data = bilinear(tempPNG.data, width, height, .5);
+    //tempPNG.data = bicubic(tempPNG.data, width, height, .5);
 
-    //node.hash = crypto.createHash("md5").update(tempPNG.data).digest("hex");
-    return blurImageSlice(tempPNG.data, width, height, 1);
+    return tempPNG;
 }
 
 function comparePixels(a, b) {
-    var i,
-        differentByteIndexes = [];
+    var i;
 
     if (a === b) return true;
 
-    for (i=0; i < a.length; i++) {
+    for (i = 0; i < a.length; i++) {
         if (Math.abs(b[i] - a[i]) > threshold) {
-            differentByteIndexes.push(i);
+            return false;
         }
     }
 
-    return differentByteIndexes;
+    return true;
+}
+
+function getPixel(png, x, y) {
+    var idx = (y * png.width + x) << 2,
+        idxT = ((y - 1) * png.width + x) << 2,
+        idxL = (y * png.width + (x - 1)) << 2,
+        idxR = (y * png.width + (x + 1)) << 2,
+        idxB = ((y + 1) * png.width + x) << 2,
+        idxTL = ((y - 1) * png.width + (x - 1)) << 2,
+        idxTR = ((y - 1) * png.width + (x + 1)) << 2,
+        idxBL = ((y + 1) * png.width + (x - 1)) << 2,
+        idxBR = ((y + 1) * png.width + (x + 1)) << 2;
+
+    return [
+        Math.round((
+            png.data[idx] + png.data[idxT] + png.data[idxL] + png.data[idxR] + png.data[idxB] +
+            png.data[idxTL] + png.data[idxTR] + png.data[idxBL] + png.data[idxBR]
+        ) / 9),
+        Math.round((
+            png.data[idx + 1] + png.data[idxT + 1] + png.data[idxL + 1] + png.data[idxR + 1] + png.data[idxB + 1] +
+            png.data[idxTL + 1] + png.data[idxTR + 1] + png.data[idxBL + 1] + png.data[idxBR + 1]
+        ) / 9),
+        Math.round((
+            png.data[idx + 2] + png.data[idxT + 2] + png.data[idxL + 2] + png.data[idxR + 2] + png.data[idxB + 2] +
+            png.data[idxTL + 2] + png.data[idxTR + 2] + png.data[idxBL + 2] + png.data[idxBR + 2]
+        ) / 9)
+    ]
 }
 
 function compareSlices(a, b) {
-    var sliceA = getImageSlice(a, imgA),
-        sliceB = getImageSlice(b, imgB),
-        tempPNG;
+    var imgAWidth   = imgA.width,
+        imgAHeight  = imgA.height,
+        imgBWidth   = imgB.width,
+        imgBHeight  = imgB.height,
+        aTop        = Math.max(a.offset.top - 1, 0),
+        aLeft       = Math.max(a.offset.left - 1, 0),
+        aWidth      = Math.min(a.offset.width + 2, imgAWidth - aLeft),
+        aHeight     = Math.min(a.offset.height + 2, imgAHeight - aTop),
+        bTop        = Math.max(b.offset.top - 1, 0),
+        bLeft       = Math.max(b.offset.left - 1, 0),
+        bWidth      = Math.min(b.offset.width + 2, imgBWidth - bLeft),
+        bHeight     = Math.min(b.offset.height + 2, imgBHeight - bTop),
+        width       = Math.min(aWidth, bWidth),
+        height      = Math.min(aHeight, bHeight),
+        x, y, srcPixel;
 
-    tempPNG = new PNG({
-        width: a.offset.width,
-        height: a.offset.height,
-        filterType: 4,
-        data: sliceA
-    });
+        for (y = 1; y < height - 1; y++) {
+            for (x = 1; x < width - 1; x++) {
+                srcPixel = getPixel(imgA, aLeft + x, aTop + y);
 
-    tempPNG.pack().pipe(fs.createWriteStream('public/images/blur/' + a.name + '.png').on('close', function() {
-            var fileName = a.name + '.png';
-            console.log(fileName + ' is created.');
-        })
-    );
+                if (!(comparePixels(srcPixel, getPixel(imgB, bLeft + x, bTop + y)) ||
+                      comparePixels(srcPixel, getPixel(imgB, bLeft + x, bTop + y - 1)) ||
+                      comparePixels(srcPixel, getPixel(imgB, bLeft + x, bTop + y + 1)) ||
+                      comparePixels(srcPixel, getPixel(imgB, bLeft + x + 1, bTop + y)) ||
+                      comparePixels(srcPixel, getPixel(imgB, bLeft + x - 1, bTop + y)) )) {
+                    //console.log('pix diff:', x, y, a.name, a.offset.left, a.offset.top, a.offset.width, a.offset.height, b.name, b.offset.left, b.offset.top, b.offset.width, b.offset.height);
+                    return false;
+                }
+            }
+        }
 
-    return comparePixels(sliceA, sliceB);
+
+    //tempPNG = new PNG({
+    //    width: Math.ceil(sliceA.width),
+    //    height: Math.ceil(sliceA.height),
+    //    filterType: 4
+    //});
+    //
+    //tempPNG.data = sliceA.data;
+    //
+    //fileName = a.name + '-' + a.offset.top + '-' + a.offset.left + '-' + a.offset.width + '-' + a.offset.height + '-A.png';
+    //
+    //tempPNG.pack().pipe(fs.createWriteStream('public/images/blur/' + fileName).on('close', function() {
+    //        console.log(fileName + ' is created.');
+    //    })
+    //);
+    //
+    //tempPNG = new PNG({
+    //    width: Math.ceil(sliceB.width),
+    //    height: Math.ceil(sliceB.height),
+    //    filterType: 4
+    //});
+    //
+    //tempPNG.data = sliceB.data;
+    //
+    //fileName = b.name + '-' + b.offset.top + '-' + b.offset.left + '-' + b.offset.width + '-' + b.offset.height + '-B.png';
+    //
+    //tempPNG.pack().pipe(fs.createWriteStream('public/images/blur/' + fileName).on('close', function() {
+    //        console.log(fileName + ' is created.');
+    //    })
+    //);
+
+    return true;
 }
 
 function isMatchingVisually(a, b) {
@@ -154,7 +146,7 @@ function isMatchingVisually(a, b) {
         isVisibleB = b.offset.width > 0 && b.offset.height > 0;
 
     if (isVisibleA && isVisibleB && isMatchingSize(a, b)) {
-        return compareSlices(a, b).length === 0;
+        return compareSlices(a, b);
     } else {
         return false;
     }
@@ -190,10 +182,6 @@ function compare(a, b) {
     }
 
     if (a) {
-        //if (a.offset.width > 0 && a.offset.height > 0) {
-        //    getImageSlice(a, imgA);
-        //}
-
         diffObj.a = {
             name:   a.name,
             path:   a.path,
@@ -205,10 +193,6 @@ function compare(a, b) {
     }
 
     if (b) {
-        //if (b.offset.width > 0 && b.offset.height > 0) {
-        //    getImageSlice(b, imgB);
-        //}
-
         diffObj.b = {
             name:   b.name,
             path:   b.path,
@@ -224,7 +208,7 @@ function compare(a, b) {
         diff.push(diffObj);
     }
 
-    //if (!visualMatching) {
+    if (!visualMatching) {
         nodesLengthA = (a && a.nodes && a.nodes.length) || 0;
         nodesLengthB = (b && b.nodes && b.nodes.length) || 0;
 
@@ -233,7 +217,7 @@ function compare(a, b) {
         for(var i=0; i < Math.max(nodesLengthA, nodesLengthB); i++) {
             compare(a && a.nodes && a.nodes[i], b && b.nodes && b.nodes[i]);
         }
-    //}
+    }
 
 }
 
@@ -289,12 +273,10 @@ function cleanUpDiff() {
                 diff[i].bHasCopy = j;
                 leftValue.deleteA = true;
                 rightValue.deleteB = true;
-               // removeChildDiffs(diff[j].a);
-                //delete leftValue.a;
-                //delete rightValue.b;
+                //removeChildDiffs(diff[j].a);
             }
 
-            if (leftValue.b && rightValue.a && sameNodes(leftValue.b, rightValue.a)) {
+            if (leftValue.b && rightValue.a && sameNodes(rightValue.a, leftValue.b)) {
                 leftValue.differences.push('NODE_REMOVED');
                 rightValue.differences.push('NODE_ADDED');
                 diff[j].bHasCopy = i;
@@ -302,8 +284,6 @@ function cleanUpDiff() {
                 leftValue.deleteB = true;
                 rightValue.deleteA = true;
                 //removeChildDiffs(diff[j].b);
-                //delete leftValue.b;
-                //delete rightValue.a;
             }
         }
 
@@ -361,7 +341,6 @@ function processImages(a, b, cb) {
         compare(domA.nodes[0], domB.nodes[0]);
         cleanUpDiff();
         cb(diff);
-
     }
 }
 

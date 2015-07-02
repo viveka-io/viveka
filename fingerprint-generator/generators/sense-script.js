@@ -30,7 +30,7 @@ var Sense = (function () {
             point.nodes.push(t);
             node = node.firstChild;
             while (node) {
-                if(node.nodeType === 1 && node.tagName !== 'SCRIPT'){
+                if(node.nodeType === 1 && node.tagName !== 'SCRIPT' && node.tagName !== 'OPTION'){
                   walk(node, func, t);
                 }
                 node = node.nextSibling;
@@ -95,10 +95,10 @@ var Sense = (function () {
         var $node = jQuery(node);
 
         return {
-            top: Math.floor($node.offset().top),
-            left: Math.floor($node.offset().left),
-            width: Math.ceil($node.outerWidth()),
-            height: Math.ceil($node.outerHeight()),
+            top: Math.round($node.offset().top),
+            left: Math.round($node.offset().left),
+            width: Math.round($node.outerWidth()),
+            height: Math.round($node.outerHeight()),
             visible: $node.is(':visible')
         }
     }
