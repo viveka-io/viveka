@@ -5,68 +5,51 @@
         header = {
             title: 'Test page',
             views: [
-                {id: 'side-by-side-view', name: 'Side by side'},
-                {id: 'baseline-view', name: 'Baseline'},
-                {id: 'current-view', name: 'Current'},
+                { id: 'side-by-side-view',  name: 'Side by side' },
+                { id: 'baseline-view',      name: 'Baseline' },
+                { id: 'current-view',       name: 'Current' },
             ]
-        };
+        },
+        router;
         
-    Promise.promisifyAll(socket, {promisifier: function (originalMethod) {
-        return function promisified() {
-            var args = [].slice.call(arguments),
-                self = this;
-                
-            return new Promise(function(resolve, reject) {
-                args.push(resolve);
-                originalMethod.apply(self, args);
-            });
-        };
-    }});
-    
-    $.getJSON('/test_cases.json')
-        .done(init);
+    $.getJSON('/test_cases.json').done(handleTestCasesLoad);
         
-    function prepareProcessing() {
-        $('#overlay').show();
-        $('#wrapper').empty();
-        $('#diff-inspector').empty();
-    }
-    
-    function setTestCaseCaption(id) {
-        $('header .test-case').text(_.result(_.find(header.testCases, 'textId', id), 'name'));
-    }
-    
-    function setFingerprintIds(baselineId, targetId) {
-        $('#baseline-id').val(baselineId);
-        $('#target-id').val(targetId);
-    }
+    function handleTestCasesLoad(testCases) {
+        header.testCases = testCases;
         
-    function init(testCases) {
-        var router = new Router();
-            
-         header.testCases = testCases;
-         $('body').prepend(Handlebars.templates.nav(header));
+        appendHeader();
+        attachDiffSwitcherEvent();
+        attachCreateDiffEvent();
+        initRouter();
          
-         $('.diff-switcher a').on('click', function(event) {
-            var $button = $(this).closest('li'),
-                $class = $button.data('diff');
-                
-            event.preventDefault();
+        //setTestCaseCaption(testCases[0].textId); // my best guess is that this runs twice
+    }
 
-            $button.toggleClass('active');
-            $('#wrapper').toggleClass($class, $button.is('.active'));
+    function appendHeader() {
+        $('#header-container').html(Handlebars.templates.nav(header));
+    }
+
+    function attachDiffSwitcherEvent() {
+        $('.diff-switcher li').on('click', function (event) {
+            $(this).toggleClass('active');
+
+            $('#wrapper').toggleClass($(this).data('diff'), $(this).is('.active'));
         });
-         
-         $('#create-diff-by-fingerprints').on('click', function(event) {
-             event.preventDefault();
-             router.setRoute($('#baseline-id').val() + '/' + $('#target-id').val());
-         });
-         
-        router.on('/:testCase', function (testCase) {
-            setTestCaseCaption(testCase);
+    }
+
+    function attachCreateDiffEvent() {
+        $('#create-diff-by-fingerprints').on('click', function (event) {
+            router.setRoute($('#baseline-id').val() + '/' + $('#target-id').val());
+        });
+    }
+    
+    function initRouter() {
+        router = new Router();
+
+        router.on('/:testCaseTextId', function (testCaseTextId) {
+            setTestCaseCaption(testCaseTextId);
             prepareProcessing();
-            showTestCaseDiff(testCase);
-            
+            showTestCaseDiff(testCaseTextId);
         });
 
         router.on('/:baselineId/:targetId', function (baselineId, targetId) {
@@ -75,18 +58,40 @@
             render(baselineId, targetId);
         });
 
-        router.init('/' + testCases[0].textId);
-        setTestCaseCaption(testCases[0].textId);
+        router.init('/' + header.testCases[0].textId);
+    }
+
+    function setTestCaseCaption(testCaseTextId) {
+        $('header .test-case').text(getTestCaseNameByTextId(testCaseTextId));
+    }
+
+    function getTestCaseNameByTextId(testCaseTextId) {
+        return _.result(_.find(header.testCases, 'textId', testCaseTextId), 'name');
+    }
+
+    function getTestCaseIdByTextId(testCaseTextId) {
+        return _.result(_.find(header.testCases, 'textId', testCaseTextId), 'id');
+    }
+
+    function prepareProcessing() {
+        $('#overlay').show();
+        $('#wrapper').empty();
+        $('#diff-inspector').empty();
     }
     
-    function showTestCaseDiff(testCase) {
-        var testId = _.result(_.find(header.testCases, 'textId', testCase), 'id'),
+    function setFingerprintIds(baselineId, targetId) {
+        $('#baseline-id').val(baselineId);
+        $('#target-id').val(targetId);
+    }
+        
+    function showTestCaseDiff(testCaseTextId) {
+        var testId = getTestCaseIdByTextId(testCaseTextId),
             baselineId,
             targetId;
         
         console.log('Searching for baseline finerprint...');
-        socket.emitAsync('fingerprints get baseline', {id: testId})
-            .then(function(data){
+        socket.emitAsync('fingerprints get baseline', { id: testId })
+            .then(function (data) {
                 if (data.result) {
                     baselineId = data.result._id;
                     console.log('Baseline fingerprint ' + baselineId + ' found.');
@@ -94,18 +99,29 @@
                 }
                 
                 console.log('Baseline fingerprint not found. Creating new fingerprint...');
-                return socket.emitAsync('fingerprints create', {id: testId})
-                    .then(function(data){
+                /*********************************************************************/
+                /*                                                                   */
+                /*                                                                   */
+                /*                                                                   */
+                /*                                                                   */
+                /* THIS IS WHERE I GAVE UP AND KILLED THE PERSON WHO WROTE THIS CODE */
+                /*                                                                   */
+                /*                                                                   */
+                /*                                                                   */
+                /*                                                                   */
+                /*********************************************************************/
+                return socket.emitAsync('fingerprints create', { id: testId })
+                    .then(function (data) {
                         console.log('Fingerprint created. Approving it...');
                         baselineId = data.result._id;
-                        return socket.emitAsync('fingerprints approve', {id: data.result._id});
+                        return socket.emitAsync('fingerprints approve', { id: data.result._id });
                     });
             })
-            .then(function(){
+            .then(function () {
                 console.log('Searching latest fingerprint...');
-                return socket.emitAsync('fingerprints get latest', {id: testId});
+                return socket.emitAsync('fingerprints get latest', { id: testId });
             })
-            .then(function(data){
+            .then(function (data) {
                 if (data.result && data.result._id !== baselineId) {
                     targetId = data.result._id;
                     console.log('Latest fingerprint ' + targetId + ' found.');
@@ -113,9 +129,9 @@
                 }
                 
                 console.log('Latest fingerprint not found. Creating one');
-                return socket.emitAsync('fingerprints create', {id: testId});
+                return socket.emitAsync('fingerprints create', { id: testId });
             })
-            .then(function(data){
+            .then(function (data) {
                 if (data && data.result) {
                     targetId = data.result._id;
                 }
@@ -125,15 +141,25 @@
             });
     }
     
-    function setPosition($marker, offset, imgWidth, imgHeight) {   
-        if (offset) {
-            $marker.css({
-                top: (offset.top / imgHeight * 100) + '%',
-                left: (offset.left / imgWidth * 100) + '%',
-                width: (offset.width / imgWidth * 100) + '%',
-                height: (offset.height / imgHeight * 100) + '%'
-            });
-        }
+    function render(baselineId, targetId) {
+        console.log('Generating diff between ' + baselineId + ' and ' + targetId + ' ...');
+        
+        $('#wrapper').append(Handlebars.templates.containers({
+            baselineId: baselineId,
+            targetId: targetId
+        }));
+
+        $('#imgA, #imgB').one('load', handleImageLoading(baselineId, targetId));
+    }
+    
+    function handleImageLoading(baselineId, targetId) {
+        var loaded = 0;
+
+        return function () {
+            if (++loaded == 2) {
+                getDiffs(baselineId, targetId);
+            }
+        };
     }
 
     function getDiffs(idA, idB) {
@@ -148,19 +174,19 @@
             baselineId: idA,
             targetId: idB
         })
-            .then(function(data) {
+            .then(function (data) {
                 var $listItems;
                  
                 $('#contA').append(Handlebars.templates['diff-areas-a'](data.result));
-                $('#contA').find('.diff').each(function(index){
+                $('#contA').find('.diff').each(function (index) {
                     setPosition($(this), data.result[index].a && data.result[index].a.offset, widthA, heightA);
                 });
                 
                 $('#contB').append(Handlebars.templates['diff-areas-b'](data.result));
-                $('#contB').find('.diff').each(function(index){
+                $('#contB').find('.diff').each(function (index) {
                     setPosition($(this), data.result[index].b && data.result[index].b.offset, widthB, heightB);
                 });
-                $('#contA .diff, #contB .diff').on('click', function(event){
+                $('#contA .diff, #contB .diff').on('click', function (event) {
                     var diffIndex = $(event.target).closest('.diff').data('diff-index'),
                         offset = $('#diff-inspector').find('li[data-diff-index="' + diffIndex + '"]').offset().top;
                             
@@ -171,7 +197,7 @@
                 
                 $('#diff-inspector').append(Handlebars.templates['diff-inspector'](data.result));
                 $listItems = $('#diff-inspector li');
-                $listItems.on('mouseover', function() {
+                $listItems.on('mouseover', function () {
                     var index = $listItems.index(this),
                         offsetA = data.result[index].a && data.result[index].a.offset,
                         offsetB = data.result[index].b && data.result[index].b.offset,
@@ -190,29 +216,34 @@
                         $markerB.css('top', '300%');
                     }
     
-            });
+                });
 
-            $('#overlay').hide();
-        });
+                $('#overlay').hide();
+            });
     }
 
-    function handleImageLoading(baselineId, targetId) {
-        var loaded = 0;
-        return function() {
-            loaded++;
-            if (loaded == 2) getDiffs(baselineId, targetId);
+    function setPosition($marker, offset, imgWidth, imgHeight) {   
+        if (offset) {
+            $marker.css({
+                top: (offset.top / imgHeight * 100) + '%',
+                left: (offset.left / imgWidth * 100) + '%',
+                width: (offset.width / imgWidth * 100) + '%',
+                height: (offset.height / imgHeight * 100) + '%'
+            });
+        }
+    }
+
+    Promise.promisifyAll(socket, { promisifier: promisifier });
+
+    function promisifier(originalMethod) {
+        return function promisified() {
+            var args = [].slice.call(arguments),
+                self = this;
+                
+            return new Promise(function (resolve, reject) {
+                args.push(resolve);
+                originalMethod.apply(self, args);
+            });
         };
     }
-
-    function render(baselineId, targetId) {
-        console.log('Generating diff between ' + baselineId + ' and ' + targetId + ' ...');
-        
-        $('#wrapper').append(Handlebars.templates['containers']({
-            baselineId: baselineId,
-            targetId: targetId
-        }));
-
-        $('#imgA, #imgB').one('load', handleImageLoading(baselineId, targetId));
-    }
 })();
-
