@@ -45,7 +45,7 @@
         var router = new Router();
             
          header.testCases = testCases;
-         $('header').append(Handlebars.templates.nav(header));
+         $('body').prepend(Handlebars.templates.nav(header));
          
          $('.diff-switcher a').on('click', function(event) {
             var $button = $(this).closest('li'),
@@ -160,7 +160,7 @@
                 $('#contB').find('.diff').each(function(index){
                     setPosition($(this), data.result[index].b && data.result[index].b.offset, widthB, heightB);
                 });
-                $('#contA .diff,#contB .diff').on('click', function(event){
+                $('#contA .diff, #contB .diff').on('click', function(event){
                     var diffIndex = $(event.target).closest('.diff').data('diff-index'),
                         offset = $('#diff-inspector').find('li[data-diff-index="' + diffIndex + '"]').offset().top;
                             
@@ -196,9 +196,15 @@
         });
     }
 
+    function handleImageLoading(baselineId, targetId) {
+        var loaded = 0;
+        return function() {
+            loaded++;
+            if (loaded == 2) getDiffs(baselineId, targetId);
+        };
+    }
+
     function render(baselineId, targetId) {
-        var loaded  = 0;
-            
         console.log('Generating diff between ' + baselineId + ' and ' + targetId + ' ...');
         
         $('#wrapper').append(Handlebars.templates['containers']({
@@ -206,22 +212,7 @@
             targetId: targetId
         }));
 
-        $('#imgA').one('load', function() {
-            loaded++;
-            if (loaded == 2) getDiffs(baselineId, targetId);
-        })
-            .each(function() {
-                //Cache fix for browsers that don't trigger .load()
-                if(this.complete) $(this).trigger('load');
-            });
-        $('#imgB').one('load', function() {
-            loaded++;
-            if (loaded == 2) getDiffs(baselineId, targetId);
-        })
-            .each(function() {
-                //Cache fix for browsers that don't trigger .load()
-                if(this.complete) $(this).trigger('load');
-            });
+        $('#imgA, #imgB').one('load', handleImageLoading(baselineId, targetId));
     }
 })();
 

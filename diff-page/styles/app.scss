@@ -46,6 +46,7 @@ nav {
             overflow: hidden;
             cursor: pointer;
             transition: all .3s ease;
+            position: relative;
             
             &:nth-child(2n) {
                 background: #fafafa;
@@ -53,6 +54,17 @@ nav {
             
             &:hover {
                 background: #ECEFF1;
+            }
+
+            &:before {
+                content: attr(data-diff-index);
+                position: absolute;
+                font-size: 84px;
+                right: -12px;
+                top: 0;
+                line-height: 0.7;
+                font-weight: bold;
+                color: rgba(0, 0, 0, .05);
             }
         }
     }
@@ -78,7 +90,7 @@ nav {
     dt {
         float: left;
         clear: left;
-        width: 4em;
+        width: 5em;
         font-weight: bold;
     }
     
@@ -88,7 +100,7 @@ nav {
 }
 
 #wrapper {
-    margin: 20px 0.333% 0 26.333%;
+    margin: 70px 0.333% 0 26.333%;
     
     .container {
         width:50%;
@@ -155,13 +167,13 @@ nav {
             vertical-align: -1px;
             line-height: 0;
         }
-        li[data-diff='node_removed'] i       { background: rgba(244, 67, 54, 1); }
-        li[data-diff='node_added'] i         { background: rgba(76, 175, 80, 1); }
-        li[data-diff='not_matching_name'] i  { background: rgba(255, 235, 59, 1); }
-        li[data-diff='not_matching_hash'] i  { background: rgba(33, 150, 243, 1); }
-        li[data-diff='offset_width'] i       { background: rgba(233, 30, 99, 1); }
-        li[data-diff='offset_height'] i      { background: rgba(156, 39, 176, 1); }
-        li[data-diff='offset_x'] i           {
+        li[data-diff='node_removed'] i          { background: rgba(244, 67, 54, 1); }
+        li[data-diff='node_added'] i            { background: rgba(76, 175, 80, 1); }
+        li[data-diff='not_matching_name'] i     { background: rgba(255, 235, 59, 1); }
+        li[data-diff='not_matching_visually'] i { background: rgba(33, 150, 243, 1); }
+        li[data-diff='offset_width'] i          { background: rgba(233, 30, 99, 1); }
+        li[data-diff='offset_height'] i         { background: rgba(156, 39, 176, 1); }
+        li[data-diff='offset_x'] i              {
             vertical-align: -3px;
             width: 0;
             height: 0;
@@ -181,12 +193,10 @@ nav {
 }
 
 
-
-
 .node_removed .node_removed                     { background: rgba(244, 67, 54, .2); }
 .node_added .node_added                         { background: rgba(76, 175, 80, .2); }
 .not_matching_name .not_matching_name span      { background: rgba(255, 235, 59, .2); }
-.not_matching_hash .not_matching_hash b         { background: rgba(33, 150, 243, .2); }
+.not_matching_visually .not_matching_visually b { background: rgba(33, 150, 243, .2); }
 .offset_width .offset_width_lower               { background: rgba(233, 30, 99, .05); }
 .offset_width .offset_width_higher              { background: rgba(233, 30, 99, .05); }
 .offset_height .offset_height_lower             { background: rgba(156, 39, 176, .05);}
@@ -211,31 +221,31 @@ nav {
     display: none;
     position: fixed;
     top: 0;
-    left:0;
+    left: 0;
     right: 0;
     bottom: 0;
     z-index: 9999;
     background: rgba(255, 255, 255, .7);
-}
 
-#overlay span {
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    background: #fff;
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0,0,0,.4);
-    font-weight: bold;
-    padding: 10px 20px;
-    line-height: 2em;
-}
+    span {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background: #fff;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, .4);
+        font-weight: bold;
+        padding: 10px 20px;
+        line-height: 2em;
+    }
 
-#overlay .material-icons {
-    vertical-align: middle;
-    font-size: 1.5em;
-    margin-right: 10px;
-    animation: 1s rotate infinite linear;
+    .material-icons {
+        vertical-align: middle;
+        font-size: 1.5em;
+        margin-right: 10px;
+        animation: 1s rotate infinite linear;
+    }
 }
 
 @keyframes rotate {

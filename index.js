@@ -246,6 +246,7 @@ app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 
 // Test page
 app.use('/testpage/js/templates.js', handlebarsMiddleware(__dirname + '/test-page/templates'));
+app.use('/testpage/js/testcase-templates.js', handlebarsMiddleware(__dirname + '/test-cases/templates'));
 app.use('/testpage/css', sassMiddleware({
     src: __dirname + '/test-page/styles',
     dest: __dirname + '/test-page/public/css',

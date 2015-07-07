@@ -1,46 +1,58 @@
-<ul>
-	{{#each this}}
-		<li data-diff-index="{{@index}}">
-			{{@index}}
-            {{#if a}}
-			<strong {{#if deleteA}}class="delete"{{/if}}>A</strong>
-		    <dl>
-				<dt>name:</dt><dd>{{a.name}}</dd>
-				<dt>path:</dt><dd>{{a.path}}</dd>
-				<dt>offset:</dt><dd> top: {{a.offset.top}} / left: {{a.offset.left}} / width: {{a.offset.width}} / height: {{a.offset.height}}</dd>
-				<dt>hash:</dt><dd>{{a.hash}}</dd>
-		    </dl>
-            {{/if}}
-            {{#if b}}
-            <strong {{#if deleteB}}class="delete"{{/if}}>B</strong>
-		    <dl>
-				<dt>name:</dt><dd>{{b.name}}</dd>
-				<dt>path:</dt><dd>{{b.path}}</dd>
-				<dt>offset:</dt><dd> top: {{b.offset.top}} / left: {{b.offset.left}} / width: {{b.offset.width}} / height: {{b.offset.height}}</dd>
-				<dt>hash:</dt><dd>{{b.hash}}</dd>
-		    </dl>
-            {{/if}}
-		    <dl>
-				<dt>A Copy:</dt><dd>{{aHasCopy}}</dd>
-		    </dl>
-		    <dl>
-				<dt>B Copy:</dt><dd>{{bHasCopy}}</dd>
-		    </dl>
-		    <dl>
-				<dt>delete A:</dt><dd>{{deleteA}}</dd>
-		    </dl>
-		    <dl>
-				<dt>delete B:</dt><dd>{{deleteB}}</dd>
-		    </dl>
-		    <dl>
-				<dt>DIFFS:</dt>
-				<dd>
-					{{#each differences}}
-						{{this}}
-						{{#unless @last}}<br>{{/unless}}
-					{{/each}}
-				</dd>
-		    </dl>
-		</li>
-	{{/each}}
-</ul>
+{{#if this.length}}
+    <ul>
+        {{#each this}}
+            <li data-diff-index="{{@index}}">
+                {{#if a}}
+                    <strong {{#if deleteA}}class="delete"{{/if}}>A</strong>
+                    <dl>
+                        <dt>name:</dt><dd>{{a.name}}</dd>
+                        <dt>path:</dt><dd>{{a.path}}</dd>
+                        <dt>offset:</dt><dd> top: {{a.offset.top}} / left: {{a.offset.left}} / width: {{a.offset.width}} / height: {{a.offset.height}}</dd>
+                    </dl>
+                {{/if}}
+                {{#if b}}
+                    <strong {{#if deleteB}}class="delete"{{/if}}>B</strong>
+                    <dl>
+                        <dt>name:</dt><dd>{{b.name}}</dd>
+                        <dt>path:</dt><dd>{{b.path}}</dd>
+                        <dt>offset:</dt><dd> top: {{b.offset.top}} / left: {{b.offset.left}} / width: {{b.offset.width}} / height: {{b.offset.height}}</dd>
+                    </dl>
+                {{/if}}
+                {{#if aHasCopy}}
+                    <dl>
+                        <dt>A Copy:</dt><dd>{{aHasCopy}}</dd>
+                    </dl>
+                {{/if}}
+                {{#if bHasCopy}}
+                    <dl>
+                        <dt>B Copy:</dt><dd>{{bHasCopy}}</dd>
+                    </dl>
+                {{/if}}
+                {{#if deleteA}}
+                    <dl>
+                        <dt>delete A:</dt><dd>{{deleteA}}</dd>
+                    </dl>
+                {{/if}}
+                {{#if deleteB}}
+                    <dl>
+                        <dt>delete B:</dt><dd>{{deleteB}}</dd>
+                    </dl>
+                {{/if}}
+                <dl>
+                    <dt>DIFFS:</dt>
+                    <dd>
+                        {{#each differences}}
+                            {{this}}
+                            {{#unless @last}}<br>{{/unless}}
+                        {{/each}}
+                    </dd>
+                </dl>
+            </li>
+        {{/each}}
+    </ul>
+{{else}}
+    <div class="alert alert-success">
+        <i class="mdi-navigation-check"></i> There is no difference
+    </div>
+{{/if}}
+
