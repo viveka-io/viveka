@@ -62,7 +62,7 @@
     }
 
     function setTestCaseCaption(testCaseTextId) {
-        $('header .test-case').text(getTestCaseNameByTextId(testCaseTextId));
+        $('.test-case').text(getTestCaseNameByTextId(testCaseTextId));
     }
 
     function getTestCaseNameByTextId(testCaseTextId) {
