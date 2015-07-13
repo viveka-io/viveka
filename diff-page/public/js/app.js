@@ -11,22 +11,23 @@
             ]
         },
         router;
-        
+
     $.getJSON('/test_cases.json').done(handleTestCasesLoad);
-        
+
     function handleTestCasesLoad(testCases) {
         header.testCases = testCases;
-        
+
         appendHeader();
         attachDiffSwitcherEvent();
         attachCreateDiffEvent();
         initRouter();
-         
+
         //setTestCaseCaption(testCases[0].textId); // my best guess is that this runs twice
     }
 
     function appendHeader() {
         $('#header-container').html(Handlebars.templates.nav(header));
+        $.material.init();
     }
 
     function attachDiffSwitcherEvent() {
@@ -42,7 +43,7 @@
             router.setRoute($('#baseline-id').val() + '/' + $('#target-id').val());
         });
     }
-    
+
     function initRouter() {
         router = new Router();
 
@@ -78,17 +79,17 @@
         $('#wrapper').empty();
         $('#diff-inspector').empty();
     }
-    
+
     function setFingerprintIds(baselineId, targetId) {
         $('#baseline-id').val(baselineId);
         $('#target-id').val(targetId);
     }
-        
+
     function showTestCaseDiff(testCaseTextId) {
         var testId = getTestCaseIdByTextId(testCaseTextId),
             baselineId,
             targetId;
-        
+
         console.log('Searching for baseline finerprint...');
         socket.emitAsync('fingerprints get baseline', { id: testId })
             .then(function (data) {
@@ -97,7 +98,7 @@
                     console.log('Baseline fingerprint ' + baselineId + ' found.');
                     return Promise.resolve();
                 }
-                
+
                 console.log('Baseline fingerprint not found. Creating new fingerprint...');
                 /*********************************************************************/
                 /*                                                                   */
@@ -127,7 +128,7 @@
                     console.log('Latest fingerprint ' + targetId + ' found.');
                     return Promise.resolve();
                 }
-                
+
                 console.log('Latest fingerprint not found. Creating one');
                 return socket.emitAsync('fingerprints create', { id: testId });
             })
@@ -135,15 +136,15 @@
                 if (data && data.result) {
                     targetId = data.result._id;
                 }
-                
+
                 console.log('Baseline and latest fingerprints are ready');
                 render(baselineId, targetId);
             });
     }
-    
+
     function render(baselineId, targetId) {
         console.log('Generating diff between ' + baselineId + ' and ' + targetId + ' ...');
-        
+
         $('#wrapper').append(Handlebars.templates.containers({
             baselineId: baselineId,
             targetId: targetId
@@ -151,7 +152,7 @@
 
         $('#imgA, #imgB').one('load', handleImageLoading(baselineId, targetId));
     }
-    
+
     function handleImageLoading(baselineId, targetId) {
         var loaded = 0;
 
@@ -176,12 +177,12 @@
         })
             .then(function (data) {
                 var $listItems;
-                 
+
                 $('#contA').append(Handlebars.templates['diff-areas-a'](data.result));
                 $('#contA').find('.diff').each(function (index) {
                     setPosition($(this), data.result[index].a && data.result[index].a.offset, widthA, heightA);
                 });
-                
+
                 $('#contB').append(Handlebars.templates['diff-areas-b'](data.result));
                 $('#contB').find('.diff').each(function (index) {
                     setPosition($(this), data.result[index].b && data.result[index].b.offset, widthB, heightB);
@@ -189,12 +190,12 @@
                 $('#contA .diff, #contB .diff').on('click', function (event) {
                     var diffIndex = $(event.target).closest('.diff').data('diff-index'),
                         offset = $('#diff-inspector').find('li[data-diff-index="' + diffIndex + '"]').offset().top;
-                            
+
                     event.stopPropagation();
-                        
+
                     $('#diff-inspector').scrollTop(offset);
                 });
-                
+
                 $('#diff-inspector').append(Handlebars.templates['diff-inspector'](data.result));
                 $listItems = $('#diff-inspector li');
                 $listItems.on('mouseover', function () {
@@ -203,26 +204,26 @@
                         offsetB = data.result[index].b && data.result[index].b.offset,
                         $markerA = $('#contA .diffmarker'),
                         $markerB = $('#contB .diffmarker');
-    
+
                     if (offsetA) {
                         setPosition($markerA, offsetA, widthA, heightA);
                     } else {
                         $markerA.css('top', '300%');
                     }
-    
+
                     if (offsetB) {
                         setPosition($markerB, offsetB, widthB, heightB);
                     } else {
                         $markerB.css('top', '300%');
                     }
-    
+
                 });
 
                 $('#overlay').hide();
             });
     }
 
-    function setPosition($marker, offset, imgWidth, imgHeight) {   
+    function setPosition($marker, offset, imgWidth, imgHeight) {
         if (offset) {
             $marker.css({
                 top: (offset.top / imgHeight * 100) + '%',
@@ -239,7 +240,7 @@
         return function promisified() {
             var args = [].slice.call(arguments),
                 self = this;
-                
+
             return new Promise(function (resolve, reject) {
                 args.push(resolve);
                 originalMethod.apply(self, args);

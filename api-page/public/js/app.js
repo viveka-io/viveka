@@ -73,12 +73,12 @@ var socket = io(),
             ]
         }
     ];
-      
+
 Promise.promisifyAll(socket, {promisifier: function (originalMethod) {
     return function promisified() {
         var args = [].slice.call(arguments),
             self = this;
-            
+
         return new Promise(function(resolve, reject) {
             args.push(resolve);
             originalMethod.apply(self, args);
@@ -91,6 +91,7 @@ features.forEach(function (feature) {
 
     $('#side-menu').append(html);
 });
+$.material.init();
 
 $('body').on('click', '.message', function () {
     $(this).closest('.request').find('.content').toggle();
@@ -105,7 +106,7 @@ $('body').on('click', '.submit:not("missing")', function () {
             if (data.error || data.info) {
                 return $('#messages').prepend(Handlebars.templates.message(data));
             }
-    
+
             $('#messages').prepend(Handlebars.templates.message({
                 content: JSON.stringify(data.result, undefined, 4),
                 screenshot: data.result.screenshot
