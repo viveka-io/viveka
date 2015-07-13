@@ -6,7 +6,7 @@ var fs                   = require('fs'),
     io                   = require('socket.io')(server),
     handlebars           = require('./node_modules/connect-handlebars/node_modules/handlebars/lib/index'),
     handlebarsMiddleware = require('connect-handlebars'),
-    sassMiddleware       = require('node-sass-middleware'),
+    lessMiddleware       = require('less-middleware'),
     log                  = require('bunyan').createLogger({name: "viveka-server"}),
     VError               = require('verror'),
     generator            = require('./fingerprint-generator.js'),
@@ -247,31 +247,34 @@ app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 // Test page
 app.use('/testpage/js/templates.js', handlebarsMiddleware(__dirname + '/test-page/templates'));
 app.use('/testpage/js/testcase-templates.js', handlebarsMiddleware(__dirname + '/test-cases/templates'));
-app.use('/testpage/css', sassMiddleware({
-    src: __dirname + '/test-page/styles',
+app.use('/testpage/css', lessMiddleware(__dirname + '/test-page/styles', {
     dest: __dirname + '/test-page/public/css',
     debug: true,
-    outputStyle: 'compressed'
+    render: {
+        yuicompress: true
+    }
 }));
 app.use('/testpage', express.static(__dirname + '/test-page/public'));
 
 // API page
 app.use('/apipage/js/templates.js', handlebarsMiddleware(__dirname + '/api-page/templates'));
-app.use('/apipage/css', sassMiddleware({
-    src: __dirname + '/api-page/styles',
+app.use('/apipage/css', lessMiddleware(__dirname + '/api-page/styles', {
     dest: __dirname + '/api-page/public/css',
     debug: true,
-    outputStyle: 'compressed'
+    render: {
+        yuicompress: true
+    }
 }));
 app.use('/apipage', express.static(__dirname + '/api-page/public'));
 
 // Diff page
 app.use('/diffpage/js/templates.js', handlebarsMiddleware(__dirname + '/diff-page/templates'));
-app.use('/diffpage/css', sassMiddleware({
-    src: __dirname + '/diff-page/styles',
+app.use('/diffpage/css', lessMiddleware(__dirname + '/diff-page/styles', {
     dest: __dirname + '/diff-page/public/css',
     debug: true,
-    outputStyle: 'compressed'
+    render: {
+        yuicompress: true
+    }
 }));
 app.use('/diffpage', express.static(__dirname + '/diff-page/public'));
 
