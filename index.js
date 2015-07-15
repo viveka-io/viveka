@@ -13,7 +13,7 @@ var fs                   = require('fs'),
     differ               = require('./difference-generator'),
     bodyParser           = require('body-parser'),
     db                   = require('./database.js');
-    
+
 handlebars.registerHelper('toLowerCase', function(str) {
   return str.toLowerCase();
 });
@@ -69,7 +69,7 @@ function getFingerPrint(params, respond) {
         }, handleError(respond, 'Failed to get fingerprint: ' + params.id));
 }
 
-function getBaselineFingerPrint(params, respond) {   
+function getBaselineFingerPrint(params, respond) {
     db.getBaselineFingerPrint(params.id)
         .then(function (fingerPrint) {
             if (fingerPrint) {
@@ -77,7 +77,7 @@ function getBaselineFingerPrint(params, respond) {
             } else {
                 respond({info: 'No baseline fingerprint found!'});
             }
-            
+
         }, handleError(respond, 'Failed to get fingerprint for test: ' + params.id));
 }
 
@@ -97,7 +97,7 @@ function createFingerPrint(params, respond) {
 
     db.getBaselineFingerPrint(testId)
         .then(function(fingerprint){
-            mode = !fingerprint ? 'baseline' : 'latest';   
+            mode = !fingerprint ? 'baseline' : 'latest';
             return db.getTest(testId);
         }, handleError(respond, 'Failed to get baseline finerprint for test: ' + testId))
         .then(function (test) {
@@ -140,7 +140,7 @@ function approveFingerPrint(params, respond) {
                 fingerPrint: params.id,
                 approval: true,
                 date: new Date()
-            });                              
+            });
         }, handleError(respond, 'Failed to save fingerprint: ' + params.id))
         .then(function(savedApproval) {
             log.info('APPROVAL saved: ' + savedApproval._id);
@@ -159,7 +159,7 @@ function unapproveFingerPrint(params, respond) {
                 fingerPrint: params.id,
                 approval: false,
                 date: new Date()
-            });                              
+            });
         }, handleError(respond, 'Failed to save fingerprint: ' + params.id))
         .then(function(savedApproval) {
             log.info('UNAPPROVAL saved: ' + savedApproval._id);
@@ -248,33 +248,21 @@ app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 app.use('/testpage/js/templates.js', handlebarsMiddleware(__dirname + '/test-page/templates'));
 app.use('/testpage/js/testcase-templates.js', handlebarsMiddleware(__dirname + '/test-cases/templates'));
 app.use('/testpage/css', lessMiddleware(__dirname + '/test-page/styles', {
-    dest: __dirname + '/test-page/public/css',
-    debug: true,
-    render: {
-        yuicompress: true
-    }
+    dest: __dirname + '/test-page/public/css'
 }));
 app.use('/testpage', express.static(__dirname + '/test-page/public'));
 
 // API page
 app.use('/apipage/js/templates.js', handlebarsMiddleware(__dirname + '/api-page/templates'));
 app.use('/apipage/css', lessMiddleware(__dirname + '/api-page/styles', {
-    dest: __dirname + '/api-page/public/css',
-    debug: true,
-    render: {
-        yuicompress: true
-    }
+    dest: __dirname + '/api-page/public/css'
 }));
 app.use('/apipage', express.static(__dirname + '/api-page/public'));
 
 // Diff page
 app.use('/diffpage/js/templates.js', handlebarsMiddleware(__dirname + '/diff-page/templates'));
 app.use('/diffpage/css', lessMiddleware(__dirname + '/diff-page/styles', {
-    dest: __dirname + '/diff-page/public/css',
-    debug: true,
-    render: {
-        yuicompress: true
-    }
+    dest: __dirname + '/diff-page/public/css'
 }));
 app.use('/diffpage', express.static(__dirname + '/diff-page/public'));
 
