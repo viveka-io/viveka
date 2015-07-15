@@ -1,13 +1,15 @@
 {{#if error}}
-    <div class="alert alert-warning">
+    <div class="alert alert-danger">
       <strong>Oh snap!</strong> {{error}}
-    </div>    
+    </div>
 {{else}} {{#if info}}
-    <div class="alert alert-info">{{info}}</div>   
+    <div class="alert alert-info">{{info}}</div>
 {{else}}
-    {{#if screenshot}}
-        <img src="{{screenshot}}">
-    {{/if}}
-    <pre>{{content}}</pre>
+    <div class="well">
+        {{#if screenshot}}
+            <img src="{{screenshot}}">
+        {{/if}}
+        <pre>{{content}}</pre>
+    </div>
 {{/if}}{{/if}}
 

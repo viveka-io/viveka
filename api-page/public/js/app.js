@@ -94,7 +94,7 @@ features.forEach(function (feature) {
 $.material.init();
 
 $('body').on('click', '.message', function () {
-    $(this).closest('.request').find('.content').toggle();
+    $(this).closest('.request').find('.content').slideToggle(500);
 });
 
 $('body').on('click', '.submit:not("missing")', function () {
@@ -103,14 +103,21 @@ $('body').on('click', '.submit:not("missing")', function () {
 
     socket.emitAsync(message, collectData($t.find('.content')))
         .then(function(data){
+            var $message;
+
             if (data.error || data.info) {
-                return $('#messages').prepend(Handlebars.templates.message(data));
+                $message =  $(Handlebars.templates.message(data));
+            } else {
+                $message = $(Handlebars.templates.message({
+                    content: JSON.stringify(data.result, undefined, 4),
+                    screenshot: data.result.screenshot
+                }));
             }
 
-            $('#messages').prepend(Handlebars.templates.message({
-                content: JSON.stringify(data.result, undefined, 4),
-                screenshot: data.result.screenshot
-            }));
+            $message
+                .hide()
+                .prependTo('#messages')
+                .slideDown(200);
         });
 });
 
