@@ -40,6 +40,7 @@
 
     function attachCreateDiffEvent() {
         $('#create-diff-by-fingerprints').on('click', function (event) {
+            event.preventDefault();
             router.setRoute($('#baseline-id').val() + '/' + $('#target-id').val());
         });
     }
