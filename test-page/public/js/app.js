@@ -4,7 +4,7 @@
     var header = {
             title: 'Test page',
             views: [
-                {id: 'side-by-side-view', name: 'Side by side'},
+                {id: 'side-by-side-view', name: 'Side by side', active: true},
                 {id: 'baseline-view', name: 'Baseline'},
                 {id: 'current-view', name: 'Current'},
             ]
