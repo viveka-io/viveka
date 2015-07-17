@@ -22,7 +22,7 @@
         </ul>
         <ul class="view-selector nav navbar-nav navbar-right">
             {{#each views}}
-                <li><a href="#{{id}}">{{name}}</a></li>
+                <li {{#if active}}class="active"{{/if}}><a href="#{{id}}">{{name}}</a></li>
             {{/each}}
         </ul>
     </div>
