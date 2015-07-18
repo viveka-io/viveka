@@ -1,1 +1,1 @@
-SVGInjector($('.logo')[0]);
+SVGInjector(document.querySelectorAll('.logo'));
