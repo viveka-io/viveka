@@ -1,0 +1,1 @@
+SVGInjector($('.logo')[0]);
