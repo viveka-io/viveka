@@ -2,14 +2,22 @@
     <div class="alert alert-danger">
       <strong>Oh snap!</strong> {{error}}
     </div>
-{{else}} {{#if info}}
-    <div class="alert alert-info">{{info}}</div>
 {{else}}
-    <div class="well">
+    {{#if info}}
+        <div class="alert alert-info">{{info}}</div>
+    {{else}}
         {{#if screenshot}}
-            <img src="{{screenshot}}">
+        <div class="screenshot pull-right col-md-3 text-center">
+            <img class="thumbnail" src="{{screenshot}}">
+        </div>
         {{/if}}
-        <pre>{{content}}</pre>
-    </div>
-{{/if}}{{/if}}
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">{{title}}</div>
+            <div class="panel-body">
+                <div class="code">{{content}}</div>
+            </div>
+        </div>
+    {{/if}}
+{{/if}}
 

@@ -26,7 +26,10 @@ function getTests(params, respond) {
     db.getTests()
         .then(function (tests) {
             log.info('Tests size: ' + tests.length);
-            respond({result: tests});
+            respond({
+                title: 'Tests (' + tests.length + ')',
+                result: tests
+            });
         }, handleError(respond, 'Failed to get tests'));
 }
 
@@ -34,7 +37,10 @@ function getTest(params, respond) {
     db.getTest(params.id)
         .then(function (test) {
             log.info('Test: ' + test.toObject());
-            respond({result: test.toObject()});
+            respond({
+                title: 'Test #' + params.id,
+                result: test.toObject()
+            });
         }, handleError(respond, 'Failed to get test: ' + params.id));
 }
 
@@ -42,7 +48,10 @@ function createTest(params, respond) {
     db.createTest({ config: params })
         .then(function (test) {
             log.info('Test saved: ' + test._id);
-            respond({result: test});
+            respond({
+                title: 'Test saved #' + test._id,
+                result: test
+            });
         }, handleError(respond, 'Failed to create test'));
 }
 
@@ -58,14 +67,20 @@ function getFingerPrints(params, respond) {
     db.getFingerPrintsForTest(params.id)
         .then(function (fingerPrints) {
             log.info('FingerPrints: ' + fingerPrints.length);
-            respond({result: fingerPrints});
+            respond({
+                title: 'Fingerprints (' + fingerPrints.length + ')',
+                result: fingerPrints
+            });
         }, handleError(respond, 'Failed to get fingerprints of test: ' + params.id));
 }
 
 function getFingerPrint(params, respond) {
     db.getFingerPrint(params.id)
         .then(function (fingerPrint) {
-            respond({result: fingerPrint.toObject()});
+            respond({
+                title: 'Fingeprint #' + params.id,
+                result: fingerPrint.toObject()
+            });
         }, handleError(respond, 'Failed to get fingerprint: ' + params.id));
 }
 
@@ -73,7 +88,10 @@ function getBaselineFingerPrint(params, respond) {
     db.getBaselineFingerPrint(params.id)
         .then(function (fingerPrint) {
             if (fingerPrint) {
-                respond({result: fingerPrint.toObject()});
+                respond({
+                    title: 'Baseline fingeprint of #' + params.id,
+                    result: fingerPrint.toObject()
+                });
             } else {
                 respond({info: 'No baseline fingerprint found!'});
             }
@@ -84,7 +102,10 @@ function getBaselineFingerPrint(params, respond) {
 function getLatestFingerPrint(params, respond) {
     db.getLatestFingerPrint(params.id)
         .then(function (fingerPrint) {
-            respond({result: fingerPrint.toObject()});
+            respond({
+                title: 'Latest fingeprint of #' + params.id,
+                result: fingerPrint.toObject()
+            });
         }, handleError(respond, 'Failed to get fingerprint for test: ' + params.id));
 }
 
@@ -125,7 +146,10 @@ function createFingerPrint(params, respond) {
         }, handleError(respond, 'Failed to save screenshot'))
         .then(function () {
             log.info('Fingerprint saved to db');
-            respond({result: fingerP.toObject()});
+            respond({
+                title: 'Fingerprint saved to db',
+                result: fingerP.toObject()
+            });
         }, handleError(respond, 'Failed to save fingerPrint'));
 }
 
@@ -144,7 +168,10 @@ function approveFingerPrint(params, respond) {
         }, handleError(respond, 'Failed to save fingerprint: ' + params.id))
         .then(function(savedApproval) {
             log.info('APPROVAL saved: ' + savedApproval._id);
-            respond({result: savedApproval});
+            respond({
+                title: 'Approval saved #' + savedApproval._id,
+                result: savedApproval
+            });
         }, handleError(respond, 'Failed to save approval in db'));
 }
 
@@ -163,7 +190,10 @@ function unapproveFingerPrint(params, respond) {
         }, handleError(respond, 'Failed to save fingerprint: ' + params.id))
         .then(function(savedApproval) {
             log.info('UNAPPROVAL saved: ' + savedApproval._id);
-            respond({result: savedApproval});
+            respond({
+                title: 'Unapproval saved #' + savedApproval._id,
+                result: savedApproval
+            });
         }, handleError(respond, 'Failed to save unapproval in db'));
 }
 
@@ -171,7 +201,10 @@ function getDifference(params, respond) {
     db.getDifference(params.id)
         .then(function (difference) {
             log.info('Difference: ' + difference.toObject());
-            respond({result: difference.toObject()});
+            respond({
+                title: 'Difference #' + params.id,
+                result: difference.toObject()
+            });
         }, handleError(respond, 'Failed to get difference ' + params.id));
 }
 
@@ -215,7 +248,10 @@ function generateDifference(params, respond) {
         })
         .then(function (savedDiff) {
             log.info('DIFF saved: ' + savedDiff._id);
-            respond({result: savedDiff.toObject()});
+            respond({
+                title: 'Difference saved #' + savedDiff._id,
+                result: savedDiff.toObject()
+            });
         }, handleError(respond, 'Failed to save diff'));
 }
 

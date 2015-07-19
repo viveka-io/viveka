@@ -10,20 +10,24 @@
         <link rel="stylesheet" href="css/app.css">
     </head>
     <body>
-        <section class="navbar navbar-default sidebar">
-            <div class="sidebar-nav navbar-collapse collapse navbar-responsive-collapse">
-                <ul class="nav navbar-nav" id="side-menu">
-                    <li class="text-center">
-                        <a class="navbar-brand" href="#">
-                            <img src="/images/viveka-swan.svg">
-                            <h3>API page</h3>
-                        </a>
-                    </li>
-                </ul>
+        <div class="container-fluid">
+            <div class="row">
+                <section class="sidebar navbar navbar-default col-sm-3 col-md-2">
+                    <div class="sidebar-nav navbar-collapse collapse navbar-responsive-collapse">
+                        <ul class="nav navbar-nav" id="side-menu">
+                            <li class="text-center">
+                                <a class="navbar-brand" href="#">
+                                    <img src="/images/viveka-swan.svg">
+                                    <h3>API page</h3>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+                <section id="messages" class="messages col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
+                </section>
             </div>
-        </section>
-        <section id="messages">
-        </section>
+        </div>
         <script src="/socket.io/socket.io.js"></script>
         <script src="/bower_components/bluebird/js/browser/bluebird.min.js"></script>
         <script src="/bower_components/jquery/dist/jquery.min.js"></script>

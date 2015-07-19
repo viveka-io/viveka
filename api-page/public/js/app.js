@@ -91,6 +91,7 @@ features.forEach(function (feature) {
 
     $('#side-menu').append(html);
 });
+
 $.material.init();
 
 $('body').on('click', '.message', function () {
@@ -109,6 +110,7 @@ $('body').on('click', '.submit:not("missing")', function () {
                 $message =  $(Handlebars.templates.message(data));
             } else {
                 $message = $(Handlebars.templates.message({
+                    title: data.title || " ",
                     content: JSON.stringify(data.result, undefined, 4),
                     screenshot: data.result.screenshot
                 }));

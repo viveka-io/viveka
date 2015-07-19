@@ -1,19 +1,14 @@
 @import '../../common/style.less';
 
-body {
-    padding: 10px;
-    margin: 0;
-}
-
 .sidebar {
     position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
     overflow: auto;
-    width: 300px;
     display: block;
     margin: 0;
+    padding: 0;
 
     .sidebar-nav.navbar-collapse {
         padding-right: 0;
@@ -58,24 +53,23 @@ body {
     }
 }
 
-#messages {
-    margin-left: 302px;
+.messages {
+    padding: 20px;
 
-    & > * {
-        box-shadow: 0 1px 6px 0 rgba(0,0,0,0.12),0 1px 6px 0 rgba(0,0,0,0.12);
-        border-radius: 2px;
+    .screenshot img {
+        max-width: 100%;
+        max-height: 350px;
+        margin: 0 auto;
     }
 
-    .well {
-        max-height: 300px;
-        overflow: auto;
+    .panel {
+        overflow: hidden;
+    }
 
-        pre {
-            padding: 0;
-            background-color: transparent;
-            border: none;
-            border-radius: 0;
-        }
+    .code {
+        overflow: auto;
+        white-space: pre-wrap;
+        max-height: 350px;
     }
 
     .alert {
