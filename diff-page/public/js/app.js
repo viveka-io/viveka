@@ -207,12 +207,13 @@
 
     function attachScrollToDiffEvent() {
         $('#contA .diff, #contB .diff').on('click', function (event) {
-            var diffIndex = $(this).data('diff-index'),
-                offset = $('#diff-inspector').find('li[data-diff-index="' + diffIndex + '"]').offset().top;
+            var $diffInspector = $('#diff-inspector'),
+                diffIndex = $(this).data('diff-index'),
+                offset = $diffInspector.scrollTop() + $diffInspector.find('li[data-diff-index="' + diffIndex + '"]').position().top;
                     
             event.stopPropagation();
                 
-            $('#diff-inspector').scrollTop(offset);
+            $diffInspector.scrollTop(offset);
         });
     }
 

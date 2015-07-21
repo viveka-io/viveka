@@ -124,13 +124,19 @@ nav {
 .diff {
     position: absolute;
     box-sizing: border-box;
+
+    &:hover {
+        outline: 1px dotted @black;
+    }
+
+    * {
+        position: absolute;
+        left:0; top: 0; right: 0; bottom: 0;
+        box-sizing: border-box;
+    }
+
 }
 
-.diff * {
-    position: absolute;
-    left:0; top: 0; right: 0; bottom: 0;
-    box-sizing: border-box;
-}
 
 .navbar {
     .navbar-form {
