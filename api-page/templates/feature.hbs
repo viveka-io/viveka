@@ -1,9 +1,9 @@
 <li class="request clearfix text-center">
     <a href="#" class="message"><h4>{{message}}</h4></a>
-    <div class="content">
+    <div class="content clearfix">
         {{#each inputs}}
-            <input placeholder="{{name}}" name="{{name}}" type="text" value="{{value}}" class="{{additionalClasses}}">
+            <input placeholder="{{name}}" name="{{name}}" type="text" value="{{value}}" class="form-control">
         {{/each}}
-        <button type="button" class="submit btn pull-right">SUBMIT</button>
+        <button type="button" class="submit btn btn-primary btn-raised pull-right">SUBMIT</button>
     </div>
 </li>

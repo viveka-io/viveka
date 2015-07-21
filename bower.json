@@ -16,7 +16,7 @@
     "director": "~1.2.8",
     "handlebars": "~3.0.3",
     "jquery": "~2.1.4",
-    "bootstrap-material-design": "https://github.com/mucsi96/bootstrap-material-design.git#793e3b874aead6d44768e3c25d20e84d4cdb7d01",
+    "bootstrap-material-design": "https://github.com/mucsi96/bootstrap-material-design.git#3020d5bb14c9c92810b59c44af4c89e08c72cd1c",
     "bootstrap": "~3.3.4",
     "lodash": "~3.9.3",
     "bluebird": "~2.9.30"
