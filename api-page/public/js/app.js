@@ -111,6 +111,7 @@ $('body').on('click', '.submit:not("missing")', function () {
             } else {
                 $message = $(Handlebars.templates.message({
                     title: data.title || " ",
+                    badge: data.badge,
                     content: JSON.stringify(data.result, undefined, 4),
                     screenshot: data.result.screenshot
                 }));

@@ -27,7 +27,8 @@ function getTests(params, respond) {
         .then(function (tests) {
             log.info('Tests size: ' + tests.length);
             respond({
-                title: 'Tests (' + tests.length + ')',
+                title: 'Tests',
+                badge: tests.length,
                 result: tests
             });
         }, handleError(respond, 'Failed to get tests'));
@@ -68,7 +69,8 @@ function getFingerPrints(params, respond) {
         .then(function (fingerPrints) {
             log.info('FingerPrints: ' + fingerPrints.length);
             respond({
-                title: 'Fingerprints (' + fingerPrints.length + ')',
+                title: 'Fingerprints',
+                badge: fingerPrints.length,
                 result: fingerPrints
             });
         }, handleError(respond, 'Failed to get fingerprints of test: ' + params.id));
