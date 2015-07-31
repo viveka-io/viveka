@@ -19,6 +19,7 @@
     "bootstrap-material-design": "https://github.com/mucsi96/bootstrap-material-design.git#3020d5bb14c9c92810b59c44af4c89e08c72cd1c",
     "bootstrap": "~3.3.4",
     "lodash": "~3.9.3",
-    "bluebird": "~2.9.30"
+    "bluebird": "~2.9.30",
+    "svg-injector": "~1.1.3"
   }
 }

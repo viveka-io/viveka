@@ -244,6 +244,13 @@ function generateDifferenceJSON(params, respond) {
 //Bower
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 
+// Main page
+app.use('/', lessMiddleware(__dirname + '/developers/main-page', {
+    dest: __dirname + '/developers/main-page/public'
+}));
+app.use('/', express.static(__dirname + '/developers/main-page/public'));
+
+
 // Test page
 app.use('/testpage/js/templates.js', handlebarsMiddleware(__dirname + '/test-page/templates'));
 app.use('/testpage/js/testcase-templates.js', handlebarsMiddleware(__dirname + '/test-cases/templates'));
@@ -270,10 +277,6 @@ app.use('/diffpage', express.static(__dirname + '/diff-page/public'));
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-app.get('/', function(req, res) {
-    res.redirect('/apipage');
-});
 
 io.on('connection', function(socket){
     socket.on('tests create', createTest);
