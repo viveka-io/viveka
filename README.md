@@ -11,8 +11,8 @@ The system uses selenium-webdriver and mongoose.
 
 [MongoDB](https://www.mongodb.org/)
 
-    npm install -g bower nodemon bunyan
-    
+    npm install -g bower gulp
+
 ### Running
 
 Start MongoDB
