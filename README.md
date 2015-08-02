@@ -21,7 +21,7 @@ Start MongoDB
     cd viveka
     npm install
     bower install
-    npm start
+    gulp
 
 ## Running with Docker
 
