@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var sourcemaps = require('gulp-sourcemaps');
 var babel = require('gulp-babel');
+var cache = require('gulp-cached');
 var spawn = require('child_process').spawn;
 var node;
 var bunyan;
@@ -17,11 +18,12 @@ paths.server = path.join(paths.dest, 'index.js');
 
 gulp.task('babel', ['stopServer'], function() {
     return gulp.src(paths.src)
-        //.pipe(sourcemaps.init())
+        .pipe(sourcemaps.init())
+        .pipe(cache('babel'))//Transpile only changed files
         .pipe(babel({
           optional: ['es7.asyncFunctions']
         }))
-        //.pipe(sourcemaps.write('.', { sourceRoot: paths.sourceRoot }))
+        .pipe(sourcemaps.write('.', { sourceRoot: paths.sourceRoot }))
         .pipe(gulp.dest(paths.dest));
 });
 
