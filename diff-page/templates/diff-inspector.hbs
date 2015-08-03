@@ -1,55 +1,43 @@
 {{#if this.length}}
-    <ul>
-        {{#each this}}
-            <li data-diff-index="{{@index}}">
-                {{#if a}}
-                    <strong {{#if deleteA}}class="delete"{{/if}}>A</strong>
+    <div class="list-group">
+    {{#each this}}
+        <div class="list-group-item" id="diff{{@index}}" data-diff-index="{{@index}}">
+            {{#if a}}
+                <div class="row-action-primary"><i{{#if deleteA}} class="delete"{{/if}}>A</i></div>
+                <div class="row-content">
                     <dl>
                         <dt>name:</dt><dd>{{a.name}}</dd>
                         <dt>path:</dt><dd>{{a.path}}</dd>
                         <dt>offset:</dt><dd> top: {{a.offset.top}} / left: {{a.offset.left}} / width: {{a.offset.width}} / height: {{a.offset.height}}</dd>
                     </dl>
-                {{/if}}
-                {{#if b}}
-                    <strong {{#if deleteB}}class="delete"{{/if}}>B</strong>
+                </div>
+            {{/if}}
+            {{#if b}}
+                <div class="row-action-primary"><i{{#if deleteB}} class="delete"{{/if}}>B</i></div>
+                <div class="row-content">
                     <dl>
                         <dt>name:</dt><dd>{{b.name}}</dd>
                         <dt>path:</dt><dd>{{b.path}}</dd>
                         <dt>offset:</dt><dd> top: {{b.offset.top}} / left: {{b.offset.left}} / width: {{b.offset.width}} / height: {{b.offset.height}}</dd>
                     </dl>
-                {{/if}}
-                {{#if aHasCopy}}
-                    <dl>
-                        <dt>A Copy:</dt><dd>{{aHasCopy}}</dd>
-                    </dl>
-                {{/if}}
-                {{#if bHasCopy}}
-                    <dl>
-                        <dt>B Copy:</dt><dd>{{bHasCopy}}</dd>
-                    </dl>
-                {{/if}}
-                {{#if deleteA}}
-                    <dl>
-                        <dt>delete A:</dt><dd>{{deleteA}}</dd>
-                    </dl>
-                {{/if}}
-                {{#if deleteB}}
-                    <dl>
-                        <dt>delete B:</dt><dd>{{deleteB}}</dd>
-                    </dl>
-                {{/if}}
-                <dl>
-                    <dt>DIFFS:</dt>
-                    <dd>
-                        {{#each differences}}
-                            {{this}}
-                            {{#unless @last}}<br>{{/unless}}
-                        {{/each}}
-                    </dd>
-                </dl>
-            </li>
-        {{/each}}
-    </ul>
+                </div>
+            {{/if}}
+            <div class="meta-content">
+            {{#if aHasCopy}}
+                <button class="btn btn-primary btn-xs" data-diff-target="{{aHasCopy}}">Copy of #{{aHasCopy}}B</button>
+            {{/if}}
+            {{#if bHasCopy}}
+                <button class="btn btn-primary btn-xs" data-diff-target="{{bHasCopy}}">Copy of #{{bHasCopy}}A</button>
+            {{/if}}
+                <div class="diffs">
+                {{#each differences}}
+                    <span class="label label-default">{{this}}</span>
+                {{/each}}
+                </div>
+            </div>
+        </div>
+    {{/each}}
+    </div>
 {{else}}
     <div class="alert alert-success">
         <i class="mdi-action-done"></i> There is no difference

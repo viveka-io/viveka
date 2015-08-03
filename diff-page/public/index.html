@@ -6,17 +6,19 @@
     <meta charset="utf-8">
     <title>Diff page</title>
     <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/app.css">
 </head>
 
 <body>
     <div id="header-container"></div>
-    <div id="diff-inspector"></div>
-
-    <div id="wrapper" class="node_removed node_added not_matching_name not_matching_visually"></div>
-
+    <div class="container-fluid">
+        <div class="row">
+            <div id="diff-inspector" class="col-md-3 sidebar shadow-z-1"></div>
+            <div id="wrapper" class="col-md-9 col-md-offset-3 main node_removed node_added not_matching_name not_matching_visually"></div>
+        </div>
+    </div>
     <div id="overlay"><span><i class="material-icons">search</i> Looking for differences...</span></div>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="/bower_components/bluebird/js/browser/bluebird.min.js"></script>
     <script src="/bower_components/jquery/dist/jquery.min.js"></script>

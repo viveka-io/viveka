@@ -177,19 +177,13 @@
                 appendDiffAreas($contA, diffATemplate, data.result);
                 setDiffPositions($contA.find('.diff'), 'a', widthA, heightA, data.result);
 
-
                 appendDiffAreas($contB, diffBTemplate, data.result);
                 setDiffPositions($contB.find('.diff'), 'b', widthB, heightB, data.result);
-
-                attachScrollToDiffEvent();
-
-
 
                 appendDiffInspector(data.result);
                 attachDiffInspectorHoverEvent(data.result, widthA, widthB, heightA, heightB);
 
-
-
+                attachScrollToDiffEvent();
 
                 $('#overlay').hide();
             });
@@ -206,14 +200,20 @@
     }
 
     function attachScrollToDiffEvent() {
-        $('#contA .diff, #contB .diff').on('click', function (event) {
+        $('[data-diff-target]').on('click', function (event) {
             var $diffInspector = $('#diff-inspector'),
-                diffIndex = $(this).data('diff-index'),
-                offset = $diffInspector.scrollTop() + $diffInspector.find('li[data-diff-index="' + diffIndex + '"]').position().top;
+                diffTargetIndex = $(this).data('diff-target'),
+                $diffTarget = $diffInspector.find('[data-diff-index="' + diffTargetIndex + '"]'),
+                offset = $diffInspector.scrollTop() + $diffTarget.position().top;
                     
             event.stopPropagation();
                 
-            $diffInspector.scrollTop(offset);
+            $diffInspector.stop(true, true).animate({ scrollTop: offset }, 200, function() {
+                $diffTarget.addClass('selected');
+                setTimeout(function() {
+                    $diffTarget.removeClass('selected');
+                }, 500);
+            });
         });
     }
 
@@ -222,8 +222,8 @@
     }
 
     function attachDiffInspectorHoverEvent(diffResult, widthA, widthB, heightA, heightB) {
-        $('#diff-inspector li').on('mouseover', function () {
-            var index = $(this).index(),
+        $('#diff-inspector .list-group-item').on('mouseover', function () {
+            var index = $(this).data('diff-index'),
                 offsetA = diffResult[index].a && diffResult[index].a.offset,
                 offsetB = diffResult[index].b && diffResult[index].b.offset,
                 $markerA = $('#contA .diffmarker'),
