@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+var gutil = require('gulp-util');
 var sourcemaps = require('gulp-sourcemaps');
 var babel = require('gulp-babel');
 var cache = require('gulp-cached');
@@ -49,7 +50,7 @@ gulp.task('startServer', ['babel'], function() {
 
     node.on('close', function(code) {
         if (code === 8) {
-            gulp.log('Error detected, waiting for changes...');
+            gutil.log('Error detected, waiting for changes...');
         }
     });
 });

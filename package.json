@@ -30,12 +30,14 @@
     "verror": "^1.6.0"
   },
   "devDependencies": {
+    "babel": "^5.8.20",
     "babel-core": "^5.8.20",
     "bunyan": "^1.4.0",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.0",
     "gulp-cached": "^1.1.0",
     "gulp-sourcemaps": "^1.5.2",
+    "gulp-util": "^3.0.6",
     "source-map-support": "^0.3.2"
   }
 }
