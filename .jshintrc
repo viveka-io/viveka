@@ -13,6 +13,7 @@
     "sub": true,
     "nomen" : true,
     "undef": true,
+    "esnext": true,
     "predef": [
         "afterEach",
         "alert",
