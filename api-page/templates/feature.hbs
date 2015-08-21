@@ -1,9 +1,12 @@
-<li class="request clearfix text-center">
-    <a href="#" class="message"><h4>{{message}}</h4></a>
+<div class="request">
+    <h6 class="message">{{message}}</h6>
     <div class="content clearfix">
         {{#each inputs}}
-            <input placeholder="{{name}}" name="{{name}}" type="text" value="{{value}}" class="form-control">
+            <div class="mdl-textfield mdl-js-textfield">
+                <input id="{{name}}" placeholder="{{name}}" name="{{name}}" type="text" value="{{value}}" class="form-control mdl-textfield__input">
+                <label for="{{name}}" class="mdl-textfield__label">{{name}}</label>
+            </div>
         {{/each}}
-        <button type="button" class="submit btn btn-primary btn-raised pull-right">SUBMIT</button>
+        <button type="button" class="submit mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">SUBMIT</button>
     </div>
-</li>
+</div>

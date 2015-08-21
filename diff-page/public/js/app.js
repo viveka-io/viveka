@@ -23,18 +23,16 @@
         initRouter();
 
         //setTestCaseCaption(testCases[0].textId); // my best guess is that this runs twice
+        componentHandler.upgradeAllRegistered();
     }
 
     function appendHeader() {
         $('#header-container').html(Handlebars.templates.nav(header));
-        $.material.init();
     }
 
     function attachDiffSwitcherEvent() {
-        $('.diff-switcher li').on('click', function (event) {
-            $(this).toggleClass('active');
-
-            $('#wrapper').toggleClass($(this).data('diff'), $(this).is('.active'));
+        $('.diff-switcher').on('click', function (event) {
+            $('#wrapper').toggleClass($(this).data('diff'), $(this).is('.is-checked'));
         });
     }
 
@@ -209,13 +207,13 @@
                     if (offsetA) {
                         setPosition($markerA, offsetA, widthA, heightA);
                     } else {
-                        $markerA.css('top', '300%');
+                        $markerA.css('top', '-100%');
                     }
 
                     if (offsetB) {
                         setPosition($markerB, offsetB, widthB, heightB);
                     } else {
-                        $markerB.css('top', '300%');
+                        $markerB.css('top', '-100%');
                     }
 
                 });

@@ -1,33 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<!doctype html>
+<html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>Diff page</title>
-    <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Viveka diff page</title>
+    <meta name="description" content="Viveka diff page">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/app.css">
 </head>
 
 <body>
-    <div id="header-container"></div>
-    <div id="diff-inspector"></div>
 
-    <div id="wrapper" class="node_removed node_added not_matching_name not_matching_visually"></div>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
 
-    <div id="overlay"><span><i class="material-icons">search</i> Looking for differences...</span></div>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/bower_components/bluebird/js/browser/bluebird.min.js"></script>
-    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="/bower_components/lodash/lodash.min.js"></script>
-    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="/bower_components/handlebars/handlebars.runtime.min.js"></script>
-    <script src="/bower_components/director/build/director.min.js"></script>
-    <script src="/bower_components/bootstrap-material-design/dist/js/ripples.min.js"></script>
-    <script src="/bower_components/bootstrap-material-design/dist/js/material.min.js"></script>
-    <script src="js/templates.js"></script>
-    <script src="js/app.js"></script>
+    <header id="header-container" class="mdl-layout__header"></header>
+
+    <div class="mdl-layout__drawer" id="diff-inspector"></div>
+
+    <main class="mdl-layout__content">
+        <div class="page-content">
+            <div id="wrapper" class="mdl-grid node_removed node_added not_matching_name not_matching_visually">
+            </div>
+        </div>
+    </main>
+
+</div>
+
+<div id="overlay"><span class="mdl-shadow--2dp"><i class="mdl-spinner mdl-js-spinner is-active"></i> Looking for differences...</span></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/bower_components/bluebird/js/browser/bluebird.min.js"></script>
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/bower_components/lodash/lodash.min.js"></script>
+<script src="/bower_components/handlebars/handlebars.runtime.min.js"></script>
+<script src="/bower_components/director/build/director.min.js"></script>
+<script src="/bower_components/material-design-lite/material.min.js"></script>
+<script src="js/templates.js"></script>
+<script src="js/app.js"></script>
 </body>
-
 </html>

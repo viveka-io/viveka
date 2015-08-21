@@ -22,7 +22,7 @@
     "body-parser": "^1.12.4",
     "connect-handlebars": "^3.1.0",
     "express": "^4.12.4",
-    "less-middleware": "^2.0.1",
+    "node-sass-middleware": "^0.9.0",
     "mongoose": "^4.0.3",
     "node-png": "^0.4.3",
     "selenium-webdriver": "^2.45.1",

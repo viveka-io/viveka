@@ -1,0 +1,13 @@
+@import '../../common/style';
+
+.mdl-layout-title {
+    margin-right: $grid-desktop-gutter;
+
+    a {
+        text-decoration: none;
+    }
+}
+
+.mdl-card {
+    width: auto;
+}

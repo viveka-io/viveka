@@ -1,39 +1,35 @@
 <!doctype html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Viveka</title>
-        <meta name="description" content="Viveka">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="css/app.css">
-    </head>
-    <body>
-        <section class="navbar navbar-default sidebar">
-            <div class="sidebar-nav navbar-collapse collapse navbar-responsive-collapse">
-                <ul class="nav navbar-nav" id="side-menu">
-                    <li class="text-center">
-                        <a href="/" class="home">
-                            <img src="/images/viveka-swan.svg">
-                        </a>
-                        <h3 class="navbar-brand">API page</h3>
-                    </li>
-                </ul>
-            </div>
-        </section>
-        <section id="messages">
-        </section>
-        <script src="/socket.io/socket.io.js"></script>
-        <script src="/bower_components/bluebird/js/browser/bluebird.min.js"></script>
-        <script src="/bower_components/jquery/dist/jquery.min.js"></script>
-        <script src="/bower_components/lodash/lodash.min.js"></script>
-        <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script src="/bower_components/handlebars/handlebars.runtime.min.js"></script>
-        <script src="/bower_components/director/build/director.min.js"></script>
-        <script src="/bower_components/bootstrap-material-design/dist/js/ripples.min.js"></script>
-        <script src="/bower_components/bootstrap-material-design/dist/js/material.min.js"></script>
-        <script src="js/templates.js"></script>
-        <script src="js/app.js"></script>
-    </body>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Viveka API page</title>
+    <meta name="description" content="Viveka API page">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+
+<body>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
+    <section class="mdl-layout__drawer mdl-color--primary">
+        <a href="/" class="homelink mdl-typography--display-1 mdl-color-text--primary-contrast">
+            <i class="viv-logo icon-viveka-swan"></i> API page
+        </a>
+        <div class="mdl-navigation" id="side-menu"></div>
+    </section>
+
+    <section class="mdl-layout__content">
+        <div id="messages" class="page-content mdl-grid"></div>
+    </section>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/bower_components/bluebird/js/browser/bluebird.min.js"></script>
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/bower_components/lodash/lodash.min.js"></script>
+<script src="/bower_components/handlebars/handlebars.runtime.min.js"></script>
+<script src="/bower_components/director/build/director.min.js"></script>
+<script src="/bower_components/material-design-lite/material.min.js"></script>
+<script src="js/templates.js"></script>
+<script src="js/app.js"></script>
+</body>
 </html>

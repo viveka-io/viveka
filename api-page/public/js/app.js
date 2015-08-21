@@ -91,10 +91,9 @@ features.forEach(function (feature) {
 
     $('#side-menu').append(html);
 });
-$.material.init();
 
 $('body').on('click', '.message', function () {
-    $(this).closest('.request').find('.content').slideToggle(500);
+    $(this).closest('.request').toggleClass('opened').find('.content').slideToggle(300);
 });
 
 $('body').on('click', '.submit:not("missing")', function () {
@@ -109,8 +108,10 @@ $('body').on('click', '.submit:not("missing")', function () {
                 $message =  $(Handlebars.templates.message(data));
             } else {
                 $message = $(Handlebars.templates.message({
-                    content: JSON.stringify(data.result, undefined, 4),
-                    screenshot: data.result.screenshot
+                    content: JSON.stringify(data.result, undefined, 4).replace(/"style":.*[^}]*}/igm, 'style: "..."'),
+                    screenshot: data.result.screenshot,
+                    title: data.title,
+                    badge: data.badge
                 }));
             }
 
