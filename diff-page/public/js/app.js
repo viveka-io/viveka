@@ -7,7 +7,7 @@
             views: [
                 { id: 'side-by-side-view',  name: 'Side by side' },
                 { id: 'baseline-view',      name: 'Baseline' },
-                { id: 'current-view',       name: 'Current' },
+                { id: 'current-view',       name: 'Current' }
             ]
         },
         router;

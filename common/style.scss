@@ -2,12 +2,14 @@
 @import 'public/fonts';
 @import 'http://fonts.googleapis.com/css?family=Roboto:300,400,500,700';
 
+
 // Material Design Lite
 @import 'bower_components/material-design-lite/src/color-definitions';
 $color-primary: $palette-blue-grey-500;
 $color-primary-dark: $palette-blue-grey-700;
 $color-accent: $palette-red-500;
 @import 'bower_components/material-design-lite/src/material-design-lite';
+
 
 // Helpers
 @function color($color, $alpha: null) {
@@ -17,6 +19,7 @@ $color-accent: $palette-red-500;
         @return unquote("rgb(#{$color})");
     }
 }
+
 
 // Override MDL
 .mdl-layout__drawer-button .material-icons {

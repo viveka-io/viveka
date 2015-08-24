@@ -26,7 +26,7 @@ $color-offset-y: $palette-grey-500;
     margin-left: $grid-desktop-gutter / 2;
 }
 
-#diff-filters .mdl-button--icon {
+.diff-switcher {
     &:not(.is-checked) {
         @extend .mdl-button--raised;
     }
@@ -41,6 +41,7 @@ $color-offset-y: $palette-grey-500;
     &.is-checked[data-diff="offset_y"]              { background-color: color($color-offset-y); }
 }
 
+// TODO: use MDL styles for this panel
 #diff-inspector {
 
     ul {
@@ -108,10 +109,6 @@ $color-offset-y: $palette-grey-500;
     }
 }
 
-.mdl-layout__drawer:hover + .mdl-layout__content .diffmarker {
-    border-color: red;
-}
-
 .container {
     position: relative;
 
@@ -128,6 +125,10 @@ $color-offset-y: $palette-grey-500;
     position: absolute;
     transition: all .2s ease;
     z-index: 100;
+
+    .mdl-layout__drawer:hover + .mdl-layout__content & {
+        border-color: red;
+    }
 }
 
 .diff {
@@ -181,7 +182,7 @@ $color-offset-y: $palette-grey-500;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
-        background: #fff;
+        background: color($color-white);
         padding: $grid-desktop-gutter;
         line-height: 2em;
     }

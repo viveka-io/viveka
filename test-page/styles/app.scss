@@ -1,5 +1,9 @@
 @import '../../common/style';
 
+.mdl-layout__header {
+    min-height: auto;
+}
+
 .mdl-layout-title {
     margin-right: $grid-desktop-gutter;
 
@@ -10,4 +14,27 @@
 
 .mdl-card {
     width: auto;
+}
+
+// Test content styles
+.test-content {
+    overflow: hidden;
+    padding: $grid-desktop-gutter;
+
+    figure {
+        border-radius: 100%;
+        overflow: hidden;
+        margin: 0 $grid-desktop-gutter 0 0;
+        padding: 0;
+        float: left;
+    }
+
+    .text {
+        overflow: hidden;
+
+        h4 {
+            margin: 0;
+        }
+    }
+
 }

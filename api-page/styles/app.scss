@@ -2,15 +2,13 @@
 
 $screenshot-height: 400px;
 
-body {
-    margin: 0;
-}
-
 .homelink {
     padding: $grid-desktop-gutter;
-
-    text-decoration: none;
     font-weight: normal;
+
+    a {
+        text-decoration: none;
+    }
 
     i {
         font-size: $layout-header-icon-size;
@@ -64,19 +62,19 @@ body {
 
     .mdl-card__supporting-text {
         width: auto;
-    }
 
-    .json.mdl-card__supporting-text {
-        padding: 0;
-        width: auto;
+        &.json {
+            padding: 0;
+            width: auto;
 
-        pre {
+            pre {
             margin: 0;
-            // TODO: use flexbox instead of mysterious calculations
+            // TODO: use flexbox/classes instead of mysterious calculations
             max-height: $screenshot-height - $card-title-font-size * 1.2 - $grid-desktop-gutter * 4;
             overflow: auto;
             white-space: pre-wrap;
             padding: $grid-desktop-gutter;
+            }
         }
     }
 }

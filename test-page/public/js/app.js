@@ -6,7 +6,7 @@
             views: [
                 {id: 'side-by-side-view', name: 'Side by side', active: true},
                 {id: 'baseline-view', name: 'Baseline'},
-                {id: 'current-view', name: 'Current'},
+                {id: 'current-view', name: 'Current'}
             ]
         },
         activeView = readView(),
@@ -82,7 +82,6 @@
 
         return 'side-by-side-view';
     }
-
 
 })();
 

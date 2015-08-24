@@ -1,11 +1,9 @@
     <div class="mdl-layout__header-row">
 
         <h2 class="mdl-layout-title">
-            <a href="/" class="mdl-color-text--primary-contrast mdl-typography--font-regular">
-                <i class="viv-logo icon-viveka-swan"></i> Diff page
-            </a>
+            <a href="/" class="mdl-color-text--primary-contrast mdl-typography--font-regular"><i class="icon-viveka-swan"></i></a>
+            <span class="test-case">Diff page</span>
         </h2>
-
 
         <button id="menu-tests" class="mdl-button mdl-js-button mdl-button--icon">
              <span class="mdl-color-text--primary-contrast"><i class="icon-apps"></i></span>
@@ -16,73 +14,71 @@
                     <a class="mdl-menu__item" href="#{{textId}}">{{name}}</a>
                 {{/if}}
                 {{#if divider}}
-                    <span class="divider"></span>
+                    <hr>
                 {{/if}}
             {{/each}}
         </nav>
 
-        <form class="navbar-form navbar-left">
+        <form>
             <div class="mdl-textfield mdl-js-textfield">
                 <input id="baseline-id" class="mdl-textfield__input" type="text" size="24" />
-                <label class="mdl-textfield__label" for="baseline-id">Baseline ID</label>
+                <label for="baseline-id" class="mdl-textfield__label">Baseline ID</label>
             </div>
             <div class="mdl-textfield mdl-js-textfield">
                 <input id="target-id" class="mdl-textfield__input" type="text" size="24" />
-                <label class="mdl-textfield__label" for="target-id">Latest ID</label>
+                <label for="target-id" class="mdl-textfield__label">Latest ID</label>
             </div>
-            <a id="create-diff-by-fingerprints" href="#" class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect"><i class="icon-search"></i></a>
+            <button id="create-diff-by-fingerprints" class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect"><i class="icon-search"></i></button>
         </form>
 
         <div class="mdl-layout-spacer"></div>
 
-        <div id="diff-filters">
-            <label id="difffilter-added" class="diff-switcher mdl-button mdl-js-button mdl-button--icon mdl-icon-toggle mdl-js-icon-toggle mdl-button--colored" data-diff="node_added">
-                <input type="checkbox" class="mdl-icon-toggle__input" checked />
-                <i class="icon-add"></i>
-            </label>
-            <div class="mdl-tooltip" for="difffilter-added">Node added</div>
+        <label id="difffilter-added" class="diff-switcher mdl-button mdl-js-button mdl-button--icon mdl-icon-toggle mdl-js-icon-toggle mdl-button--colored" data-diff="node_added">
+            <input type="checkbox" class="mdl-icon-toggle__input" checked />
+            <i class="icon-add"></i>
+        </label>
+        <div class="mdl-tooltip" for="difffilter-added">Node added</div>
 
-            <label id="difffilter-removed" class="diff-switcher mdl-button mdl-js-button mdl-button--icon mdl-icon-toggle mdl-js-icon-toggle mdl-button--colored" data-diff="node_removed">
-                <input type="checkbox" class="mdl-icon-toggle__input" checked />
-                <i class="icon-remove"></i>
-            </label>
-            <div class="mdl-tooltip" for="difffilter-removed">Node removed</div>
+        <label id="difffilter-removed" class="diff-switcher mdl-button mdl-js-button mdl-button--icon mdl-icon-toggle mdl-js-icon-toggle mdl-button--colored" data-diff="node_removed">
+            <input type="checkbox" class="mdl-icon-toggle__input" checked />
+            <i class="icon-remove"></i>
+        </label>
+        <div class="mdl-tooltip" for="difffilter-removed">Node removed</div>
 
-            <label id="difffilter-name" class="diff-switcher mdl-button mdl-js-button mdl-button--icon mdl-icon-toggle mdl-js-icon-toggle mdl-button--colored" data-diff="not_matching_name">
-                <input type="checkbox" class="mdl-icon-toggle__input" checked />
-                <i class="icon-text_format"></i>
-            </label>
-            <div class="mdl-tooltip" for="difffilter-name">Not matching name</div>
+        <label id="difffilter-name" class="diff-switcher mdl-button mdl-js-button mdl-button--icon mdl-icon-toggle mdl-js-icon-toggle mdl-button--colored" data-diff="not_matching_name">
+            <input type="checkbox" class="mdl-icon-toggle__input" checked />
+            <i class="icon-text_format"></i>
+        </label>
+        <div class="mdl-tooltip" for="difffilter-name">Not matching name</div>
 
-            <label id="difffilter-visual" class="diff-switcher mdl-button mdl-js-button mdl-button--icon mdl-icon-toggle mdl-js-icon-toggle mdl-button--colored" data-diff="not_matching_visually">
-                <input type="checkbox" class="mdl-icon-toggle__input" checked />
-                <i class="icon-visibility"></i>
-            </label>
-            <div class="mdl-tooltip" for="difffilter-visual">Visual difference</div>
+        <label id="difffilter-visual" class="diff-switcher mdl-button mdl-js-button mdl-button--icon mdl-icon-toggle mdl-js-icon-toggle mdl-button--colored" data-diff="not_matching_visually">
+            <input type="checkbox" class="mdl-icon-toggle__input" checked />
+            <i class="icon-visibility"></i>
+        </label>
+        <div class="mdl-tooltip" for="difffilter-visual">Visual difference</div>
 
-            <label id="difffilter-width" class="diff-switcher mdl-button mdl-js-button mdl-button--icon mdl-icon-toggle mdl-js-icon-toggle mdl-button--colored" data-diff="offset_width">
-                <input type="checkbox" class="mdl-icon-toggle__input" />
-                <i class="icon-crop_landscape"></i>
-            </label>
-            <div class="mdl-tooltip" for="difffilter-width">Different width</div>
+        <label id="difffilter-width" class="diff-switcher mdl-button mdl-js-button mdl-button--icon mdl-icon-toggle mdl-js-icon-toggle mdl-button--colored" data-diff="offset_width">
+            <input type="checkbox" class="mdl-icon-toggle__input" />
+            <i class="icon-crop_landscape"></i>
+        </label>
+        <div class="mdl-tooltip" for="difffilter-width">Different width</div>
 
-            <label id="difffilter-height" class="diff-switcher mdl-button mdl-js-button mdl-button--icon mdl-icon-toggle mdl-js-icon-toggle mdl-button--colored" data-diff="offset_height">
-                <input type="checkbox" class="mdl-icon-toggle__input" />
-                <i class="icon-crop_portrait"></i>
-            </label>
-            <div class="mdl-tooltip" for="difffilter-height">Different height</div>
+        <label id="difffilter-height" class="diff-switcher mdl-button mdl-js-button mdl-button--icon mdl-icon-toggle mdl-js-icon-toggle mdl-button--colored" data-diff="offset_height">
+            <input type="checkbox" class="mdl-icon-toggle__input" />
+            <i class="icon-crop_portrait"></i>
+        </label>
+        <div class="mdl-tooltip" for="difffilter-height">Different height</div>
 
-            <label id="difffilter-offset-x" class="diff-switcher mdl-button mdl-js-button mdl-button--icon mdl-icon-toggle mdl-js-icon-toggle mdl-button--colored" data-diff="offset_x">
-                <input type="checkbox" class="mdl-icon-toggle__input" />
-                <i class="icon-keyboard_tab"></i>
-            </label>
-            <div class="mdl-tooltip" for="difffilter-offset-x">Different horizontal position</div>
+        <label id="difffilter-offset-x" class="diff-switcher mdl-button mdl-js-button mdl-button--icon mdl-icon-toggle mdl-js-icon-toggle mdl-button--colored" data-diff="offset_x">
+            <input type="checkbox" class="mdl-icon-toggle__input" />
+            <i class="icon-keyboard_tab"></i>
+        </label>
+        <div class="mdl-tooltip" for="difffilter-offset-x">Different horizontal position</div>
 
-            <label id="difffilter-offset-y" class="diff-switcher mdl-button mdl-js-button mdl-button--icon mdl-icon-toggle mdl-js-icon-toggle mdl-button--colored" data-diff="offset_y">
-                <input type="checkbox" class="mdl-icon-toggle__input" />
-                <i class="icon-vertical_align_bottom"></i>
-            </label>
-            <div class="mdl-tooltip" for="difffilter-offset-y">Different vertical position</div>
-        </div>
+        <label id="difffilter-offset-y" class="diff-switcher mdl-button mdl-js-button mdl-button--icon mdl-icon-toggle mdl-js-icon-toggle mdl-button--colored" data-diff="offset_y">
+            <input type="checkbox" class="mdl-icon-toggle__input" />
+            <i class="icon-vertical_align_bottom"></i>
+        </label>
+        <div class="mdl-tooltip" for="difffilter-offset-y">Different vertical position</div>
 
     </div>

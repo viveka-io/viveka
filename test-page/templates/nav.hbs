@@ -2,8 +2,9 @@
 
         <h2 class="mdl-layout-title">
             <a href="/" class="mdl-color-text--primary-contrast mdl-typography--font-regular">
-                <i class="viv-logo icon-viveka-swan"></i> {{title}}
+                <i class="icon-viveka-swan"></i>
             </a>
+            <span class="test-case">{{title}}</span>
         </h2>
 
 
@@ -16,7 +17,7 @@
                     <a class="mdl-menu__item" href="#{{textId}}">{{name}}</a>
                 {{/if}}
                 {{#if divider}}
-                    <span class="divider"></span>
+                    <hr>
                 {{/if}}
             {{/each}}
         </nav>
