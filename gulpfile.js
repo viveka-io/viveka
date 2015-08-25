@@ -4,6 +4,7 @@ var sourcemaps = require('gulp-sourcemaps');
 var babel = require('gulp-babel');
 var cache = require('gulp-cached');
 var spawn = require('child_process').spawn;
+var sass = require('node-sass-middleware');
 var node;
 var bunyan;
 
@@ -55,8 +56,15 @@ gulp.task('startServer', ['babel'], function() {
     });
 });
 
+gulp.task('styles', function() {
+    return gulp.src('styles/**/*.scss')
+        .pipe(sass().on('error', sass.logError))
+        .pipe(gulp.dest('./public/css/'));
+});
+
 gulp.task('watch', function() {
     gulp.watch(paths.src, ['startServer']);
+    gulp.watch('styles/**/*.scss',['styles']);
 });
 
 gulp.task('default', ['startServer', 'watch']);

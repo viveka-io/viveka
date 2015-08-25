@@ -6,7 +6,7 @@
             views: [
                 {id: 'side-by-side-view', name: 'Side by side', active: true},
                 {id: 'baseline-view', name: 'Baseline'},
-                {id: 'current-view', name: 'Current'},
+                {id: 'current-view', name: 'Current'}
             ]
         },
         activeView = readView(),
@@ -22,7 +22,6 @@
 
         if(activeView === 'side-by-side-view') {
             $('header').append(Handlebars.templates.nav(header));
-            $.material.init();
         }
 
         router.on('/:testCase', function (testCase) {
@@ -61,6 +60,8 @@
         $('.current').append(Handlebars.templates[testCase + '-current']()).removeClass('current');
         setTestCaseCaption(testCase);
         activeTestCase = testCase;
+
+        componentHandler.upgradeAllRegistered();
     }
 
     function getQueryParam(name) {
@@ -81,7 +82,6 @@
 
         return 'side-by-side-view';
     }
-
 
 })();
 

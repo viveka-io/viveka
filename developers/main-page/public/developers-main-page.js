@@ -1,1 +1,0 @@
-SVGInjector(document.querySelectorAll('.logo'));

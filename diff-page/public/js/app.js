@@ -7,7 +7,7 @@
             views: [
                 { id: 'side-by-side-view',  name: 'Side by side' },
                 { id: 'baseline-view',      name: 'Baseline' },
-                { id: 'current-view',       name: 'Current' },
+                { id: 'current-view',       name: 'Current' }
             ]
         },
         router;
@@ -21,18 +21,16 @@
         attachDiffSwitcherEvent();
         attachCreateDiffEvent();
         initRouter();
+        componentHandler.upgradeAllRegistered();
     }
 
     function appendHeader() {
         $('#header-container').html(Handlebars.templates.nav(header));
-        $.material.init();
     }
 
     function attachDiffSwitcherEvent() {
-        $('.diff-switcher li').on('click', function (event) {
-            $(this).toggleClass('active');
-
-            $('#wrapper').toggleClass($(this).data('diff'), $(this).is('.active'));
+        $('.diff-switcher').on('click', function (event) {
+            $('#wrapper').toggleClass($(this).data('diff'), $(this).is('.is-checked'));
         });
     }
 
@@ -238,7 +236,7 @@
             if (offsetB) {
                 setPosition($markerB, offsetB, widthB, heightB);
             } else {
-                $markerB.css('top', '300%');
+                $markerB.css('top', '-100%');
             }
         });
     }
