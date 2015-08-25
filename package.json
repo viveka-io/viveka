@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "postinstall": "bower install",
     "start": "gulp"
   },
   "repository": {
