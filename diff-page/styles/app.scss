@@ -9,6 +9,8 @@ $color-height:   $palette-lime-500;
 $color-offset-x: $palette-grey-500;
 $color-offset-y: $palette-grey-500;
 
+$list-action-size: 32px;
+
 .mdl-layout-title {
     margin-right: $grid-desktop-gutter;
 
@@ -41,70 +43,82 @@ $color-offset-y: $palette-grey-500;
     &.is-checked[data-diff="offset_y"]              { background-color: color($color-offset-y); }
 }
 
-// TODO: use MDL styles for this panel
-/*
 #diff-inspector {
 
-    .list-group {
-        margin-bottom: 0;
-
-        .list-group-item {
-
-            padding: 16px;
-            border-top: 1px solid color($palette-grey-300);
-            transition: background .3s ease;
-
-            &.selected, &:hover {
-                background-color: color($palette-blue-grey-100);
-            }
-
-
-            &:before {
-                content: attr(data-diff-index);
-                position: absolute;
-                font-size: 84px;
-                right: -12px;
-                top: 0;
-                line-height: 0.75;
-                font-weight: bold;
-                color: color($palette-grey-100);
-            }
-
-            .row-action-primary i {
-                font-style: normal;
-
-                &.delete {
-                    background: color($palette-red-500);
-                }
-            }
-
-            .row-content {
-                position: relative;
-            }
-        }
-    }
-
-    .meta-content {
-        margin-left: 72px;
-    }
-
-    dl {
+    .diff-item {
+        position: relative;
         overflow: hidden;
-        margin: 0;
+        padding: $grid-desktop-gutter;
+        border-top: 1px solid color($palette-grey-300);
+        font-size: $card-supporting-text-font-size;
+        transition: all .5s ease;
+
+        &.selected, &:hover {
+            @include focus-shadow;
+            background-color: color($color-white);
         }
 
-    dt {
+        &:before {
+            content: attr(data-diff-index);
+            position: absolute;
+            right: 4px;
+            top: 2px;
+            color: color($color-primary);
+        }
+
+        h6 {
+            margin: .2em 0 .4em;
+            font-size: 14px;
+            line-height: 16px;
+        }
+
+        small {
+            line-height: 1.2;
+            display: block;
+        }
+
+    }
+
+    .diff-letter {
         float: left;
-        clear: left;
-        width: 5em;
-        font-weight: bold;
+        font-size: $list-action-size/2;
+        line-height: $list-action-size;
+        width: $list-action-size;
+        height: $list-action-size;
+        margin-right: $grid-desktop-gutter;
+        border: 0;
+        border-radius: 100%;
+        text-align: center;
     }
 
-    dd {
+    .diff-content {
         overflow: hidden;
+        font-size: 12px;
+
+        p {
+            font-size: 10px;
+        }
+
+        i {
+            font-size: 11px;
+        }
+
+        span {
+            margin-right: .5em;
+        }
+
+    }
+
+    .diff-types span {
+        display: block;
+        font-size: 10px;
+        background: color($color-primary, .1);
+        border-radius: $button-border-radius;
+        padding: 0 .5em;
+        margin-bottom: 1px;
+
     }
 }
-*/
 
 .container {
     position: relative;

@@ -25,7 +25,7 @@
     }
 
     function appendHeader() {
-        $('#header-container').html(Handlebars.templates.nav(header));
+        $('#header-container').append(Handlebars.templates.nav(header));
     }
 
     function attachDiffSwitcherEvent() {
@@ -220,7 +220,7 @@
     }
 
     function attachDiffInspectorHoverEvent(diffResult, widthA, widthB, heightA, heightB) {
-        $('#diff-inspector .list-group-item').on('mouseover', function () {
+        $('#diff-inspector .diff-item').on('mouseover', function () {
             var index = $(this).data('diff-index'),
                 offsetA = diffResult[index].a && diffResult[index].a.offset,
                 offsetB = diffResult[index].b && diffResult[index].b.offset,
@@ -230,7 +230,7 @@
             if (offsetA) {
                 setPosition($markerA, offsetA, widthA, heightA);
             } else {
-                $markerA.css('top', '300%');
+                $markerA.css('top', '-100%');
             }
 
             if (offsetB) {
@@ -238,6 +238,10 @@
             } else {
                 $markerB.css('top', '-100%');
             }
+        });
+
+        $('#diff-inspector').on('mouseout', function () {
+            $('.diffmarker').css('height', 0);
         });
     }
 

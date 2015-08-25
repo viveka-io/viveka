@@ -1,43 +1,41 @@
 {{#if this.length}}
-    <div class="list-group">
     {{#each this}}
-        <div class="list-group-item" id="diff{{@index}}" data-diff-index="{{@index}}">
+        <div class="diff-item" id="diff{{@index}}" data-diff-index="{{@index}}">
             {{#if a}}
-                <div class="row-action-primary"><i{{#if deleteA}} class="delete"{{/if}}>A</i></div>
-                <div class="row-content">
-                    <dl>
-                        <dt>name:</dt><dd>{{a.name}}</dd>
-                        <dt>path:</dt><dd>{{a.path}}</dd>
-                        <dt>offset:</dt><dd> top: {{a.offset.top}} / left: {{a.offset.left}} / width: {{a.offset.width}} / height: {{a.offset.height}}</dd>
-                    </dl>
+                <div class="diff-letter mdl-color-text--accent-contrast {{#if deleteA}}mdl-color--red-500{{else}}mdl-color--blue-grey-400{{/if}}">A</div>
+                <div class="diff-content">
+                    <h6>{{a.name}}</h6>
+                    <small>{{a.path}}</small>
+                    {{#if aHasCopy}}
+                        <button class="diff-button mdl-button mdl-js-button mdl-button--accent" data-diff-target="{{aHasCopy}}">Copy of #{{aHasCopy}}B</button>
+                    {{/if}}
+                    <p>
+                        <i class="icon-gps_fixed"></i> <span>{{a.offset.left}} / {{a.offset.top}}</span>
+                        <i class="icon-crop"></i> <span>{{a.offset.width}} &#215; {{a.offset.height}}</span>
+                    </p>
                 </div>
             {{/if}}
             {{#if b}}
-                <div class="row-action-primary"><i{{#if deleteB}} class="delete"{{/if}}>B</i></div>
-                <div class="row-content">
-                    <dl>
-                        <dt>name:</dt><dd>{{b.name}}</dd>
-                        <dt>path:</dt><dd>{{b.path}}</dd>
-                        <dt>offset:</dt><dd> top: {{b.offset.top}} / left: {{b.offset.left}} / width: {{b.offset.width}} / height: {{b.offset.height}}</dd>
-                    </dl>
+                <div class="diff-letter mdl-color-text--accent-contrast {{#if deleteB}}mdl-color--red-500{{else}}mdl-color--blue-grey-400{{/if}}">B</div>
+                <div class="diff-content">
+                    <h6>{{b.name}}</h6>
+                    <small>{{b.path}}</small>
+                    {{#if bHasCopy}}
+                        <button class="diff-button mdl-button mdl-js-button mdl-button--accent" data-diff-target="{{bHasCopy}}">Copy of #{{bHasCopy}}A</button>
+                    {{/if}}
+                    <p>
+                        <i class="icon-gps_fixed"></i> <span>{{b.offset.left}} / {{b.offset.top}}</span>
+                        <i class="icon-crop"></i> <span>{{b.offset.width}} &#215; {{b.offset.height}}</span>
+                    </p>
                 </div>
             {{/if}}
-            <div class="meta-content">
-            {{#if aHasCopy}}
-                <button class="btn btn-primary btn-xs" data-diff-target="{{aHasCopy}}">Copy of #{{aHasCopy}}B</button>
-            {{/if}}
-            {{#if bHasCopy}}
-                <button class="btn btn-primary btn-xs" data-diff-target="{{bHasCopy}}">Copy of #{{bHasCopy}}A</button>
-            {{/if}}
-                <div class="diffs">
-                {{#each differences}}
-                    <span class="label label-default">{{this}}</span>
-                {{/each}}
-                </div>
+            <div class="diff-types">
+            {{#each differences}}
+                <span>{{this}}</span>
+            {{/each}}
             </div>
         </div>
     {{/each}}
-    </div>
 {{else}}
     <div class="mdl-color--green mdl-color-text--white mdl-typography--display-3 mdl-typography--text-center">
         <i class="icon-done"></i>
