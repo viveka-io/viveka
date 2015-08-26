@@ -1,0 +1,51 @@
+@import '../../common/style';
+
+body {
+    background: color($color-white);
+}
+
+.viv-header {
+    background: url(images/bg-mountains.png) no-repeat 50% 100% / cover $layout-header-bg-color;
+    min-height: 30vh;
+
+    h2 {
+        text-align: center;
+
+        @media (max-width: $grid-tablet-breakpoint - 1) {
+            font-size: 34px;
+        }
+    }
+}
+
+.viv-logo {
+    display: block;
+    text-align: center;
+    font-size: 15vh;
+    line-height: 20vh;
+}
+
+
+.mdl-grid {
+    max-width: 1200px;
+}
+
+.mdl-card {
+    width: 100%;
+}
+
+.mdl-card__title {
+    color: color($color-primary-contrast);
+    height: 20vh;
+
+    i {
+        opacity: .1;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        text-align: right;
+        font-size: 50vh;
+        font-weight: bold;
+        line-height: 20vh;
+    }
+}

@@ -6,4 +6,5 @@ public/images/fingerprints/*.png
 .idea
 .settings
 *.css
+*.map
 public/test_cases.json

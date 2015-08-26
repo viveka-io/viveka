@@ -91,10 +91,9 @@ features.forEach(function (feature) {
 
     $('#side-menu').append(html);
 });
-$.material.init();
 
 $('body').on('click', '.message', function () {
-    $(this).closest('.request').find('.content').slideToggle(500);
+    $(this).closest('.request').toggleClass('opened').find('.content').slideToggle(300);
 });
 
 $('body').on('click', '.submit:not("missing")', function () {
@@ -103,14 +102,20 @@ $('body').on('click', '.submit:not("missing")', function () {
 
     socket.emitAsync(message, collectData($t.find('.content')))
         .then(function(data){
-            var $message;
+            var $message,
+                jsonString,
+                jsonStringWithoutStyle;
 
             if (data.error || data.info) {
                 $message =  $(Handlebars.templates.message(data));
             } else {
+                jsonString = JSON.stringify(data.result, undefined, 4);
+                jsonStringWithoutStyle = jsonString.replace(/"style":.*[^}]*}/igm, 'style: "..."');
+
                 $message = $(Handlebars.templates.message({
-                    content: JSON.stringify(data.result, undefined, 4),
-                    screenshot: data.result.screenshot
+                    content: jsonStringWithoutStyle,
+                    screenshot: data.result.screenshot,
+                    title: data.title
                 }));
             }
 
@@ -130,19 +135,3 @@ function collectData(content) {
 
     return data;
 }
-
-function replaceUrl(url, content) {
-    var matches = url.match(/{.*?}/g);
-
-    if(matches && matches.length > 0) {
-        $.each(matches, function(i, match) {
-            var input = content.find('input[name="'+match.substr(1, match.length-2)+'"]');
-            if (input.val()) {
-                url = url.replace(match, input.val());
-            }
-        })
-    }
-    console.log(url);
-    return url;
-}
-
