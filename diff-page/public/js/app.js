@@ -87,7 +87,7 @@
             baselineId,
             targetId;
 
-        console.log('Searching for baseline finerprint...');
+        console.log('Searching for baseline fingerprint...');
         socket.emitAsync('fingerprints get baseline', { id: testId })
             .then(function (data) {
                 if (data.result) {
