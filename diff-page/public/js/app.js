@@ -21,13 +21,11 @@
         attachDiffSwitcherEvent();
         attachCreateDiffEvent();
         initRouter();
-
-        //setTestCaseCaption(testCases[0].textId); // my best guess is that this runs twice
         componentHandler.upgradeAllRegistered();
     }
 
     function appendHeader() {
-        $('#header-container').html(Handlebars.templates.nav(header));
+        $('#header-container').append(Handlebars.templates.nav(header));
     }
 
     function attachDiffSwitcherEvent() {
@@ -58,7 +56,7 @@
             render(baselineId, targetId);
         });
 
-        router.init('/' + header.testCases[0].textId);
+        router.init(header.testCases[0].textId);
     }
 
     function setTestCaseCaption(testCaseTextId) {
@@ -95,40 +93,35 @@
                 if (data.result) {
                     baselineId = data.result._id;
                     console.log('Baseline fingerprint ' + baselineId + ' found.');
+                    
                     return Promise.resolve();
                 }
 
                 console.log('Baseline fingerprint not found. Creating new fingerprint...');
-                /*********************************************************************/
-                /*                                                                   */
-                /*                                                                   */
-                /*                                                                   */
-                /*                                                                   */
-                /* THIS IS WHERE I GAVE UP AND KILLED THE PERSON WHO WROTE THIS CODE */
-                /*                                                                   */
-                /*                                                                   */
-                /*                                                                   */
-                /*                                                                   */
-                /*********************************************************************/
+                
                 return socket.emitAsync('fingerprints create', { id: testId })
                     .then(function (data) {
                         console.log('Fingerprint created. Approving it...');
                         baselineId = data.result._id;
+                        
                         return socket.emitAsync('fingerprints approve', { id: data.result._id });
                     });
             })
             .then(function () {
                 console.log('Searching latest fingerprint...');
+                
                 return socket.emitAsync('fingerprints get latest', { id: testId });
             })
             .then(function (data) {
                 if (data.result && data.result._id !== baselineId) {
                     targetId = data.result._id;
                     console.log('Latest fingerprint ' + targetId + ' found.');
+                    
                     return Promise.resolve();
                 }
 
                 console.log('Latest fingerprint not found. Creating one');
+                
                 return socket.emitAsync('fingerprints create', { id: testId });
             })
             .then(function (data) {
@@ -156,73 +149,103 @@
         var loaded = 0;
 
         return function () {
-            if (++loaded == 2) {
+            if (++loaded === 2) {
                 getDiffs(baselineId, targetId);
             }
         };
     }
 
     function getDiffs(idA, idB) {
-        var $imgA   = $('#imgA'),
-            $imgB   = $('#imgB'),
-            widthA  = $imgA[0].naturalWidth,
-            widthB  = $imgB[0].naturalWidth,
-            heightA = $imgA[0].naturalHeight,
-            heightB = $imgB[0].naturalHeight;
+        var $imgA           = $('#imgA'),
+            $imgB           = $('#imgB'),
+            $contA          = $('#contA'),
+            $contB          = $('#contB'),
+            diffATemplate   = Handlebars.templates['diff-areas-a'],
+            diffBTemplate   = Handlebars.templates['diff-areas-b'],
+            widthA          = $imgA[0].naturalWidth,
+            widthB          = $imgB[0].naturalWidth,
+            heightA         = $imgA[0].naturalHeight,
+            heightB         = $imgB[0].naturalHeight;
 
         socket.emitAsync('differences create json', {
             baselineId: idA,
             targetId: idB
         })
             .then(function (data) {
-                var $listItems;
+                appendDiffAreas($contA, diffATemplate, data.result);
+                setDiffPositions($contA.find('.diff'), 'a', widthA, heightA, data.result);
 
-                $('#contA').append(Handlebars.templates['diff-areas-a'](data.result));
-                $('#contA').find('.diff').each(function (index) {
-                    setPosition($(this), data.result[index].a && data.result[index].a.offset, widthA, heightA);
-                });
+                appendDiffAreas($contB, diffBTemplate, data.result);
+                setDiffPositions($contB.find('.diff'), 'b', widthB, heightB, data.result);
 
-                $('#contB').append(Handlebars.templates['diff-areas-b'](data.result));
-                $('#contB').find('.diff').each(function (index) {
-                    setPosition($(this), data.result[index].b && data.result[index].b.offset, widthB, heightB);
-                });
-                $('#contA .diff, #contB .diff').on('click', function (event) {
-                    var diffIndex = $(event.target).closest('.diff').data('diff-index'),
-                        offset = $('#diff-inspector').find('li[data-diff-index="' + diffIndex + '"]').offset().top;
+                appendDiffInspector(data.result);
+                attachDiffInspectorHoverEvent(data.result, widthA, widthB, heightA, heightB);
 
-                    event.stopPropagation();
-
-                    $('#diff-inspector').scrollTop(offset);
-                });
-
-                $('#diff-inspector').append(Handlebars.templates['diff-inspector'](data.result));
-                $listItems = $('#diff-inspector li');
-                $listItems.on('mouseover', function () {
-                    var index = $listItems.index(this),
-                        offsetA = data.result[index].a && data.result[index].a.offset,
-                        offsetB = data.result[index].b && data.result[index].b.offset,
-                        $markerA = $('#contA .diffmarker'),
-                        $markerB = $('#contB .diffmarker');
-
-                    if (offsetA) {
-                        setPosition($markerA, offsetA, widthA, heightA);
-                    } else {
-                        $markerA.css('top', '-100%');
-                    }
-
-                    if (offsetB) {
-                        setPosition($markerB, offsetB, widthB, heightB);
-                    } else {
-                        $markerB.css('top', '-100%');
-                    }
-
-                });
+                attachScrollToDiffEvent();
 
                 $('#overlay').hide();
             });
     }
 
-    function setPosition($marker, offset, imgWidth, imgHeight) {
+    function appendDiffAreas(diffContainer, diffTemplate, diffResult) {
+        diffContainer.append(diffTemplate(diffResult));
+    }
+
+    function setDiffPositions($diffs, item, width, height, diffResult) {
+        $diffs.each(function (index) {
+            setPosition($(this), diffResult[index][item] && diffResult[index][item].offset, width, height);
+        });
+    }
+
+    function attachScrollToDiffEvent() {
+        $('[data-diff-target]').on('click', function (event) {
+            var $diffInspector = $('#diff-inspector'),
+                diffTargetIndex = $(this).data('diff-target'),
+                $diffTarget = $diffInspector.find('[data-diff-index="' + diffTargetIndex + '"]'),
+                offset = $diffInspector.scrollTop() + $diffTarget.position().top;
+                    
+            event.stopPropagation();
+                
+            $diffInspector.stop(true, true).animate({ scrollTop: offset }, 200, function() {
+                $diffTarget.addClass('selected');
+                setTimeout(function() {
+                    $diffTarget.removeClass('selected');
+                }, 500);
+            });
+        });
+    }
+
+    function appendDiffInspector(diffResult) {
+        $('#diff-inspector').append(Handlebars.templates['diff-inspector'](diffResult));
+    }
+
+    function attachDiffInspectorHoverEvent(diffResult, widthA, widthB, heightA, heightB) {
+        $('#diff-inspector .diff-item').on('mouseover', function () {
+            var index = $(this).data('diff-index'),
+                offsetA = diffResult[index].a && diffResult[index].a.offset,
+                offsetB = diffResult[index].b && diffResult[index].b.offset,
+                $markerA = $('#contA .diffmarker'),
+                $markerB = $('#contB .diffmarker');
+
+            if (offsetA) {
+                setPosition($markerA, offsetA, widthA, heightA);
+            } else {
+                $markerA.css('top', '-100%');
+            }
+
+            if (offsetB) {
+                setPosition($markerB, offsetB, widthB, heightB);
+            } else {
+                $markerB.css('top', '-100%');
+            }
+        });
+
+        $('#diff-inspector').on('mouseout', function () {
+            $('.diffmarker').css('height', 0);
+        });
+    }
+
+    function setPosition($marker, offset, imgWidth, imgHeight) {   
         if (offset) {
             $marker.css({
                 top: (offset.top / imgHeight * 100) + '%',

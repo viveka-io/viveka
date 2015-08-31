@@ -18,6 +18,6 @@
     "jquery": "~2.1.4",
     "lodash": "~3.9.3",
     "bluebird": "~2.9.30",
-    "material-design-lite": "~1.0.2"
+    "material-design-lite": "~1.0.4"
   }
 }

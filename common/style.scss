@@ -10,7 +10,6 @@ $color-primary-dark: $palette-blue-grey-700;
 $color-accent: $palette-red-500;
 @import 'bower_components/material-design-lite/src/material-design-lite';
 
-
 // Helpers
 @function color($color, $alpha: null) {
     @if ($alpha) {
@@ -22,6 +21,7 @@ $color-accent: $palette-red-500;
 
 
 // Override MDL
+
 .mdl-layout__drawer-button .material-icons {
     display: inline-block;
     text-indent: 100%;
