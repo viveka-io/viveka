@@ -1,76 +1,80 @@
-var gulp = require('gulp');
-var gutil = require('gulp-util');
-var sourcemaps = require('gulp-sourcemaps');
-var babel = require('gulp-babel');
-var cache = require('gulp-cached');
-var spawn = require('child_process').spawn;
-var sass = require('node-sass-middleware');
-var node;
-var bunyan;
-
 var path = require('path');
-
+var gulp = require('gulp');
+var $ = require('gulp-load-plugins')({
+    pattern: ['gulp-*', 'del']
+});
+var browserSync = require('browser-sync').create();
+var spawn = require('child_process').spawn;
+var node;
+//--------------------------- CONFIGURATION ----------------------------------
 var paths = {
-    src: ['lib/**/*.js'],
-    dest: 'dist',
-    sourceRoot: path.join(__dirname, 'lib'),
+    src: {
+        server: {
+            root: path.join(__dirname, 'lib'),
+            all: 'lib/**/*.js'
+        },
+        style: 'developers/**/*.scss'
+    },
+    tmp: {
+        server: {
+            index: 'tmp/server/index.js',
+            root: 'tmp/server'
+        },
+        style: 'tmp/public/style'
+    }
 };
-
-paths.server = path.join(paths.dest, 'index.js');
-
+//---------------------------- SERVER TASKS -----------------------------------
 gulp.task('babel', ['stopServer'], function() {
-    return gulp.src(paths.src)
-        .pipe(sourcemaps.init())
-        .pipe(cache('babel'))//Transpile only changed files
-        .pipe(babel({
+    return gulp.src(paths.src.server.all)
+        .pipe($.sourcemaps.init())
+        .pipe($.cached('Server:Babel'))
+        .pipe($.babel({
           optional: ['es7.asyncFunctions']
-        }))
-        .pipe(sourcemaps.write('.', { sourceRoot: paths.sourceRoot }))
-        .pipe(gulp.dest(paths.dest));
+        }).on('error', errorHandler('Server:Babel')))
+        .pipe($.sourcemaps.write('.', { sourceRoot: paths.src.server.root }))
+        .pipe(gulp.dest(paths.tmp.server.root));
 });
 
 gulp.task('stopServer', function() {
     if (node) {
         node.kill();
     }
-
-    if (bunyan) {
-        bunyan.kill();
-    }
 });
 
 gulp.task('startServer', ['babel'], function() {
-    node = spawn('node', [paths.server]);
-    bunyan = spawn('node', ['./node_modules/bunyan/bin/bunyan', '-o', 'short']);
-
-    node.stdout.pipe(bunyan.stdin);
-    node.stderr.pipe(bunyan.stdin);
-
-    bunyan.stdout.pipe(process.stdout);
-    bunyan.stderr.pipe(process.stderr);
-
+    node = spawn('node', [paths.tmp.server.index], { stdio: 'inherit' });
     node.on('close', function(code) {
         if (code === 8) {
-            gutil.log('Error detected, waiting for changes...');
+            $.util.log('Error detected, waiting for changes...');
         }
     });
 });
-
-gulp.task('styles', function() {
-    return gulp.src('styles/**/*.scss')
-        .pipe(sass().on('error', sass.logError))
-        .pipe(gulp.dest('./public/css/'));
-});
-
-gulp.task('watch', function() {
-    gulp.watch(paths.src, ['startServer']);
-    gulp.watch('styles/**/*.scss',['styles']);
-});
-
-gulp.task('default', ['startServer', 'watch']);
 
 process.on('exit', function() {
     if (node) {
         node.kill();
     }
 });
+//---------------------------- STYLE TASKS -----------------------------------
+gulp.task('sass', function() {
+    return gulp.src(paths.src.style)
+        .pipe($.cached('Sass'))
+        .pipe($.sass().on('error', errorHandler('Sass')))
+        .pipe(gulp.dest(paths.tmp.style));
+});
+//---------------------------- WATCH TASK -----------------------------------
+gulp.task('watch', function() {
+    gulp.watch(paths.src.server.all, ['startServer']);
+    gulp.watch(paths.src.style, ['sass']);
+});
+//---------------------------- DEFAULT TASK -----------------------------------
+gulp.task('default', ['startServer', 'watch']);
+//---------------------------- ERROR HANDLER -----------------------------------
+function errorHandler(title) {
+    'use strict';
+
+    return function(err) {
+        $.util.log($.util.colors.red('[' + title + ']'), err.toString());
+        this.emit('end');
+    };
+}
