@@ -1,0 +1,219 @@
+@import '../../common/style';
+
+$color-removed:  $palette-red-300;
+$color-added:    $palette-green-300;
+$color-name:     $palette-yellow-300;
+$color-visual:   $palette-blue-300;
+$color-width:    $palette-teal-500;
+$color-height:   $palette-lime-500;
+$color-offset-x: $palette-grey-500;
+$color-offset-y: $palette-grey-500;
+$color-forced:   $palette-red-500;
+
+$list-action-size: 32px;
+
+.mdl-layout-title {
+    margin-right: $grid-desktop-gutter;
+
+    a {
+        text-decoration: none;
+    }
+}
+
+#menu-tests {
+    margin-right: $grid-desktop-gutter;
+}
+
+#header-container .mdl-button--icon {
+    line-height: 1.5;
+    margin-left: $grid-desktop-gutter / 2;
+}
+
+.diff-switcher {
+    &:not(.is-checked) {
+        @extend .mdl-button--raised;
+    }
+
+    &.is-checked[data-diff="node_added"]            { background-color: color($color-added); }
+    &.is-checked[data-diff="node_removed"]          { background-color: color($color-removed); }
+    &.is-checked[data-diff="not_matching_name"]     { background-color: color($color-name); }
+    &.is-checked[data-diff="not_matching_visually"] { background-color: color($color-visual); }
+    &.is-checked[data-diff="offset_width"]          { background-color: color($color-width); }
+    &.is-checked[data-diff="offset_height"]         { background-color: color($color-height); }
+    &.is-checked[data-diff="offset_x"]              { background-color: color($color-offset-x); }
+    &.is-checked[data-diff="offset_y"]              { background-color: color($color-offset-y); }
+    &.is-checked[data-diff="forced"]                { background-color: color($color-forced); }
+}
+
+#diff-inspector {
+
+    .diff-item {
+        position: relative;
+        overflow: hidden;
+        padding: $grid-desktop-gutter;
+        border-top: 1px solid color($palette-grey-300);
+        font-size: $card-supporting-text-font-size;
+        transition: all .5s ease;
+
+        &.selected, &:hover {
+            @include focus-shadow;
+            background-color: color($color-white);
+        }
+
+        &:before {
+            content: attr(data-diff-index);
+            position: absolute;
+            right: 4px;
+            top: 2px;
+            color: color($color-primary);
+        }
+
+        h6 {
+            margin: .2em 0 .4em;
+            font-size: 14px;
+            line-height: 16px;
+        }
+
+        small {
+            line-height: 1.2;
+            display: block;
+        }
+
+    }
+
+    .diff-letter {
+        float: left;
+        font-size: $list-action-size/2;
+        line-height: $list-action-size;
+        width: $list-action-size;
+        height: $list-action-size;
+        margin-right: $grid-desktop-gutter;
+        border: 0;
+        border-radius: 100%;
+        text-align: center;
+    }
+
+    .diff-content {
+        overflow: hidden;
+        font-size: 12px;
+
+        p {
+            font-size: 10px;
+        }
+
+        i {
+            font-size: 11px;
+        }
+
+        span {
+            margin-right: .5em;
+        }
+
+    }
+
+    .diff-types span {
+        display: block;
+        font-size: 10px;
+        background: color($color-primary, .1);
+        border-radius: $button-border-radius;
+        padding: 0 .5em;
+        margin-bottom: 1px;
+
+    }
+}
+
+.container {
+    position: relative;
+
+    img {
+        width: 100%;
+        vertical-align: top;
+    }
+}
+
+
+.diffmarker {
+    border: 1px solid transparent;
+    box-sizing: border-box;
+    position: absolute;
+    transition: all .2s ease;
+    z-index: 100;
+
+    .mdl-layout__drawer:hover + .mdl-layout__content & {
+        border-color: red;
+    }
+}
+
+.diff {
+    position: absolute;
+    box-sizing: border-box;
+
+    &:hover {
+        outline: 1px dotted color($color-black);
+    }
+
+    * {
+        position: absolute;
+        left:0; top: 0; right: 0; bottom: 0;
+        box-sizing: border-box;
+    }
+}
+
+.node_removed .node_removed                     { background: color($color-removed, .2); }
+.node_added .node_added                         { background: color($color-added, .2); }
+.not_matching_name .not_matching_name span      { background: color($color-name, .2); }
+.not_matching_visually .not_matching_visually b { background: color($color-visual, .2); }
+.offset_width .offset_width_lower               { background: color($color-width, .2); }
+.offset_width .offset_width_higher              { background: color($color-width, .2); }
+.offset_height .offset_height_lower             { background: color($color-height, .2);}
+.offset_height .offset_height_higher            { background: color($color-height, .2);}
+.offset_x .offset_x_lower:after,
+.offset_x .offset_x_higher:after,
+.offset_y .offset_y_lower:after,
+.offset_y .offset_y_higher:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    transform: translate(-50%, -50%);
+}
+
+.offset_x .offset_x_lower:after                 { left: 0; top: 50%; border-right-color: rgba(0, 0, 0, .4); margin-left: -10px;}
+.offset_x .offset_x_higher:after                { left: 0; top: 50%; border-left-color: rgba(0, 0, 0, .4); }
+.offset_y .offset_y_lower:after                 { left: 50%; top: 0; border-bottom-color: rgba(0, 0, 0, .4); margin-top: -10px; }
+.offset_y .offset_y_higher:after                { left: 50%; top: 0; border-top-color: rgba(0, 0, 0, .4); }
+
+.forced {
+    .diff, .diff * {
+        background: color($color-forced);
+    }
+}
+
+
+#overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    background: color($color-black, .4);
+
+    span {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background: color($color-white);
+        padding: $grid-desktop-gutter;
+        line-height: 2em;
+    }
+
+    i {
+        vertical-align: middle;
+        font-size: 1.5em;
+        margin-right: $grid-desktop-gutter;
+    }
+}
