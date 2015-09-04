@@ -10,11 +10,12 @@ module.exports = [{
     id: '5595663e9c5d719811f1659c',
     textId: "half-pixels",
     name: "Half pixels"
+}, {
+    id: '5595663e9c5d719811f1659d',
+    textId: "changed-style",
+    name: "Changed style"
 }
-//, {
-//    textId: "floated-element-added",
-//    name: "Floated element added"
-//}, {
+//,  {
 //    textId: "floated-element-removed",
 //    name: "Floated element removed"
 //}, {

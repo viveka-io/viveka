@@ -8,6 +8,7 @@ $color-width:    $palette-teal-500;
 $color-height:   $palette-lime-500;
 $color-offset-x: $palette-grey-500;
 $color-offset-y: $palette-grey-500;
+$color-forced:   $palette-red-500;
 
 $list-action-size: 32px;
 
@@ -41,6 +42,7 @@ $list-action-size: 32px;
     &.is-checked[data-diff="offset_height"]         { background-color: color($color-height); }
     &.is-checked[data-diff="offset_x"]              { background-color: color($color-offset-x); }
     &.is-checked[data-diff="offset_y"]              { background-color: color($color-offset-y); }
+    &.is-checked[data-diff="forced"]                { background-color: color($color-forced); }
 }
 
 #diff-inspector {
@@ -181,6 +183,13 @@ $list-action-size: 32px;
 .offset_x .offset_x_higher:after                { left: 0; top: 50%; border-left-color: rgba(0, 0, 0, .4); }
 .offset_y .offset_y_lower:after                 { left: 50%; top: 0; border-bottom-color: rgba(0, 0, 0, .4); margin-top: -10px; }
 .offset_y .offset_y_higher:after                { left: 50%; top: 0; border-top-color: rgba(0, 0, 0, .4); }
+
+.forced {
+    .diff, .diff * {
+        background: color($color-forced);
+    }
+}
+
 
 #overlay {
     display: none;
