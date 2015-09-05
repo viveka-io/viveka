@@ -1,4 +1,4 @@
-@import '../../common/styles/_common';
+@import '../../common/style/_general';
 
 $color-removed:  $palette-red-300;
 $color-added:    $palette-green-300;
@@ -201,7 +201,7 @@ $list-action-size: 32px;
     z-index: 9999;
     background: color($color-black, .4);
 
-    span {
+    & > div {
         position: fixed;
         left: 50%;
         top: 50%;
@@ -212,8 +212,15 @@ $list-action-size: 32px;
     }
 
     i {
+        position: absolute;
+        left: -45px;
         vertical-align: middle;
         font-size: 1.5em;
         margin-right: $grid-desktop-gutter;
+    }
+
+    .caption-container {
+        margin-left: 45px;
+        position: relative;
     }
 }

@@ -12,7 +12,7 @@
         activeView = readView(),
         activeTestCase;
 
-    $.getJSON('/test_cases.json')
+    $.getJSON('/test-cases.json')
         .done(init);
 
     function init(testCases) {
@@ -84,7 +84,3 @@
     }
 
 })();
-
-
-
-

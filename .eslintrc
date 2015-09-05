@@ -3,6 +3,7 @@
         "node": true,
         "es6": true
     },
+    "parser": "babel-eslint",
     "rules": {
         "no-alert": 2,
         "no-array-constructor": 2,
@@ -42,7 +43,7 @@
         "no-inline-comments": 0,
         "no-inner-declarations": [2, "both"],
         "no-invalid-regexp": 2,
-        "no-invalid-this": 2,
+        "no-invalid-this": 0,
         "no-irregular-whitespace": 2,
         "no-iterator": 0,
         "no-label-var": 2,
@@ -170,7 +171,7 @@
         "space-return-throw-case": 0,
         "space-unary-ops": [0, { "words": true, "nonwords": false }],
         "spaced-comment": 0,
-        "strict": [1, "global"],
+        "strict": 0,
         "use-isnan": 2,
         "valid-jsdoc": [1, { "requireReturn": false, "requireParamDescription": false }],
         "valid-typeof": 2,
