@@ -13,22 +13,22 @@ var paths = {
     src: {
         server: {
             root: path.join(__dirname, 'lib'),
-            all: ['lib/**/*.js', 'developers/test-cases/test-cases.js']
+            all: ['lib/**/*.js', 'dev-section/test-cases/test-cases.js']
         },
-        style: 'developers/**/*.scss',
-        script: 'developers/**/*.js',
+        style: 'dev-section/**/*.scss',
+        script: 'dev-section/**/*.js',
         template: [
-            'developers/test-cases/**/*.hbs',
-            'developers/api-page/**/*.hbs',
-            'developers/diff-page/**/*.hbs',
-            'developers/main-page/**/*.hbs',
-            'developers/test-page/**/*.hbs'
+            'dev-section/test-cases/**/*.hbs',
+            'dev-section/api-page/**/*.hbs',
+            'dev-section/diff-page/**/*.hbs',
+            'dev-section/main-page/**/*.hbs',
+            'dev-section/test-page/**/*.hbs'
         ],
         markup: [
-            'developers/api-page/api-page.html',
-            'developers/diff-page/diff-page.html',
-            'developers/main-page/developers-main-page.html',
-            'developers/test-page/test-page.html'
+            'dev-section/api-page/api-page.html',
+            'dev-section/diff-page/diff-page.html',
+            'dev-section/main-page/dev-section-main-page.html',
+            'dev-section/test-page/test-page.html'
         ]
     },
     tmp: {
