@@ -1,10 +1,6 @@
 *.log
 node_modules
 bower_components
-dist
-public/images/fingerprints/*.png
+tmp
 .idea
 .settings
-*.css
-*.map
-public/test_cases.json

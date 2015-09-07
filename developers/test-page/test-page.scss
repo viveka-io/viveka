@@ -1,0 +1,59 @@
+@import '../../common/style/_general';
+
+.mdl-layout__header {
+    min-height: auto;
+}
+
+.mdl-layout-title {
+    margin-right: $grid-desktop-gutter;
+
+    a {
+        text-decoration: none;
+    }
+}
+
+.mdl-card {
+    width: auto;
+}
+
+// Test content styles
+.test-content {
+    overflow: hidden;
+    padding: $grid-desktop-gutter;
+
+    figure {
+        border-radius: 100%;
+        overflow: hidden;
+        margin: 0 $grid-desktop-gutter 0 0;
+        padding: 0;
+        float: left;
+    }
+
+    .text {
+        overflow: hidden;
+
+        h4 {
+            margin: 0;
+        }
+    }
+
+    .pseudo {
+        position: relative;
+
+        .text {
+            margin-right: 50px;
+        }
+
+        &[data-change='pseudo'] h4:after {
+            content: "";
+            background: url(http://lorempixel.com/56/56/nature/7);
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 56px;
+            height: 56px;
+            border-radius: 100%;
+        }
+    }
+}
+

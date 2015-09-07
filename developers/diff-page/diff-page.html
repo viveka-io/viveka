@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Viveka diff page</title>
+    <meta name="description" content="Viveka diff page">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/fonts/iconmoon.css">
+    <link rel="stylesheet" href="/style/diff-page.css">
+</head>
+
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+        <header id="header-container" class="mdl-layout__header"></header>
+        <div class="mdl-layout__drawer" id="diff-inspector"></div>
+        <main class="mdl-layout__content">
+            <div id="wrapper" class="mdl-grid node_removed node_added not_matching_name not_matching_visually"></div>
+        </main>
+    </div>
+
+    <div id="overlay">
+        <div class="mdl-shadow--2dp">
+            <div class="caption-container">
+                <i class="mdl-spinner mdl-js-spinner is-active"></i>
+                <p class="caption"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/bower_components/bluebird/js/browser/bluebird.min.js"></script>
+    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/bower_components/lodash/lodash.min.js"></script>
+    <script src="/bower_components/handlebars/handlebars.runtime.min.js"></script>
+    <script src="/bower_components/director/build/director.min.js"></script>
+    <script src="/bower_components/material-design-lite/material.min.js"></script>
+    <script src="/template/diff-page.js"></script>
+    <script src="/script/diff-page.js"></script>
+</body>
+</html>
