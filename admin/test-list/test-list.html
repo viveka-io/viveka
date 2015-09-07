@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title></title>
+    <title>Vikeka Tests</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/fonts/iconmoon.css">
@@ -12,10 +12,28 @@
 
 <body>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-        <header class="mdl-layout__header"></header>
-        <main class="mdl-layout__content" id="view"></main>
+        <header class="mdl-layout__header">
+            <div class="mdl-layout__header-row">
+                <span class="mdl-layout-title">Viveka Tests</span>
+                <div class="mdl-layout-spacer"></div>
+                <nav class="mdl-navigation mdl-layout--large-screen-only">
+                    <a class="mdl-navigation__link" href="">Tests</a>
+                </nav>
+            </div>
+        </header>
+        <div class="mdl-layout__drawer">
+            <span class="mdl-layout-title">Viveka Tests</span>
+            <nav class="mdl-navigation">
+                <a class="mdl-navigation__link" href="">Tests</a>
+            </nav>
+        </div>
+        <main class="mdl-layout__content">
+            <div class="page-content" id="view"></div>
+        </main>
     </div>
 
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/bower_components/bluebird/js/browser/bluebird.min.js"></script>
     <script src="/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="/bower_components/lodash/lodash.min.js"></script>
     <script src="/bower_components/handlebars/handlebars.runtime.min.js"></script>
