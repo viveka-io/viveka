@@ -15,17 +15,20 @@ var paths = {
             root: path.join(__dirname, 'lib'),
             all: ['lib/**/*.js', 'developers/test-cases/test-cases.js']
         },
-        style: 'admin/**/*.scss',
-        script: 'admin/**/*.js',
+        style: 'developers/**/*.scss',
+        script: 'developers/**/*.js',
         template: [
-            'admin/test-list/**/*.hbs',
-            'admin/test-details/**/*.hbs',
-            'admin/diff-page/**/*.hbs'
+            'developers/test-cases/**/*.hbs',
+            'developers/api-page/**/*.hbs',
+            'developers/diff-page/**/*.hbs',
+            'developers/main-page/**/*.hbs',
+            'developers/test-page/**/*.hbs'
         ],
         markup: [
-            'admin/test-list/test-list.html',
-            'admin/test-details/test-details.html',
-            'admin/diff-page/diff-page.html'
+            'developers/api-page/api-page.html',
+            'developers/diff-page/diff-page.html',
+            'developers/main-page/developers-main-page.html',
+            'developers/test-page/test-page.html'
         ]
     },
     tmp: {
@@ -38,17 +41,20 @@ var paths = {
         template: {
             root: 'tmp/public/template',
             name: [
-                'test-list.js',
-                'test-details.js',
-                'diff-page.js'
+                'test-cases.js',
+                'api-page.js',
+                'diff-page.js',
+                'main-page.js',
+                'test-page.js'
             ]
         },
         markup: {
             root: 'tmp/public',
             name: [
+                'api-page.html',
+                'diff-page.html',
                 'index.html',
-                'test-details.html',
-                'diff-page.html'
+                'test-page.html'
             ]
         }
     }
