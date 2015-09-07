@@ -14,11 +14,12 @@ module.exports = [{
     id: '5595663e9c5d719811f1659d',
     textId: "changed-style",
     name: "Changed style"
+},  {
+    id: '5595663e9c5d719811f1659e',
+    textId: "pseudo-elements",
+    name: "Pseudo elements"
 }
-//,  {
-//    textId: "floated-element-removed",
-//    name: "Floated element removed"
-//}, {
+//, {
 //    textId: "fixed-position-element-added",
 //    name: "Fixed position element added"
 //}, {

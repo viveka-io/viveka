@@ -37,4 +37,23 @@
         }
     }
 
+    .pseudo {
+        position: relative;
+
+        .text {
+            margin-right: 50px;
+        }
+
+        &[data-change='pseudo'] h4:after {
+            content: "";
+            background: url(http://lorempixel.com/56/56/nature/7);
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 56px;
+            height: 56px;
+            border-radius: 100%;
+        }
+    }
 }
+
