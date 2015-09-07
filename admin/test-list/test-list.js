@@ -19,6 +19,7 @@ function getTests() {
 
             console.log(data);
             $tests.prependTo('#view');
+            componentHandler.upgradeAllRegistered();
         });
 }
 
