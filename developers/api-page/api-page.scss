@@ -1,0 +1,89 @@
+@import '../../common/style/_general';
+
+$screenshot-height: 400px;
+
+.homelink {
+    padding: $grid-desktop-gutter;
+    font-weight: normal;
+
+    a {
+        text-decoration: none;
+    }
+
+    i {
+        font-size: $layout-header-icon-size;
+    }
+}
+
+.request {
+    transition: all .3s ease;
+
+    &:hover {
+        background: color($color-primary-contrast, .2);
+    }
+
+    &.opened {
+        @include focus-shadow;
+        background: color($color-primary-contrast);
+
+        .message {
+            color: color($color-primary);
+        }
+    }
+
+    .message {
+        margin: 0;
+        padding: $grid-desktop-gutter/2 $grid-desktop-gutter;
+        color: color($color-primary-contrast);
+        cursor: pointer;
+        transition: all .3s ease;
+    }
+
+    .content {
+        padding: 0 $grid-desktop-gutter $grid-desktop-gutter;
+        display: none;
+    }
+
+}
+
+#messages {
+    @media screen and (max-width: $layout-screen-size-threshold) {
+        padding-top: $layout-drawer-button-desktop-size;
+    }
+}
+
+.response {
+    width: auto;
+    min-height: 0;
+
+    .mdl-card__title-text {
+        overflow: visible;
+    }
+
+    .mdl-card__supporting-text {
+        width: auto;
+
+        &.json {
+            padding: 0;
+            width: auto;
+
+            pre {
+            margin: 0;
+            // TODO: use flexbox/classes instead of mysterious calculations
+            max-height: $screenshot-height - $card-title-font-size * 1.2 - $grid-desktop-gutter * 4;
+            overflow: auto;
+            white-space: pre-wrap;
+            padding: $grid-desktop-gutter;
+            }
+        }
+    }
+}
+
+.screenshot {
+    max-height: $screenshot-height;
+
+    img {
+        max-width: 100%;
+        max-height: $screenshot-height;
+    }
+}

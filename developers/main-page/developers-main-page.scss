@@ -1,11 +1,11 @@
-@import '../../common/style';
+@import '../../common/style/_general';
 
 body {
     background: color($color-white);
 }
 
 .viv-header {
-    background: url(images/bg-mountains.png) no-repeat 50% 100% / cover $layout-header-bg-color;
+    background: url(/image/bg-mountains.png) no-repeat 50% 100% / cover $layout-header-bg-color;
     min-height: 30vh;
 
     h2 {
