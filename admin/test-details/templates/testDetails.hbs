@@ -14,7 +14,7 @@
             <label class="mdl-textfield__label" for="browser-height">Screen height</label>
         </span>
         <div id="browser-selector">
-            {{#each config.browsers}}
+            {{#each browsers}}
             <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="option-{{@index}}" id="browser-{{@index}}">
               <input type="checkbox" id="option-{{@index}}" class="mdl-icon-toggle__input" name="options" value="{{name}}" {{#if selected}}checked{{/if}} />
               <i class="mdl-icon-toggle__label material-icons"><em class="icon-{{iconname}}"></em></i>

@@ -1,3 +1,4 @@
+/* global componentHandler */
 (function () {
     'use strict';
 
@@ -14,8 +15,9 @@
         getTestDetailsAsync()
             .then(loadTestDetailsView);
 
-        getFingerprintsListAsync()
-            .then(loadFingerprintsListView);
+        loadFingerprints();
+
+        attachEventHandlers();
     }
 
     function initRouter() {
@@ -29,6 +31,11 @@
         });
     }
 
+    function loadFingerprints() {
+        getFingerprintsListAsync()
+            .then(renderFingerprintsListView);
+    }
+
     function getFingerprintsListAsync() {
         return socket.emitAsync('fingerprints list', {
             id: testId
@@ -36,16 +43,23 @@
     }
 
     function loadTestDetailsView(testDetails) {
-        console.log(testDetails.result);
-        setSelectedBrowser(testDetails.result.config.browser);
-        testDetails.result.config.browsers = browsers;
-        $('#test-details-container').html(Handlebars.templates.testDetails(testDetails.result));
-        $('#test-title').html(testDetails.result.name);
+        var testData;
+
+        if (testDetails.error) {
+            testData = { browsers: browsers };
+        } else {
+            testData = testDetails.result;
+            setSelectedBrowser(testData.config.browser);
+            testData.browsers = browsers;
+            $('#test-title').html(testData.name);
+        }
+
+        $('#test-details-container').html(Handlebars.templates.testDetails(testData));
         componentHandler.upgradeAllRegistered();
     }
 
-    function loadFingerprintsListView(testFingerprints) {
-        console.log(testFingerprints.result);
+    function renderFingerprintsListView(testFingerprints) {
+        console.log(testFingerprints);
         $('#fingerprints-list-container').html(Handlebars.templates.fingerprintList(testFingerprints.result));
         componentHandler.upgradeAllRegistered();
     }
@@ -57,6 +71,15 @@
             }
             browser.iconname = browser.name.toLowerCase();
         });
+    }
+
+    function attachEventHandlers() {
+        $('#add-fingerprint').on('click', createFingerprint);
+    }
+
+    function createFingerprint() {
+        socket.emitAsync('fingerprints create', { id: testId })
+                .then(loadFingerprints);
     }
 
     Promise.promisifyAll(socket, {
