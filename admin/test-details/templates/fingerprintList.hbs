@@ -20,6 +20,12 @@
                 <div class="mdl-tooltip" for="test-detail{{@index}}">compare to baseline</div>
             </td>
         </tr>
+    {{else}}
+        <tr>
+            <td colspan="3" class="mdl-data-table__cell--non-numeric">
+                There is no fingerprint yet.
+            </td>
+        </tr>
     {{/each}}
     </tbody>
 </table>

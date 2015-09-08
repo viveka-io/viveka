@@ -40,11 +40,14 @@
         setSelectedBrowser(testDetails.result.config.browser);
         testDetails.result.config.browsers = browsers;
         $('#test-details-container').html(Handlebars.templates.testDetails(testDetails.result));
+        $('#test-title').html(testDetails.result.name);
+        componentHandler.upgradeAllRegistered();
     }
 
     function loadFingerprintsListView(testFingerprints) {
         console.log(testFingerprints.result);
         $('#fingerprints-list-container').html(Handlebars.templates.fingerprintList(testFingerprints.result));
+        componentHandler.upgradeAllRegistered();
     }
 
     function setSelectedBrowser(testBrowser) {

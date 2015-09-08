@@ -45,7 +45,7 @@
 
 .mdl-card {
     width: 100%;
-    margin: $grid-desktop-gutter*2 0;
+    margin: 0 0 $grid-desktop-gutter*2;
 }
 
 .grid {
@@ -55,5 +55,19 @@
     td {
         vertical-align: middle;
         padding: 10px 20px;
+    }
+}
+
+#test-title {
+    padding: 0 $grid-desktop-gutter;
+    margin-bottom: 0;
+}
+
+.test-config {
+    width: 100%;
+    padding: $grid-desktop-gutter;
+
+    .url {
+        width: 100%;
     }
 }
