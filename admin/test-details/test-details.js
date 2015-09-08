@@ -55,6 +55,7 @@
             if (browser.name.toUpperCase() === testBrowser.toUpperCase()) {
                 browser.selected = true;
             }
+            browser.iconname = browser.name.toLowerCase();
         });
     }
 

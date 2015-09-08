@@ -39,13 +39,14 @@
     }
 }
 
-.mdl-layout__content {
+body, .mdl-layout__content {
     background: $layout-drawer-bg-color;
 }
 
 .mdl-card {
     width: 100%;
     margin: 0 0 $grid-desktop-gutter*2;
+    overflow: visible;
 }
 
 .grid {
@@ -66,8 +67,4 @@
 .test-config {
     width: 100%;
     padding: $grid-desktop-gutter;
-
-    .url {
-        width: 100%;
-    }
 }

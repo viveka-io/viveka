@@ -1,25 +1,25 @@
 <div class="test-config mdl-card mdl-shadow--2dp">
     <div>
-        <span class="url mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <span class="url mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width" title="{{config.url}}">
             <input class="mdl-textfield__input" type="text" id="url" value="{{config.url}}" />
             <label class="mdl-textfield__label" for="url">URL</label>
         </span>
         <br>
-        <span class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <span class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width">
             <input class="mdl-textfield__input" type="number" id="browser-width" value="{{config.browserWidth}}" maxlength="4" min="0" />
             <label class="mdl-textfield__label" for="browser-width">Screen width</label>
         </span>
-        <i class="icon-close"></i>
-        <span class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <span class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width">
             <input class="mdl-textfield__input" type="number" id="browser-height" value="{{config.browserHeight}}" maxlength="4" min="0" />
             <label class="mdl-textfield__label" for="browser-height">Screen height</label>
         </span>
         <div id="browser-selector">
             {{#each config.browsers}}
-            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-{{@index}}">
-                <input type="radio" id="option-{{@index}}" class="mdl-radio__button" name="options" value="{{name}}" {{#if selected}}checked{{/if}} />
-                <span class="mdl-radio__label">{{name}}</span>
+            <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="option-{{@index}}" id="browser-{{@index}}">
+              <input type="checkbox" id="option-{{@index}}" class="mdl-icon-toggle__input" name="options" value="{{name}}" {{#if selected}}checked{{/if}} />
+              <i class="mdl-icon-toggle__label material-icons"><em class="icon-{{iconname}}"></em></i>
             </label>
+            <div class="mdl-tooltip" for="browser-{{@index}}">{{name}}</div>
             {{/each}}
         </div>
     </div>
