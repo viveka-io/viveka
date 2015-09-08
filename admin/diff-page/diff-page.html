@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title></title>
+    <title>Viveka Differences</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/fonts/iconmoon.css">
@@ -12,10 +12,41 @@
 
 <body>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-        <header class="mdl-layout__header"></header>
-        <main class="mdl-layout__content" id="view"></main>
+        <header class="mdl-layout__header">
+            <div class="mdl-layout__header-row">
+                <div class="mdl-layout-grid">
+                    <h2 class="mdl-layout-title">
+                        <a href="/" class="mdl-color-text--primary-contrast mdl-typography--font-regular">
+                            <i class="icon-viveka-swan"></i>
+                        </a>
+                        <span>viveka</span><br>
+                        <small>Differences</small>
+                    </h2>
+                    <div class="fabs-container">
+                        <button id="approve" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--green">
+                            <i class="icon-check"></i>
+                        </button>
+                        <div class="mdl-tooltip" for="approve">Approve differences</div>
+                        <button id="decline" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--red">
+                            <i class="icon-close"></i>
+                        </button>
+                        <div class="mdl-tooltip" for="decline">Decline differences</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main class="mdl-layout__content">
+            <div class="page-content" id="view">
+                <div class="mdl-grid">
+                    <div id="test-details-container"></div>
+                    <div id="diff-tool-container"></div>
+                </div>
+            </div>
+        </main>
     </div>
 
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/bower_components/bluebird/js/browser/bluebird.min.js"></script>
     <script src="/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="/bower_components/lodash/lodash.min.js"></script>
     <script src="/bower_components/handlebars/handlebars.runtime.min.js"></script>

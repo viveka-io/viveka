@@ -1,40 +1,48 @@
 @import '../../common/style/_general';
 
+body, .mdl-layout__content {
+    background: $layout-drawer-bg-color;
+}
 .mdl-layout__header {
-    min-height: auto;
+    position: relative;
+}
+
+.mdl-layout__header-row {
+    padding-left: $grid-desktop-gutter;
+    min-height: 100px;
 }
 
 .mdl-layout-title {
-    margin-right: $grid-desktop-gutter;
+    font-size: 3em;
+    line-height: .6;
 
     a {
         text-decoration: none;
     }
-}
 
-.mdl-card {
-    width: auto;
-}
+    span {
+        font-weight: 500;
+    }
 
-// Test content styles
-.test-content {
-    overflow: hidden;
-    padding: $grid-desktop-gutter;
+    small {
+        font-size: .5em;
+        font-weight: 300;
+    }
 
-    figure {
-        border-radius: 100%;
-        overflow: hidden;
-        margin: 0 $grid-desktop-gutter 0 0;
-        padding: 0;
+    .icon-viveka-swan {
         float: left;
+        font-size: 1.4em;
+        color: color($color-primary-contrast, .3);
+        margin: -.05em $grid-desktop-gutter 0 0;
     }
+}
 
-    .text {
-        overflow: hidden;
+.fabs-container {
+    position: absolute;
+    right: $grid-desktop-gutter;
+    bottom: -$button-fab-size/2;
 
-        h4 {
-            margin: 0;
-        }
+    .mdl-button {
+        margin-left: $grid-desktop-gutter;
     }
-
 }
