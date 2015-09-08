@@ -2,10 +2,16 @@
 
 .mdl-layout__header {
     position: relative;
+
+    .mdl-button--fab {
+        position: absolute;
+        right: $grid-desktop-gutter;
+        bottom: -$button-fab-size/2;
+    }
 }
 .mdl-layout__header-row {
     padding-left: $grid-desktop-gutter;
-    min-height: 160px;
+    min-height: 100px;
 }
 
 .mdl-layout-title {
@@ -37,25 +43,17 @@
     background: $layout-drawer-bg-color;
 }
 
-// Test content styles
-.test-content {
-    overflow: hidden;
-    padding: $grid-desktop-gutter;
+.mdl-card {
+    width: 100%;
+    margin: $grid-desktop-gutter*2 0;
+}
 
-    figure {
-        border-radius: 100%;
-        overflow: hidden;
-        margin: 0 $grid-desktop-gutter 0 0;
-        padding: 0;
-        float: left;
+.grid {
+    width: 100%;
+    margin: 0 auto;
+
+    td {
+        vertical-align: middle;
+        padding: 10px 20px;
     }
-
-    .text {
-        overflow: hidden;
-
-        h4 {
-            margin: 0;
-        }
-    }
-
 }

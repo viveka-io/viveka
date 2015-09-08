@@ -2,7 +2,14 @@
 
 .mdl-layout__header {
     position: relative;
+
+    .mdl-button--fab {
+        position: absolute;
+        right: $grid-desktop-gutter;
+        bottom: -$button-fab-size/2;
+    }
 }
+
 .mdl-layout__header-row {
     padding-left: $grid-desktop-gutter;
     min-height: 160px;
@@ -37,7 +44,7 @@
     background: $layout-drawer-bg-color;
 }
 
-.test-list {
+.grid {
     width: 100%;
     margin: 0 auto;
 
@@ -45,10 +52,4 @@
         vertical-align: middle;
         padding: 10px 20px;
     }
-}
-
-#add-test {
-    position: absolute;
-    right: $grid-desktop-gutter;
-    bottom: -$button-fab-size/2;
 }

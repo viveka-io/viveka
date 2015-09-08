@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title></title>
+    <title>Vikeka Test details</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/fonts/iconmoon.css">
@@ -22,13 +22,21 @@
                         <span>viveka</span><br>
                         <small>Test details</small>
                     </h2>
+                    <button id="add-fingerprint" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent">
+                        <i class="icon-play_arrow"></i>
+                    </button>
+                    <div class="mdl-tooltip" for="add-fingerprint">Run</div>
                 </div>
             </div>
         </header>
         <main class="mdl-layout__content" id="view">
             <div class="page-content" id="view">
-                <div id="test-details-container"></div>
-                <div id="fingerprints-list-container"></div>
+                <div class="mdl-grid">
+                    <div class="mdl-cell mdl-cell--12-col">
+                        <div id="test-details-container"></div>
+                        <div id="fingerprints-list-container"></div>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
