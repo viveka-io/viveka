@@ -6,6 +6,7 @@
 
     function init() {
         getTests();
+        attachAddTestRedirectEvent();
     }
 
     function getTests() {
@@ -17,6 +18,14 @@
                 $tests.prependTo('#view');
                 componentHandler.upgradeAllRegistered();
             });
+    }
+
+    function attachAddTestRedirectEvent() {
+        $('#add-test').on('click', addTestRedirect);
+    }
+
+    function addTestRedirect() {
+        window.location.href = '/test-details.html';
     }
 
     Promise.promisifyAll(socket, {
