@@ -1,0 +1,25 @@
+<table class="fingerprint-list mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+    <thead class="mdl-color--primary">
+        <tr>
+            <th class="mdl-color-text--primary-contrast mdl-data-table__cell--non-numeric">Date</th>
+            <th class="mdl-color-text--primary-contrast mdl-data-table__cell--non-numeric">Approved</th>
+            <th class="mdl-color-text--primary-contrast"></th>
+        </tr>
+    </thead>
+    <tbody>
+    {{#each this}}
+        <tr>
+            <td class="mdl-data-table__cell--non-numeric">
+                <span class="mdl-typography--font-bold">{{created}}</span>
+            </td>
+            <td class="mdl-data-table__cell--non-numeric">{{_id}}</td>
+            <td>
+                <a href="/test-details.html#{{_id}}" id="test-detail{{@index}}" class="mdl-button mdl-js-button mdl-button--icon mdl-button--primary">
+                    <i class="icon-photo_library"></i>
+                </a>
+                <div class="mdl-tooltip" for="test-detail{{@index}}">compare to baseline</div>
+            </td>
+        </tr>
+    {{/each}}
+    </tbody>
+</table>

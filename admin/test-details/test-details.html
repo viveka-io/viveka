@@ -12,10 +12,29 @@
 
 <body>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-        <header class="mdl-layout__header"></header>
-        <main class="mdl-layout__content" id="view"></main>
+        <header class="mdl-layout__header">
+            <div class="mdl-layout__header-row">
+                <div class="mdl-layout-grid">
+                    <h2 class="mdl-layout-title">
+                        <a href="/" class="mdl-color-text--primary-contrast mdl-typography--font-regular">
+                            <i class="icon-viveka-swan"></i>
+                        </a>
+                        <span>viveka</span><br>
+                        <small>Test details</small>
+                    </h2>
+                </div>
+            </div>
+        </header>
+        <main class="mdl-layout__content" id="view">
+            <div class="page-content" id="view">
+                <div id="test-details-container"></div>
+                <div id="fingerprints-list-container"></div>
+            </div>
+        </main>
     </div>
 
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/bower_components/bluebird/js/browser/bluebird.min.js"></script>
     <script src="/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="/bower_components/lodash/lodash.min.js"></script>
     <script src="/bower_components/handlebars/handlebars.runtime.min.js"></script>

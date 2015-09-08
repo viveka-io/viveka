@@ -1,0 +1,13 @@
+<div>
+    <h3>{{name}}</h3>
+    <div>{{config.url}}</div>
+    <div id="browser-selector">
+        {{#each config.browsers}}
+        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-{{@index}}">
+            <input type="radio" id="option-{{@index}}" class="mdl-radio__button" name="options" value="{{name}}" {{#if selected}}checked{{/if}} />
+            <span class="mdl-radio__label">{{name}}</span>
+        </label>
+        {{/each}}
+    </div>
+    <div>{{config.browserWidth}}x{{config.browserHeight}}</div>
+</div>

@@ -1,19 +1,40 @@
 @import '../../common/style/_general';
 
 .mdl-layout__header {
-    min-height: auto;
+    position: relative;
+}
+.mdl-layout__header-row {
+    padding-left: $grid-desktop-gutter;
+    min-height: 160px;
 }
 
 .mdl-layout-title {
-    margin-right: $grid-desktop-gutter;
+    font-size: 3em;
+    line-height: .6;
 
     a {
         text-decoration: none;
     }
+
+    span {
+        font-weight: 500;
+    }
+
+    small {
+        font-size: .5em;
+        font-weight: 300;
+    }
+
+    .icon-viveka-swan {
+        float: left;
+        font-size: 1.4em;
+        color: color($color-primary-contrast, .3);
+        margin: -.05em $grid-desktop-gutter 0 0;
+    }
 }
 
-.mdl-card {
-    width: auto;
+.mdl-layout__content {
+    background: $layout-drawer-bg-color;
 }
 
 // Test content styles
