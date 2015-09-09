@@ -36,8 +36,34 @@
 
     function renderTestDetailsView(testDetails) {
         $('#test-details-container').html(Handlebars.templates.testDetails(testDetails.result));
+        attachApprovingEvents();
         componentHandler.upgradeAllRegistered();
     }
+
+    function attachApprovingEvents() {
+        $('#approve').on('click', approveFingerprint);
+        $('#decline').on('click', declineFingerprint);
+    }
+
+    function approveFingerprint(jQueryEvent) {
+        var $approveButton = $(jQueryEvent.currentTarget);
+
+        $approveButton.attr('disabled', true);
+        socket.emitAsync('fingerprints approve', { id: currentId })
+            .then(function () {
+                $approveButton.attr('disabled', false);
+            });
+    }
+
+    function declineFingerprint(jQueryEvent) {
+        var $declineButton = $(jQueryEvent.currentTarget);
+
+        $declineButton.attr('disabled', true);
+        socket.emitAsync('fingerprints unapprove', { id: currentId })
+            .then(function () {
+                $declineButton.attr('disabled', false);
+            });
+    }    
 
     function panzoomify() {
         var $panzoom = $('.panzoom');
@@ -80,7 +106,6 @@
     }
 
     function renderDifferencesView(differencesData) {
-        console.log(differencesData);
         $('#diff-tool-container').html(Handlebars.templates.diffTool(differencesData));
         panzoomify();
         componentHandler.upgradeAllRegistered();
