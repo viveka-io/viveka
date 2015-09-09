@@ -104,5 +104,13 @@ body, .mdl-layout__content {
         &.disabled {
             opacity: 0.3;
         }
+
+        tr.approved:nth-of-type(1) {
+            background: color($palette-green-100);
+        }
+
+        .status {
+            font-size: $button-icon-size;
+        }
     }
 }
