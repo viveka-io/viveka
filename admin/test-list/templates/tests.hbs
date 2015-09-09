@@ -13,7 +13,7 @@
             </thead>
             <tbody>
             {{#each result}}
-                <tr>
+                <tr class="test-row">
                     <td class="mdl-data-table__cell--non-numeric">
                         <a href="/test-details.html#{{_id}}" class="mdl-navigation__link mdl-typography--font-bold">{{name}}</a>
                     </td>
@@ -24,10 +24,10 @@
                         </a>
                         <div class="mdl-tooltip" for="test-detail{{@index}}">Test details</div>
 
-                        <button id="test-delete{{@index}}" class="test-delete mdl-button mdl-js-button mdl-button--icon mdl-button--colored mdl-button--accent">
+                        <button id="test-delete-{{@index}}" class="test-delete mdl-button mdl-js-button mdl-button--icon mdl-button--colored mdl-button--accent" data-test-id="{{_id}}">
                             <i class="icon-cancel"></i>
                         </button>
-                        <div class="mdl-tooltip" for="test-delete{{@index}}">Delete test</div>
+                        <div class="mdl-tooltip" for="test-delete-{{@index}}">Delete test</div>
                     </td>
                 </tr>
             {{/each}}

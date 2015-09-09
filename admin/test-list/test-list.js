@@ -5,19 +5,8 @@
     var socket = io();
 
     function init() {
-        getTests();
         attachAddTestRedirectEvent();
-    }
-
-    function getTests() {
-        socket.emitAsync('tests list', {})
-            .then(function (data) {
-                var $tests = $(Handlebars.templates.tests(data));
-
-                console.log(data);
-                $tests.prependTo('#view');
-                componentHandler.upgradeAllRegistered();
-            });
+        loadTests();
     }
 
     function attachAddTestRedirectEvent() {
@@ -26,6 +15,39 @@
 
     function addTestRedirect() {
         window.location.href = '/test-details.html';
+    }
+
+    function loadTests() {
+        getTestsAsync()
+            .then(renderTestsView);
+    }
+
+    function getTestsAsync() {
+        return socket.emitAsync('tests list', {});
+    }
+
+    function renderTestsView(tests) {
+        $('#view').html(Handlebars.templates.tests(tests));
+        componentHandler.upgradeAllRegistered();
+        attachDeleteTestEvent();
+    }
+
+    function attachDeleteTestEvent() {
+        $('.test-delete').on('click', function (jQueryEvent) {
+            if (window.confirm('Are you sure?')) {
+                deleteTest(jQueryEvent);
+            }
+        });
+    }
+
+    function deleteTest(jQueryEvent) {
+        var $deleteButton   = $(jQueryEvent.currentTarget),
+            $testRow        = $deleteButton.parents('.test-row'),
+            testId          = $deleteButton.data('test-id');
+
+        $testRow.toggleClass('disabled');
+        socket.emitAsync('tests delete', { id: testId })
+            .then(loadTests());
     }
 
     Promise.promisifyAll(socket, {

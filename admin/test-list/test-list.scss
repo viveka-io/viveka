@@ -53,3 +53,11 @@ body, .mdl-layout__content {
         padding: 10px 20px;
     }
 }
+
+.test-row {
+    transition: opacity .4s ease-in-out;
+
+    &.disabled {
+        opacity: 0.3;
+    }
+}
