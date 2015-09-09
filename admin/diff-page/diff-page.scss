@@ -46,3 +46,35 @@ body, .mdl-layout__content {
         margin-left: $grid-desktop-gutter;
     }
 }
+
+
+.controls {
+    padding: $grid-desktop-gutter 0;
+    text-align: center;
+
+    .slider {
+        display: inline-block;
+        width: 300px;
+        margin: 0 -20px;
+    }
+}
+
+.screenshots {
+    background: color($color-white);
+    overflow: hidden;
+    height: 800px;
+
+    .container {
+        position: relative;
+
+        img {
+            display: block;
+            opacity: .5;
+        }
+
+        .diff {
+            position: absolute;
+        }
+    }
+
+}
