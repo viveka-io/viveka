@@ -5,6 +5,8 @@
     var socket = io(),
         router,
         testId,
+        baselineId,
+        firstFingerprintId,
         browsers = [
             { name: 'Firefox' }, { name: 'Chrome' },  { name: 'Safari' }, { name: 'PhantomJS' }
         ];
@@ -91,13 +93,37 @@
 
     function loadFingerprints() {
         getFingerprintsListAsync()
-            .then(renderFingerprintsListView);
+            .then(function (testFingerprints) {
+                setBaselineIdAsync()
+                    .then(function () {
+                        if (testFingerprints.result.length) {
+                            setFirstFingerprintId(testFingerprints);
+                        }
+
+                        renderFingerprintsListView(testFingerprints);
+                    });
+            });
     }
 
     function getFingerprintsListAsync() {
         return socket.emitAsync('fingerprints list', {
             id: testId
         });
+    }
+
+    function setBaselineIdAsync() {
+        return socket.emitAsync('fingerprints get baseline', { id: testId })
+            .then(function (baselineData) {
+                var hasBaseline = !baselineData.info;
+                
+                if (hasBaseline) {
+                    baselineId = baselineData.result._id;
+                }
+            });
+    }
+
+    function setFirstFingerprintId(testFingerprints) {
+        firstFingerprintId = testFingerprints.result[testFingerprints.result.length - 1]._id;
     }
 
     function renderFingerprintsListView(testFingerprints) {
@@ -120,6 +146,10 @@
                 $('.fingerprint-list').toggleClass('disabled');
             });
     }
+
+    Handlebars.registerHelper('compareToFingerprintId', function () {
+        return baselineId || firstFingerprintId;
+    });
 
     Promise.promisifyAll(socket, {
         promisifier: function (originalMethod) {
