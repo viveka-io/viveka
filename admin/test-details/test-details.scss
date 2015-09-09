@@ -52,7 +52,26 @@ body, .mdl-layout__content {
 
 #test-title {
     padding: 0 $grid-desktop-gutter;
-    margin-bottom: 0;
+    margin: 1em 0 .5em;
+    line-height: inherit;
+
+    .mdl-textfield {
+        margin: -$input-text-vertical-spacing 0;
+    }
+
+    .mdl-textfield__input {
+        @include typo-display-1;
+    }
+
+    .mdl-textfield__label {
+        @include typo-display-1;
+    }
+
+    .mdl-textfield--floating-label.is-focused .mdl-textfield__label ,
+    .mdl-textfield--floating-label.is-dirty .mdl-textfield__label {
+        @include typo-title;
+    }
+
 }
 
 .test-config {
