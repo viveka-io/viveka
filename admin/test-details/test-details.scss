@@ -1,14 +1,5 @@
 @import '../../common/style/_general';
 
-.mdl-layout__header {
-    position: relative;
-
-    .mdl-button--fab {
-        position: absolute;
-        right: $grid-desktop-gutter;
-        bottom: -$button-fab-size/2;
-    }
-}
 .mdl-layout__header-row {
     padding-left: $grid-desktop-gutter;
     min-height: 100px;
@@ -67,4 +58,32 @@ body, .mdl-layout__content {
 .test-config {
     width: 100%;
     padding: $grid-desktop-gutter;
+
+    .mdl-button {
+        position: absolute;
+        right: $grid-desktop-gutter;
+        bottom: -$button-fab-size / 2;
+    }
+}
+
+.hidden {
+    display: none;
+}
+
+#fingerprints-list-container {
+    position: relative;
+
+    .mdl-button--fab {
+        position: absolute;
+        right: $grid-desktop-gutter;
+        top: -$button-fab-size / 2;
+    }
+
+    .fingerprint-list {
+        transition: opacity .4s ease-in-out;
+        
+        &.disabled {
+            opacity: 0.3;
+        }
+    }
 }

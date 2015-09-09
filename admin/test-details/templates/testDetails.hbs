@@ -16,11 +16,19 @@
         <div id="browser-selector">
             {{#each browsers}}
             <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="option-{{@index}}" id="browser-{{@index}}">
-              <input type="checkbox" id="option-{{@index}}" class="mdl-icon-toggle__input" name="options" value="{{name}}" {{#if selected}}checked{{/if}} />
-              <i class="mdl-icon-toggle__label material-icons"><em class="icon-{{iconname}}"></em></i>
+                <input type="checkbox" id="option-{{@index}}" class="mdl-icon-toggle__input" name="browser" value="{{value}}" {{#if selected}}checked{{/if}} />
+                <i class="mdl-icon-toggle__label material-icons"><em class="icon-{{iconname}}"></em></i>
             </label>
             <div class="mdl-tooltip" for="browser-{{@index}}">{{name}}</div>
             {{/each}}
         </div>
+        <button id="add-test" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--green">
+            <i class="icon-add"></i>
+        </button>
+        <div class="mdl-tooltip" for="add-test">Add</div>
+        <button id="save-test" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--green">
+            <i class="icon-save"></i>
+        </button>
+        <div class="mdl-tooltip" for="save-test">Save</div>
     </div>
 </div>

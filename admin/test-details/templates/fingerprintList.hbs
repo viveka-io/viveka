@@ -7,7 +7,7 @@
         </tr>
     </thead>
     <tbody>
-    {{#each this}}
+        {{#each this}}
         <tr>
             <td class="mdl-data-table__cell--non-numeric">
                 <span class="mdl-typography--font-bold">{{created}}</span>
@@ -20,12 +20,16 @@
                 <div class="mdl-tooltip" for="test-detail{{@index}}">compare to baseline</div>
             </td>
         </tr>
-    {{else}}
+        {{else}}
         <tr>
             <td colspan="3" class="mdl-data-table__cell--non-numeric">
                 There is no fingerprint yet.
             </td>
         </tr>
-    {{/each}}
+        {{/each}}
     </tbody>
 </table>
+<button id="add-fingerprint" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent">
+    <i class="icon-play_arrow"></i>
+</button>
+<div class="mdl-tooltip" for="add-fingerprint">Run</div>
