@@ -80,6 +80,7 @@
     }
 
     function renderDifferencesView(differencesData) {
+        console.log(differencesData);
         $('#diff-tool-container').html(Handlebars.templates.diffTool(differencesData));
         panzoomify();
         componentHandler.upgradeAllRegistered();

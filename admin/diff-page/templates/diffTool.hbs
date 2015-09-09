@@ -9,16 +9,20 @@
     <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
         <div id="baseline-container" class="container panzoom">
             <img src="{{screenshotA}}">
-            {{#each diffs}}
-            <div class="diff" style="top: {{a.top}}px; left:  {{a.left}}px; width:  {{a.width}}px; height:  {{a.height}}px; background-image: url({{screenshotA}}); background-position: -{{a.left}}px -{{a.top}}px;"></div>
+            {{#each result}}
+                {{#if a}}
+                <div class="diff" style="top: {{a.offset.top}}px; left:  {{a.offset.left}}px; width:  {{a.offset.width}}px; height:  {{a.offset.height}}px; background-image: url({{../../screenshotA}}); background-position: -{{a.offset.left}}px -{{a.offset.top}}px;"></div>
+                {{/if}}
             {{/each}}
         </div>
     </div>
     <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
         <div id="current-container" class="container panzoom">
             <img src="{{screenshotB}}">
-            {{#each diffs}}
-            <div class="diff" style="top: {{b.top}}px; left:  {{b.left}}px; width:  {{b.width}}px; height:  {{b.height}}px; background-image: url({{screenshotB}}); background-position: -{{b.left}}px -{{b.top}}px;"></div>
+            {{#each result}}
+                {{#if b}}
+                <div class="diff" style="top: {{b.offset.top}}px; left:  {{b.offset.left}}px; width:  {{b.offset.width}}px; height:  {{b.offset.height}}px; background-image: url({{../../screenshotB}}); background-position: -{{b.offset.left}}px -{{b.offset.top}}px;"></div>
+                {{/if}}
             {{/each}}
         </div>
     </div>
