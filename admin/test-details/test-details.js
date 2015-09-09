@@ -70,7 +70,7 @@
 
     function createTest() {
         var details = {
-                name: (new Date()).toISOString(),
+                name: $('#name').val(),
                 config: {
                     url: $('#url').val(),
                     browserWidth: $('#browser-width').val(),
