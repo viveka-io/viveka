@@ -1,10 +1,25 @@
-<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-    <div class="container" id="contA">
-        <img id="imgA" src="/fingerprints/{{baselineId}}.png" class="mdl-shadow--2dp">
-    </div>
+<div class="controls">
+    <button id="zoom-out" class="mdl-button mdl-js-button mdl-button--icon"><i class="icon-zoom_out"></i></button>
+    <span class="slider"><input id="zoom" class="mdl-slider mdl-js-slider" type="range" min="0.2" max="1" value="1" step="0.01" /></span>
+    <button id="zoom-in" class="mdl-button mdl-js-button mdl-button--icon"><i class="icon-zoom_in"></i></button>
+    <button id="zoom-reset" class="mdl-button mdl-js-button mdl-button--icon"><i class="icon-youtube_searched_for"></i></button>
 </div>
-<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-    <div class="container" id="contB">
-        <img id="imgB" src="/fingerprints/{{targetId}}.png" class="mdl-shadow--2dp">
+
+<div class="screenshots mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+        <div id="baseline-container" class="container panzoom">
+            <img src="{{screenshotA}}">
+            {{#each diffs}}
+            <div class="diff" style="top: {{a.top}}px; left:  {{a.left}}px; width:  {{a.width}}px; height:  {{a.height}}px; background-image: url({{screenshotA}}); background-position: -{{a.left}}px -{{a.top}}px;"></div>
+            {{/each}}
+        </div>
+    </div>
+    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+        <div id="current-container" class="container panzoom">
+            <img src="{{screenshotB}}">
+            {{#each diffs}}
+            <div class="diff" style="top: {{b.top}}px; left:  {{b.left}}px; width:  {{b.width}}px; height:  {{b.height}}px; background-image: url({{screenshotB}}); background-position: -{{b.left}}px -{{b.top}}px;"></div>
+            {{/each}}
+        </div>
     </div>
 </div>
