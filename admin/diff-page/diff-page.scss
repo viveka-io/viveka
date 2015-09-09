@@ -39,14 +39,28 @@ body, .mdl-layout__content {
 
 .fabs-container {
     position: absolute;
-    right: $grid-desktop-gutter;
-    bottom: -$button-fab-size/2;
+    right: $grid-desktop-gutter * 2;
+    bottom: -$button-fab-size / 2;
 
     .mdl-button {
         margin-left: $grid-desktop-gutter;
     }
 }
 
+
+.details {
+    margin-top: -1em;
+
+    .icon {
+        font-size: 24px;
+        vertical-align: middle;
+        margin-left: 20px;
+        margin-right: .1em;
+        &:first-child {
+            margin-left: 0;
+        }
+    }
+}
 
 .controls {
     padding: $grid-desktop-gutter 0;
@@ -60,6 +74,7 @@ body, .mdl-layout__content {
 }
 
 .screenshots {
+    position: relative;
     background: color($color-black);
     overflow: hidden;
     height: 800px;
@@ -75,6 +90,15 @@ body, .mdl-layout__content {
         .diff {
             position: absolute;
         }
+    }
+
+    .no-diff {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+        padding: $grid-desktop-gutter * 2;
     }
 
 }

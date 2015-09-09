@@ -26,4 +26,10 @@
             {{/each}}
         </div>
     </div>
+    {{#unless result}}
+    <div class="no-diff mdl-shadow--4dp mdl-color--green mdl-color-text--white mdl-typography--title">
+        There is no difference!
+    </div>
+    {{/unless}}
 </div>
+

@@ -35,6 +35,7 @@
     }
 
     function renderTestDetailsView(testDetails) {
+        testDetails.result.config.browser = testDetails.result.config.browser.toLowerCase();
         $('#test-details-container').html(Handlebars.templates.testDetails(testDetails.result));
         componentHandler.upgradeAllRegistered();
     }
