@@ -140,11 +140,7 @@
         $('.fingerprint-list').toggleClass('disabled');
         $('#add-fingerprint').attr('disabled', true);
         socket.emitAsync('fingerprints create', { id: testId })
-            .then(loadFingerprints)
-            .then(function () {
-                $('#add-fingerprint').attr('disabled', false);
-                $('.fingerprint-list').toggleClass('disabled');
-            });
+            .then(loadFingerprints);
     }
 
     Handlebars.registerHelper('compareToFingerprintId', function () {
