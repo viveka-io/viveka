@@ -14,6 +14,9 @@ var node;
 var sections = {
     'dev-section': {
         'index': 'dev-section-main-page.html'
+    },
+    'admin': {
+        'index': 'test-list.html'
     }
 };
 var server = {
@@ -27,7 +30,7 @@ var server = {
     }
 };
 //---------------------------- SERVER TASKS -----------------------------------
-gulp.task('server:babel', function() {
+gulp.task('server:babel', function () {
     return gulp.src(server.src.all)
         .pipe($.sourcemaps.init())
         .pipe($.cached('Server:Babel'))
@@ -38,34 +41,34 @@ gulp.task('server:babel', function() {
         .pipe(gulp.dest(server.tmp.root));
 });
 
-gulp.task('stopServer', function() {
+gulp.task('stopServer', function () {
     if (node) {
         node.kill();
     }
 });
 
-gulp.task('startServer', ['server:babel', 'stopServer'], function(done) {
+gulp.task('startServer', ['server:babel', 'stopServer'], function (done) {
     node = cp.spawn('node', [server.tmp.index], { stdio: ['ipc', process.stdout, process.stderr] });
-    node.on('close', function(code) {
+    node.on('close', function (code) {
         if (code === 8) {
             $.util.log('Error detected, waiting for changes...');
         }
     });
-    node.on('message', function(message) {
+    node.on('message', function (message) {
         if (message === 'started') {
             done();
         }
     });
 });
 
-process.on('exit', function() {
+process.on('exit', function () {
     if (node) {
         node.kill();
     }
 });
-Object.keys(sections).map(function(section) {
+Object.keys(sections).map(function (section) {
     //---------------------------- SCRIPT TASK ----------------------------------
-    gulp.task(section + ':script', function() {
+    gulp.task(section + ':script', function () {
         return gulp.src(section + '/**/*.js')
             .pipe($.sourcemaps.init())
             .pipe($.cached('Client:Babel'))
@@ -78,7 +81,7 @@ Object.keys(sections).map(function(section) {
             .pipe(browserSync.stream());
     });
     //---------------------------- STYLE TASK -----------------------------------
-    gulp.task(section + ':style', function() {
+    gulp.task(section + ':style', function () {
         return gulp.src(section + '/**/*.scss')
             .pipe($.sourcemaps.init())
             .pipe($.cached('Sass'))
@@ -89,8 +92,8 @@ Object.keys(sections).map(function(section) {
             .pipe(browserSync.stream());
     });
     //---------------------------- TEMPLATE TASK ------------------------------
-    gulp.task(section + ':template', function() {
-        var templatesFolders = glob.sync(section + '/**/*.hbs').reduce(function(list, item){
+    gulp.task(section + ':template', function () {
+        var templatesFolders = glob.sync(section + '/**/*.hbs').reduce(function (list, item) {
             var folder = path.resolve(path.dirname(item), '..');
 
             if (list.indexOf(folder) === -1) {
@@ -115,8 +118,8 @@ Object.keys(sections).map(function(section) {
         return merge(tasks);
     });
     //---------------------------- MARKUP TASK ----------------------------------
-    gulp.task(section + ':markup', function() {
-        var indexFilter = $.filter(sections[section].index, {restore: true});
+    gulp.task(section + ':markup', function () {
+        var indexFilter = $.filter(sections[section].index, { restore: true });
 
         return gulp.src(section + '/**/*.html')
             .pipe($.flatten())
@@ -127,15 +130,15 @@ Object.keys(sections).map(function(section) {
     });
 });
 //---------------------------- WATCH TASK -----------------------------------
-gulp.task('browser-sync', function() {
+gulp.task('browser-sync', function () {
     browserSync({
         proxy: 'localhost:5555'
     });
 });
 
-gulp.task('watch', function() {
+gulp.task('watch', function () {
     gulp.watch(server.src.all, ['startServer']);
-    Object.keys(sections).forEach(function(section) {
+    Object.keys(sections).forEach(function (section) {
         gulp.watch(section + '/**/*.js', [section + ':script']);
         gulp.watch(section + '/**/*.scss', [section + ':style']);
         gulp.watch(section + '/**/*.hbs', [section + ':template', browserSync.reload]);
@@ -144,19 +147,19 @@ gulp.task('watch', function() {
 });
 //---------------------------- CLEAN TASK -----------------------------------
 gulp.task('clean', function () {
-    var folders = Object.keys(sections).map(function(section) {
+    var folders = Object.keys(sections).map(function (section) {
         return 'tmp/public/' + section;
     });
 
     folders.push(server.tmp.root);
 
-    folders.forEach(function(folder) {
+    folders.forEach(function (folder) {
         rimraf.sync(folder);
     });
 });
 //---------------------------- DEFAULT TASK -----------------------------------
 gulp.task('default', function (done) {
-    var tasks = Object.keys(sections).reduce(function(list, section) {
+    var tasks = Object.keys(sections).reduce(function (list, section) {
         list.push(section + ':script');
         list.push(section + ':style');
         list.push(section + ':template');
@@ -172,7 +175,7 @@ gulp.task('default', function (done) {
 function errorHandler(title) {
     'use strict';
 
-    return function(err) {
+    return function (err) {
         $.util.log($.util.colors.red('[' + title + ']'), err.toString());
         this.emit('end');
     };
