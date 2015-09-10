@@ -8,6 +8,7 @@ var glob = require('glob');
 var merge = require('merge-stream');
 var runSequence = require('run-sequence');
 var browserSync = require('browser-sync');
+var browserSyncInitialized = false;
 var cp = require('child_process');
 var node;
 //--------------------------- CONFIGURATION ----------------------------------
@@ -43,6 +44,10 @@ gulp.task('server:babel', function () {
 });
 
 gulp.task('stopServer', function () {
+    if (browserSyncInitialized) {
+        browserSync.pause();
+    }
+
     if (node) {
         node.kill();
     }
@@ -50,8 +55,10 @@ gulp.task('stopServer', function () {
 
 gulp.task('startServer', ['server:babel', 'stopServer'], function (done) {
     node = cp.spawn('node', [server.tmp.index], { stdio: ['ipc', process.stdout, process.stderr] });
-    node.on('close', function () {
-        $.util.log('Server crashed, waiting for changes...');
+    node.on('close', function (code) {
+        if (code) {
+            $.util.log('Server crashed, waiting for changes...');
+        }
     });
     node.on('message', function (message) {
         if (message === 'started') {
@@ -135,13 +142,21 @@ Object.keys(sections).map(function (section) {
 });
 //---------------------------- WATCH TASK -----------------------------------
 gulp.task('browser-sync', function () {
-    browserSync({
-        proxy: 'localhost:5555'
-    });
+    if (!browserSyncInitialized) {
+        browserSync.init({
+            proxy: 'localhost:5555'
+        });
+        browserSyncInitialized = true;
+    } else {
+        browserSync.resume();
+        browserSync.reload();
+    }
 });
 
 gulp.task('watch', function () {
-    gulp.watch(server.src.all, ['startServer']);
+    gulp.watch(server.src.all, function(){
+        runSequence('startServer', 'browser-sync');
+    });
     Object.keys(sections).forEach(function (section) {
         gulp.watch(section + '/**/*.js', [section + ':script']);
         gulp.watch(section + '/**/*.scss', [section + ':style']);
@@ -150,8 +165,8 @@ gulp.task('watch', function () {
     });
 });
 //---------------------------- CLEAN TASK -----------------------------------
-gulp.task('clean', function () {
-    rimraf.sync('tmp/public');
+gulp.task('clean', function (done) {
+    rimraf('tmp/public', done);
 });
 //---------------------------- DEFAULT TASK -----------------------------------
 gulp.task('default', function (done) {
