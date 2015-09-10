@@ -8,14 +8,18 @@
     </thead>
     <tbody>
         {{#each this}}
-        <tr class="{{#if approved}}approved{{else}}declined{{/if}}">
+        <tr class="{{status.name}}">
             <td class="mdl-data-table__cell--non-numeric">
                 <span class="mdl-typography--font-bold">{{created}}</span>
             </td>
             <td class="mdl-data-table__cell--non-numeric">
-                {{#if approved}}
+                {{#if status.baseline}}
+                <i class="status icon-flag mdl-color-text--green"></i>
+                {{/if}}
+                {{#if status.approved}}
                 <i class="status icon-check mdl-color-text--green"></i>
-                {{else}}
+                {{/if}}
+                {{#if status.unapproved}}
                 <i class="status icon-close mdl-color-text--red"></i>
                 {{/if}}
             </td>

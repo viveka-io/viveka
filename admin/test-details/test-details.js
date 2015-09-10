@@ -50,7 +50,6 @@
         $('#add-fingerprint').attr('disabled', isNewTest);
         $('#test-details-container').html(Handlebars.templates.testDetails(testData));
         $('#add-test').toggleClass('hidden', !isNewTest);
-        $('#save-test').toggleClass('hidden', isNewTest);
         componentHandler.upgradeAllRegistered();
         attachTestDetailsEventHandlers();
     }
@@ -127,9 +126,31 @@
     }
 
     function renderFingerprintsListView(testFingerprints) {
+        setFingerprintsStatus(testFingerprints.result);
         $('#fingerprints-list-container').html(Handlebars.templates.fingerprintList(testFingerprints.result));
         componentHandler.upgradeAllRegistered();
         attachFingerprintListEventHandlers();
+    }
+
+    function setFingerprintsStatus(fingerprints) {
+        fingerprints.forEach(function (fingerprint) {
+            if (fingerprint._id === baselineId) {
+                fingerprint.status = {
+                    name: 'baseline',
+                    baseline: true
+                };
+            } else if (fingerprint.approved === true) {
+                fingerprint.status = {
+                    name: 'approved',
+                    approved: true
+                };
+            } else if (fingerprint.approved === false) {
+                fingerprint.status = {
+                    name: 'unapproved',
+                    unapproved: true
+                };
+            }
+        });
     }
 
     function attachFingerprintListEventHandlers() {

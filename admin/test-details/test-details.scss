@@ -76,6 +76,7 @@ body, .mdl-layout__content {
 
 .test-config {
     width: 100%;
+    margin-bottom: $button-fab-size;
     padding: $grid-desktop-gutter;
 
     .mdl-button {
@@ -107,6 +108,10 @@ body, .mdl-layout__content {
 
         .status {
             font-size: $button-icon-size;
+        }
+
+        .baseline td {
+            border-bottom: 2px solid color($palette-green-500);
         }
     }
 }
