@@ -14,7 +14,10 @@
     function init() {
         initRouter();
         loadTestDetails();
-        loadFingerprints();
+
+        if (testId) {
+            loadFingerprints();
+        }
     }
 
     function initRouter() {
@@ -41,13 +44,16 @@
             testData = {
                 browsers: mapBrowsers()
             };
+            $('#test-title .url').removeClass('hidden');
         } else {
             testData = testDetails.result;
             testData.browsers = mapBrowsers(testData.config.browser);
             $('#test-title').html(testData.name);
+            $('#test-details-container')
+                .removeClass('mdl-cell--12-col')
+                .addClass('mdl-cell--4-col');
         }
 
-        $('#add-fingerprint').attr('disabled', isNewTest);
         $('#test-details-container').html(Handlebars.templates.testDetails(testData));
         $('#add-test').toggleClass('hidden', !isNewTest);
         componentHandler.upgradeAllRegistered();
