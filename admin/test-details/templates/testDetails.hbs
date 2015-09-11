@@ -1,0 +1,30 @@
+<div class="test-config mdl-card mdl-shadow--2dp">
+    <div>
+        <span class="url mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width" title="{{config.url}}">
+            <input class="mdl-textfield__input" type="text" id="url" value="{{config.url}}" />
+            <label class="mdl-textfield__label" for="url">URL</label>
+        </span>
+        <br>
+        <span class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width">
+            <input class="mdl-textfield__input" type="number" id="browser-width" value="{{config.browserWidth}}" maxlength="4" min="0" />
+            <label class="mdl-textfield__label" for="browser-width">Screen width</label>
+        </span>
+        <span class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width">
+            <input class="mdl-textfield__input" type="number" id="browser-height" value="{{config.browserHeight}}" maxlength="4" min="0" />
+            <label class="mdl-textfield__label" for="browser-height">Screen height</label>
+        </span>
+        <div id="browser-selector">
+            {{#each browsers}}
+            <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="option-{{@index}}" id="browser-{{@index}}">
+                <input type="checkbox" id="option-{{@index}}" class="mdl-icon-toggle__input" name="browser" value="{{value}}" {{#if selected}}checked{{/if}} />
+                <i class="mdl-icon-toggle__label material-icons"><em class="icon-{{iconname}}"></em></i>
+            </label>
+            <div class="mdl-tooltip" for="browser-{{@index}}">{{name}}</div>
+            {{/each}}
+        </div>
+        <button id="add-test" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--green">
+            <i class="icon-add"></i>
+        </button>
+        <div class="mdl-tooltip" for="add-test">Add</div>
+    </div>
+</div>

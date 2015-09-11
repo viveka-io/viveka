@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'icomoon';
-	src:url('/fonts/icomoon.eot?owx3en');
-	src:url('/fonts/icomoon.eot?#iefixowx3en') format('embedded-opentype'),
-		url('/fonts/icomoon.ttf?owx3en') format('truetype'),
-		url('/fonts/icomoon.woff?owx3en') format('woff'),
-		url('/fonts/icomoon.svg?owx3en#icomoon') format('svg');
+	src:url('/fonts/icomoon.eot?-iugjjp');
+	src:url('/fonts/icomoon.eot?#iefix-iugjjp') format('embedded-opentype'),
+		url('/fonts/icomoon.ttf?-iugjjp') format('truetype'),
+		url('/fonts/icomoon.woff?-iugjjp') format('woff'),
+		url('/fonts/icomoon.svg?-iugjjp#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -23,6 +23,24 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.icon-phantomjs:before {
+	content: "\e606";
+}
+.icon-chrome:before {
+	content: "\e601";
+}
+.icon-firefox:before {
+	content: "\e602";
+}
+.icon-explorer:before {
+	content: "\e603";
+}
+.icon-opera:before {
+	content: "\e604";
+}
+.icon-safari:before {
+	content: "\e605";
+}
 .icon-viveka-swan:before {
 	content: "\e600";
 }
@@ -2410,4 +2428,4 @@
 }
 .icon-offline_pin:before {
 	content: "\e31a";
-}
+} 

@@ -1,0 +1,117 @@
+@import '../../common/style/_general';
+
+.mdl-layout__header-row {
+    padding-left: $grid-desktop-gutter;
+    min-height: 100px;
+}
+
+.mdl-layout-title {
+    font-size: 3em;
+    line-height: .6;
+
+    a {
+        text-decoration: none;
+    }
+
+    span {
+        font-weight: 500;
+    }
+
+    small {
+        font-size: .5em;
+        font-weight: 300;
+    }
+
+    .icon-viveka-swan {
+        float: left;
+        font-size: 1.4em;
+        color: color($color-primary-contrast, .3);
+        margin: -.05em $grid-desktop-gutter 0 0;
+    }
+}
+
+body, .mdl-layout__content {
+    background: $layout-drawer-bg-color;
+}
+
+.mdl-card {
+    width: 100%;
+    margin: 0 0 $grid-desktop-gutter*2;
+    overflow: visible;
+}
+
+.grid {
+    width: 100%;
+    margin: 0 auto;
+
+    td {
+        vertical-align: middle;
+        padding: 10px 20px;
+    }
+}
+
+#test-title {
+    padding: 0 $grid-desktop-gutter;
+    margin: 1em 0 .5em;
+    line-height: inherit;
+
+    .mdl-textfield {
+        margin: -$input-text-vertical-spacing 0;
+    }
+
+    .mdl-textfield__input {
+        @include typo-display-1;
+    }
+
+    .mdl-textfield__label {
+        @include typo-display-1;
+    }
+
+    .mdl-textfield--floating-label.is-focused .mdl-textfield__label ,
+    .mdl-textfield--floating-label.is-dirty .mdl-textfield__label {
+        @include typo-title;
+    }
+
+}
+
+.test-config {
+    width: 100%;
+    margin-bottom: $button-fab-size;
+    padding: $grid-desktop-gutter;
+
+    .mdl-button {
+        position: absolute;
+        right: $grid-desktop-gutter;
+        bottom: -$button-fab-size / 2;
+    }
+}
+
+.hidden {
+    display: none;
+}
+
+#fingerprints-list-container {
+    position: relative;
+
+    .mdl-button--fab {
+        position: absolute;
+        right: $grid-desktop-gutter;
+        top: -$button-fab-size / 2;
+    }
+
+    .fingerprint-list {
+        transition: opacity .4s ease-in-out;
+        
+        &.disabled {
+            opacity: 0.3;
+        }
+
+        .status {
+            font-size: $button-icon-size;
+        }
+
+        .baseline td {
+            border-bottom: 2px solid color($palette-green-500);
+        }
+    }
+}

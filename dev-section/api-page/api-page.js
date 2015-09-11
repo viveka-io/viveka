@@ -7,11 +7,12 @@ var socket = io(),
         {
             message: 'tests create',
             inputs: [
-                { name: 'browserWidth',     value: 1280, additionalClasses: 'data' },
-                { name: 'browserHeight',    value: 720, additionalClasses: 'data' },
-                { name: 'url',              value: 'http://localhost:5555/testpage', additionalClasses: 'data' },
-                { name: 'generator',        value: 'SENSE', additionalClasses: 'data' },
-                { name: 'browser',          value: 'FIREFOX', additionalClasses: 'data' }
+                { name: 'name',                    value: 'Untitled', additionalClasses: 'data' },
+                { name: 'config.browserWidth',     value: 1280, additionalClasses: 'data' },
+                { name: 'config.browserHeight',    value: 720, additionalClasses: 'data' },
+                { name: 'config.url',              value: 'http://localhost:5555/testpage', additionalClasses: 'data' },
+                { name: 'config.generator',        value: 'SENSE', additionalClasses: 'data' },
+                { name: 'config.browser',          value: 'FIREFOX', additionalClasses: 'data' }
             ]
         },
         {
@@ -130,7 +131,15 @@ function collectData(content) {
     var data = {};
 
     $.each(content.find('input'), function () {
-        data[$(this).attr('name')] = $(this).val();
+        var name = $(this).attr('name'),
+            obj = name.split('.');
+
+        if (obj.length === 1) {
+            data[name] = $(this).val();
+        } else {
+            data[obj[0]] = data[obj[0]] || {};
+            data[obj[0]][obj[1]] = $(this).val();
+        }
     });
 
     return data;
