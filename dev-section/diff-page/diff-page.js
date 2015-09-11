@@ -12,7 +12,7 @@
         },
         router;
 
-    $.getJSON('/test-cases.json').done(handleTestCasesLoad);
+    $.getJSON('/dev-section/test-cases.json').done(handleTestCasesLoad);
 
     function handleTestCasesLoad(testCases) {
         header.testCases = testCases;

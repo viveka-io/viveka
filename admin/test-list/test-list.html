@@ -1,1 +1,47 @@
-<p>asd</p>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Vikeka Tests</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/fonts/iconmoon.css">
+    <link rel="stylesheet" href="/style/test-list.css">
+</head>
+
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <header class="mdl-layout__header">
+            <div class="mdl-layout__header-row">
+                <div class="mdl-layout-grid">
+                    <h2 class="mdl-layout-title">
+                        <a href="/" class="mdl-color-text--primary-contrast mdl-typography--font-regular">
+                            <i class="icon-viveka-swan"></i>
+                        </a>
+                        <span>viveka</span><br>
+                        <small>Tests</small>
+                    </h2>
+                    <button id="add-test" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent">
+                        <i class="icon-add"></i>
+                    </button>
+                    <div class="mdl-tooltip" for="add-test">Add new test</div>
+                </div>
+            </div>
+        </header>
+        <main class="mdl-layout__content">
+            <div class="page-content" id="view"></div>
+        </main>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/bower_components/bluebird/js/browser/bluebird.min.js"></script>
+    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/bower_components/lodash/lodash.min.js"></script>
+    <script src="/bower_components/handlebars/handlebars.runtime.min.js"></script>
+    <script src="/bower_components/director/build/director.min.js"></script>
+    <script src="/bower_components/material-design-lite/material.min.js"></script>
+    <script src="/template/test-list.js"></script>
+    <script src="/script/test-list.js"></script>
+</body>
+</html>

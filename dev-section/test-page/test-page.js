@@ -12,7 +12,7 @@
         activeView = readView(),
         activeTestCase;
 
-    $.getJSON('/test-cases.json')
+    $.getJSON('/dev-section/test-cases.json')
         .done(init);
 
     function init(testCases) {

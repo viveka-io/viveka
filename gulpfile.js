@@ -8,15 +8,17 @@ var glob = require('glob');
 var merge = require('merge-stream');
 var runSequence = require('run-sequence');
 var browserSync = require('browser-sync');
+var browserSyncInitialized = false;
 var cp = require('child_process');
 var node;
 //--------------------------- CONFIGURATION ----------------------------------
 var sections = {
     'dev-section': {
-        'index': 'dev-section-main-page.html'
+        index: 'dev-section-main-page.html'
     },
     'admin': {
-        'index': 'test-list.html'
+        root: true,
+        index: 'test-list.html'
     }
 };
 var server = {
@@ -42,6 +44,10 @@ gulp.task('server:babel', function () {
 });
 
 gulp.task('stopServer', function () {
+    if (browserSyncInitialized) {
+        browserSync.pause();
+    }
+
     if (node) {
         node.kill();
     }
@@ -50,8 +56,8 @@ gulp.task('stopServer', function () {
 gulp.task('startServer', ['server:babel', 'stopServer'], function (done) {
     node = cp.spawn('node', [server.tmp.index], { stdio: ['ipc', process.stdout, process.stderr] });
     node.on('close', function (code) {
-        if (code === 8) {
-            $.util.log('Error detected, waiting for changes...');
+        if (code) {
+            $.util.log('Server crashed, waiting for changes...');
         }
     });
     node.on('message', function (message) {
@@ -69,6 +75,8 @@ process.on('exit', function () {
 Object.keys(sections).map(function (section) {
     //---------------------------- SCRIPT TASK ----------------------------------
     gulp.task(section + ':script', function () {
+        var dest = path.join('tmp', 'public', sections[section].root ? '' : section, 'script');
+
         return gulp.src(section + '/**/*.js')
             .pipe($.sourcemaps.init())
             .pipe($.cached('Client:Babel'))
@@ -77,22 +85,24 @@ Object.keys(sections).map(function (section) {
             }).on('error', errorHandler('Client:Babel')))
             .pipe($.flatten())
             .pipe($.sourcemaps.write('.'))
-            .pipe(gulp.dest('tmp/public/' + section + '/script'))
+            .pipe(gulp.dest(dest))
             .pipe(browserSync.stream());
     });
     //---------------------------- STYLE TASK -----------------------------------
     gulp.task(section + ':style', function () {
+        var dest = path.join('tmp', 'public', sections[section].root ? '' : section, 'style');
         return gulp.src(section + '/**/*.scss')
             .pipe($.sourcemaps.init())
             .pipe($.cached('Sass'))
             .pipe($.sass().on('error', errorHandler('Sass')))
             .pipe($.flatten())
             .pipe($.sourcemaps.write('.'))
-            .pipe(gulp.dest('tmp/public/' + section + '/style'))
+            .pipe(gulp.dest(dest))
             .pipe(browserSync.stream());
     });
     //---------------------------- TEMPLATE TASK ------------------------------
     gulp.task(section + ':template', function () {
+        var dest = path.join('tmp', 'public', sections[section].root ? '' : section, 'template');
         var templatesFolders = glob.sync(section + '/**/*.hbs').reduce(function (list, item) {
             var folder = path.resolve(path.dirname(item), '..');
 
@@ -112,13 +122,14 @@ Object.keys(sections).map(function (section) {
                     noRedeclare: true
                 }))
                 .pipe($.concat(path.basename(templateFolder) + '.js'))
-                .pipe(gulp.dest('tmp/public/' + section + '/template'));
+                .pipe(gulp.dest(dest));
         });
 
         return merge(tasks);
     });
     //---------------------------- MARKUP TASK ----------------------------------
     gulp.task(section + ':markup', function () {
+        var dest = path.join('tmp', 'public', sections[section].root ? '' : section);
         var indexFilter = $.filter(sections[section].index, { restore: true });
 
         return gulp.src(section + '/**/*.html')
@@ -126,18 +137,26 @@ Object.keys(sections).map(function (section) {
             .pipe(indexFilter)
             .pipe($.rename('index.html'))
             .pipe(indexFilter.restore)
-            .pipe(gulp.dest('tmp/public/' + section));
+            .pipe(gulp.dest(dest));
     });
 });
 //---------------------------- WATCH TASK -----------------------------------
 gulp.task('browser-sync', function () {
-    browserSync({
-        proxy: 'localhost:5555'
-    });
+    if (!browserSyncInitialized) {
+        browserSync.init({
+            proxy: 'localhost:5555'
+        });
+        browserSyncInitialized = true;
+    } else {
+        browserSync.resume();
+        browserSync.reload();
+    }
 });
 
 gulp.task('watch', function () {
-    gulp.watch(server.src.all, ['startServer']);
+    gulp.watch(server.src.all, function(){
+        runSequence('startServer', 'browser-sync');
+    });
     Object.keys(sections).forEach(function (section) {
         gulp.watch(section + '/**/*.js', [section + ':script']);
         gulp.watch(section + '/**/*.scss', [section + ':style']);
@@ -146,16 +165,8 @@ gulp.task('watch', function () {
     });
 });
 //---------------------------- CLEAN TASK -----------------------------------
-gulp.task('clean', function () {
-    var folders = Object.keys(sections).map(function (section) {
-        return 'tmp/public/' + section;
-    });
-
-    folders.push(server.tmp.root);
-
-    folders.forEach(function (folder) {
-        rimraf.sync(folder);
-    });
+gulp.task('clean', function (done) {
+    rimraf('tmp/public', done);
 });
 //---------------------------- DEFAULT TASK -----------------------------------
 gulp.task('default', function (done) {

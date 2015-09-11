@@ -1,0 +1,104 @@
+@import '../../common/style/_general';
+
+body, .mdl-layout__content {
+    background: $layout-drawer-bg-color;
+}
+.mdl-layout__header {
+    position: relative;
+}
+
+.mdl-layout__header-row {
+    padding-left: $grid-desktop-gutter;
+    min-height: 100px;
+}
+
+.mdl-layout-title {
+    font-size: 3em;
+    line-height: .6;
+
+    a {
+        text-decoration: none;
+    }
+
+    span {
+        font-weight: 500;
+    }
+
+    small {
+        font-size: .5em;
+        font-weight: 300;
+    }
+
+    .icon-viveka-swan {
+        float: left;
+        font-size: 1.4em;
+        color: color($color-primary-contrast, .3);
+        margin: -.05em $grid-desktop-gutter 0 0;
+    }
+}
+
+.fabs-container {
+    position: absolute;
+    right: $grid-desktop-gutter * 2;
+    bottom: -$button-fab-size / 2;
+
+    .mdl-button {
+        margin-left: $grid-desktop-gutter;
+    }
+}
+
+
+.details {
+    margin-top: -1em;
+
+    .icon {
+        font-size: 24px;
+        vertical-align: middle;
+        margin-left: 20px;
+        margin-right: .1em;
+        &:first-child {
+            margin-left: 0;
+        }
+    }
+}
+
+.controls {
+    padding: $grid-desktop-gutter 0;
+    text-align: center;
+
+    .slider {
+        display: inline-block;
+        width: 300px;
+        margin: 0 -20px;
+    }
+}
+
+.screenshots {
+    position: relative;
+    background: color($color-black);
+    overflow: hidden;
+    height: 800px;
+
+    .container {
+        position: relative;
+
+        img {
+            display: block;
+            opacity: .5;
+        }
+
+        .diff {
+            position: absolute;
+        }
+    }
+
+    .no-diff {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+        padding: $grid-desktop-gutter * 2;
+    }
+
+}

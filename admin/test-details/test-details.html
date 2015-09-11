@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Vikeka Test details</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/fonts/iconmoon.css">
+    <link rel="stylesheet" href="/style/test-details.css">
+</head>
+
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <header class="mdl-layout__header">
+            <div class="mdl-layout__header-row">
+                <div class="mdl-layout-grid">
+                    <h2 class="mdl-layout-title">
+                        <a href="/" class="mdl-color-text--primary-contrast mdl-typography--font-regular">
+                            <i class="icon-viveka-swan"></i>
+                        </a>
+                        <span>viveka</span><br>
+                        <small>Test details</small>
+                    </h2>
+                </div>
+            </div>
+        </header>
+        <main class="mdl-layout__content" id="view">
+            <div class="page-content" id="view">
+                <h3 id="test-title">
+                    <span class="hidden url mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width">
+                        <input class="mdl-textfield__input" type="text" id="name" value="" />
+                        <label class="mdl-textfield__label" for="name">Test title</label>
+                    </span>
+                </h3>
+                <div class="mdl-grid">
+                    <div id="test-details-container" class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone"></div>
+                    <div id="fingerprints-list-container" class="mdl-cell mdl-cell--8-col mdl-cell--8-col-tablet mdl-cell--4-col-phone"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/bower_components/bluebird/js/browser/bluebird.min.js"></script>
+    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/bower_components/lodash/lodash.min.js"></script>
+    <script src="/bower_components/handlebars/handlebars.runtime.min.js"></script>
+    <script src="/bower_components/director/build/director.min.js"></script>
+    <script src="/bower_components/material-design-lite/material.min.js"></script>
+    <script src="/template/test-details.js"></script>
+    <script src="/script/test-details.js"></script>
+</body>
+</html>

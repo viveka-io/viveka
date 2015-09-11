@@ -1,0 +1,45 @@
+<table class="fingerprint-list grid mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+    <thead class="mdl-color--primary">
+        <tr>
+            <th class="mdl-color-text--primary-contrast mdl-data-table__cell--non-numeric">Date</th>
+            <th class="mdl-color-text--primary-contrast mdl-data-table__cell--non-numeric">Approved</th>
+            <th class="mdl-color-text--primary-contrast"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each this}}
+        <tr class="{{status.name}}">
+            <td class="mdl-data-table__cell--non-numeric">
+                <span class="mdl-typography--font-bold">{{created}}</span>
+            </td>
+            <td class="mdl-data-table__cell--non-numeric">
+                {{#if status.baseline}}
+                <i class="status icon-flag mdl-color-text--green"></i>
+                {{/if}}
+                {{#if status.approved}}
+                <i class="status icon-check mdl-color-text--green"></i>
+                {{/if}}
+                {{#if status.unapproved}}
+                <i class="status icon-close mdl-color-text--red"></i>
+                {{/if}}
+            </td>
+            <td>
+                <a href="/diff-page.html#{{testId}}/{{compareToFingerprintId}}/{{_id}}" id="test-detail-{{@index}}" class="mdl-button mdl-js-button mdl-button--icon mdl-button--primary">
+                    <i class="icon-photo_library"></i>
+                </a>
+                <div class="mdl-tooltip" for="test-detail-{{@index}}">compare to baseline</div>
+            </td>
+        </tr>
+        {{else}}
+        <tr>
+            <td colspan="3" class="mdl-data-table__cell--non-numeric">
+                There is no fingerprint yet.
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<button id="add-fingerprint" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp">
+    <i class="icon-play_arrow"></i>
+</button>
+<div class="mdl-tooltip" for="add-fingerprint">Run</div>

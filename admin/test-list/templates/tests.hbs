@@ -1,0 +1,37 @@
+<div class="mdl-grid">
+    <div class="mdl-cell mdl-cell--12-col">
+
+        <h3>List of tests</h3>
+
+        <table class="test-list grid mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+            <thead class="mdl-color--primary">
+                <tr>
+                    <th class="mdl-color-text--primary-contrast mdl-data-table__cell--non-numeric">Title</th>
+                    <th class="mdl-color-text--primary-contrast mdl-data-table__cell--non-numeric">ID</th>
+                    <th class="mdl-color-text--primary-contrast"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {{#each result}}
+                <tr class="test-row">
+                    <td class="mdl-data-table__cell--non-numeric">
+                        <a href="/test-details.html#{{_id}}" class="mdl-navigation__link mdl-typography--font-bold">{{name}}</a>
+                    </td>
+                    <td class="mdl-data-table__cell--non-numeric">{{_id}}</td>
+                    <td>
+                        <a href="/test-details.html#{{_id}}" id="test-detail{{@index}}" class="mdl-button mdl-js-button mdl-button--icon mdl-button--primary">
+                            <i class="icon-mode_edit"></i>
+                        </a>
+                        <div class="mdl-tooltip" for="test-detail{{@index}}">Test details</div>
+
+                        <button id="test-delete-{{@index}}" class="test-delete mdl-button mdl-js-button mdl-button--icon mdl-button--colored mdl-button--accent" data-test-id="{{_id}}">
+                            <i class="icon-cancel"></i>
+                        </button>
+                        <div class="mdl-tooltip" for="test-delete-{{@index}}">Delete test</div>
+                    </td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
