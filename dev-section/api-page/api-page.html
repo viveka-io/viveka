@@ -26,13 +26,13 @@
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script src="/bower_components/bluebird/js/browser/bluebird.min.js"></script>
     <script src="/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="/bower_components/lodash/lodash.min.js"></script>
     <script src="/bower_components/handlebars/handlebars.runtime.min.js"></script>
     <script src="/bower_components/director/build/director.min.js"></script>
     <script src="/bower_components/material-design-lite/material.min.js"></script>
+    <script src="/bower_components/system.js/dist/system-register-only.js"></script>
     <script src="template/api-page.js"></script>
-    <script src="script/api-page.js"></script>
+    <script>System.import('script/api-page.js')</script>
 </body>
 </html>

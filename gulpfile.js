@@ -53,7 +53,7 @@ gulp.task('stopServer', function () {
     }
 });
 
-gulp.task('startServer', ['server:babel', 'stopServer'], function (done) {
+gulp.task('startServer', function (done) {
     node = cp.spawn('node', [server.tmp.index], { stdio: ['ipc', process.stdout, process.stderr] });
     node.on('close', function (code) {
         if (code) {
@@ -72,8 +72,23 @@ process.on('exit', function () {
         node.kill();
     }
 });
+
+//---------------------------- SCRIPT TASK ----------------------------------
+gulp.task('common:script', function () {
+    return gulp.src('common/**/*.js')
+        .pipe($.sourcemaps.init())
+        .pipe($.cached('Client:Babel'))
+        .pipe($.babel({
+            modules: 'system',
+            optional: ['es7.asyncFunctions']
+        }).on('error', errorHandler('Client:Babel')))
+        .pipe($.flatten())
+        .pipe($.sourcemaps.write('.'))
+        .pipe(gulp.dest('tmp/public/script'))
+        .pipe(browserSync.stream());
+});
+
 Object.keys(sections).map(function (section) {
-    //---------------------------- SCRIPT TASK ----------------------------------
     gulp.task(section + ':script', function () {
         var dest = path.join('tmp', 'public', sections[section].root ? '' : section, 'script');
 
@@ -81,6 +96,7 @@ Object.keys(sections).map(function (section) {
             .pipe($.sourcemaps.init())
             .pipe($.cached('Client:Babel'))
             .pipe($.babel({
+                modules: 'system',
                 optional: ['es7.asyncFunctions']
             }).on('error', errorHandler('Client:Babel')))
             .pipe($.flatten())
@@ -130,7 +146,7 @@ Object.keys(sections).map(function (section) {
     //---------------------------- MARKUP TASK ----------------------------------
     gulp.task(section + ':markup', function () {
         var dest = path.join('tmp', 'public', sections[section].root ? '' : section);
-        var indexFilter = $.filter(sections[section].index, { restore: true });
+        var indexFilter = $.filter(sections[section].index || 'index.html', { restore: true });
 
         return gulp.src(section + '/**/*.html')
             .pipe($.flatten())
@@ -155,8 +171,9 @@ gulp.task('browser-sync', function () {
 
 gulp.task('watch', function () {
     gulp.watch(server.src.all, function(){
-        runSequence('startServer', 'browser-sync');
+        runSequence('stopServer', 'server:babel', 'startServer', 'browser-sync');
     });
+    gulp.watch('common/**/*.js', ['common:script']);
     Object.keys(sections).forEach(function (section) {
         gulp.watch(section + '/**/*.js', [section + ':script']);
         gulp.watch(section + '/**/*.scss', [section + ':style']);
@@ -176,11 +193,9 @@ gulp.task('default', function (done) {
         list.push(section + ':template');
         list.push(section + ':markup');
         return list;
-    }, ['server:babel']);
+    }, ['common:script', 'startServer']);
 
-    tasks.push('startServer');
-
-    runSequence('clean', tasks, ['browser-sync', 'watch'], done);
+    runSequence('clean', 'server:babel', tasks, ['browser-sync', 'watch'], done);
 });
 //---------------------------- ERROR HANDLER -----------------------------------
 function errorHandler(title) {
