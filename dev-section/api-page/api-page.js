@@ -1,6 +1,8 @@
-var socket = io(),
-    source      = $("#request-template").html(),
-    features = [
+/*global $ Handlebars */
+import { emitOnSocket } from '/script/common.js';
+
+var features =
+    [
         {
             message: 'tests list'
         },
@@ -17,75 +19,63 @@ var socket = io(),
         },
         {
             message: 'tests get',
-            inputs : [ { name: 'id'} ]
+            inputs: [{ name: 'id' }]
         },
         {
             message: 'tests delete',
-            inputs : [ { name: 'id'} ]
+            inputs: [{ name: 'id' }]
         },
         {
             message: 'fingerprints list',
-            inputs : [ { name: 'id'} ]
+            inputs: [{ name: 'id' }]
         },
         {
             message: 'fingerprints create',
-            inputs : [ { name: 'id'} ]
+            inputs: [{ name: 'id' }]
         },
         {
             message: 'fingerprints get',
-            inputs : [ { name: 'id'} ]
+            inputs: [{ name: 'id' }]
         },
         {
             message: 'fingerprints get baseline',
-            inputs : [ { name: 'id'} ]
+            inputs: [{ name: 'id' }]
         },
         {
             message: 'fingerprints get latest',
-            inputs : [ { name: 'id'} ]
+            inputs: [{ name: 'id' }]
         },
         {
             message: 'fingerprints update',
-            inputs : [ { name: 'id'} ]
+            inputs: [{ name: 'id' }]
         },
         {
-           message: 'fingerprints approve',
-           inputs : [ { name: 'id'} ]
+            message: 'fingerprints approve',
+            inputs: [{ name: 'id' }]
         },
         {
-           message: 'fingerprints unapprove',
-           inputs : [ { name: 'id'} ]
+            message: 'fingerprints unapprove',
+            inputs: [{ name: 'id' }]
         },
         {
             message: 'differences get',
-            inputs : [ { name: 'id'} ]
+            inputs: [{ name: 'id' }]
         },
         {
             message: 'differences create',
-            inputs : [
+            inputs: [
                 { name: 'baselineId'},
                 { name: 'targetId'}
             ]
         },
         {
             message: 'differences create json',
-            inputs : [
+            inputs: [
                 { name: 'baselineId'},
                 { name: 'targetId'}
             ]
         }
     ];
-
-Promise.promisifyAll(socket, {promisifier: function (originalMethod) {
-    return function promisified() {
-        var args = [].slice.call(arguments),
-            self = this;
-
-        return new Promise(function(resolve, reject) {
-            args.push(resolve);
-            originalMethod.apply(self, args);
-        });
-    };
-}});
 
 features.forEach(function (feature) {
     var html = Handlebars.templates.feature(feature);
@@ -101,7 +91,7 @@ $('body').on('click', '.submit:not("missing")', function () {
     var $t = $(this).closest('.request'),
         message = $t.find('.message').text();
 
-    socket.emitAsync(message, collectData($t.find('.content')))
+    emitOnSocket(message, collectData($t.find('.content')))
         .then(function(data){
             var $message,
                 jsonString,

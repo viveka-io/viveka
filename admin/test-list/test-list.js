@@ -1,68 +1,51 @@
-/* global componentHandler */
-(function () {
-    'use strict';
-    
-    var socket = io();
+/* global window $ Handlebars componentHandler */
 
-    function init() {
-        attachAddTestRedirectEvent();
-        loadTests();
-    }
+import { emitOnSocket } from '/script/common.js';
 
-    function attachAddTestRedirectEvent() {
-        $('#add-test').on('click', addTestRedirect);
-    }
+function init() {
+    attachAddTestRedirectEvent();
+    loadTests();
+}
 
-    function addTestRedirect() {
-        window.location.href = '/test-details.html';
-    }
+function attachAddTestRedirectEvent() {
+    $('#add-test').on('click', addTestRedirect);
+}
 
-    function loadTests() {
-        getTestsAsync()
-            .then(renderTestsView);
-    }
+function addTestRedirect() {
+    window.location.href = '/test-details.html';
+}
 
-    function getTestsAsync() {
-        return socket.emitAsync('tests list', {});
-    }
+function loadTests() {
+    getTestsAsync()
+        .then(renderTestsView);
+}
 
-    function renderTestsView(tests) {
-        $('#view').html(Handlebars.templates.tests(tests));
-        componentHandler.upgradeAllRegistered();
-        attachDeleteTestEvent();
-    }
+function getTestsAsync() {
+    return emitOnSocket('tests list', {});
+}
 
-    function attachDeleteTestEvent() {
-        $('.test-delete').on('click', function (jQueryEvent) {
-            if (window.confirm('Are you sure?')) {
-                deleteTest(jQueryEvent);
-            }
-        });
-    }
+function renderTestsView(tests) {
+    $('#view').html(Handlebars.templates.tests(tests));
+    componentHandler.upgradeAllRegistered();
+    attachDeleteTestEvent();
+}
 
-    function deleteTest(jQueryEvent) {
-        var $deleteButton   = $(jQueryEvent.currentTarget),
-            $testRow        = $deleteButton.parents('.test-row'),
-            testId          = $deleteButton.data('test-id');
-
-        $testRow.toggleClass('disabled');
-        socket.emitAsync('tests delete', { id: testId })
-            .then(loadTests());
-    }
-
-    Promise.promisifyAll(socket, {
-        promisifier: function (originalMethod) {
-            return function promisified() {
-                var args = [].slice.call(arguments),
-                    self = this;
-
-                return new Promise(function (resolve, reject) {
-                    args.push(resolve);
-                    originalMethod.apply(self, args);
-                });
-            };
+function attachDeleteTestEvent() {
+    $('.test-delete').on('click', function (jQueryEvent) {
+        if (window.confirm('Are you sure?')) {
+            deleteTest(jQueryEvent);
         }
     });
+}
 
-    init();
-})();
+function deleteTest(jQueryEvent) {
+    var $deleteButton   = $(jQueryEvent.currentTarget),
+        $testRow        = $deleteButton.parents('.test-row'),
+        testId          = $deleteButton.data('test-id');
+
+    $testRow.toggleClass('disabled');
+    emitOnSocket('tests delete', { id: testId })
+        .then(loadTests());
+}
+
+init();

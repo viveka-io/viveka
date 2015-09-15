@@ -5,7 +5,7 @@
     },
     "parser": "babel-eslint",
     "rules": {
-        "no-alert": 2,
+        "no-alert": 0,
         "no-array-constructor": 2,
         "no-bitwise": 0,
         "no-caller": 2,
