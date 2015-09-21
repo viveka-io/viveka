@@ -71,7 +71,6 @@ body, .mdl-layout__content {
     .mdl-textfield--floating-label.is-dirty .mdl-textfield__label {
         @include typo-title;
     }
-
 }
 
 .test-config {
@@ -79,7 +78,24 @@ body, .mdl-layout__content {
     margin-bottom: $button-fab-size;
     padding: $grid-desktop-gutter;
 
-    .mdl-button {
+    #url-container {
+        padding-right: $button-icon-size;
+        position: relative;
+
+        #query-parameter-switcher {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            position: absolute;
+            top: 18px;
+            right: 0;
+        }
+    }
+
+    #add-test {
         position: absolute;
         right: $grid-desktop-gutter;
         bottom: -$button-fab-size / 2;
@@ -113,5 +129,33 @@ body, .mdl-layout__content {
         .baseline td {
             border-bottom: 2px solid color($palette-green-500);
         }
+    }
+}
+
+#query-parameters-container {
+    display: none;
+
+    .query-parameters {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .parameter {
+        display: inline-block;
+        padding: 4px 16px;
+        border-radius: 16px;
+        margin-bottom: 8px;
+        font-size: 90%;
+        transition: all .1s ease;
+        cursor: pointer;
+
+        &:hover {
+            @extend .mdl-shadow--2dp;
+        }
+    }
+
+    li:not(:last-child) {
+        margin-right: 8px;
     }
 }
