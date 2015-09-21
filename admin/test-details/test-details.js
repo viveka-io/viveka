@@ -53,6 +53,7 @@ function renderTestDetailsView(testDetails) {
             .addClass('mdl-cell--4-col');
     }
 
+    testData.queryParameters = getQueryParameters(testData.config.url);
     $('#test-details-container').html(Handlebars.templates.testDetails(testData));
     $('#add-test').toggleClass('hidden', !isNewTest);
     componentHandler.upgradeAllRegistered();
@@ -70,8 +71,30 @@ function mapBrowsers(testBrowser) {
     });
 }
 
+function getQueryParameters(url) {
+    var queryParametersDividerIndex = url.indexOf('?'),
+        queryParameters;
+    
+    if (queryParametersDividerIndex !== -1) {
+        queryParameters = url.slice(queryParametersDividerIndex + 1).split('&').map(function (param) {
+            var keyValue = param.split('=');
+            return {
+                key: keyValue[0],
+                value: keyValue[1]
+            };
+        });
+    }
+
+    return queryParameters;
+}
+
 function attachTestDetailsEventHandlers() {
+    $('#query-parameter').off('click').on('change', toggleQueryParameters);
     $('#add-test').off('click').on('click', createTest);
+}
+
+function toggleQueryParameters() {
+    $('#query-parameters-container').stop().slideToggle();
 }
 
 function createTest() {
