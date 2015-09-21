@@ -64,6 +64,7 @@ var features =
         {
             message: 'differences create',
             inputs: [
+                { name: 'testId'},
                 { name: 'baselineId'},
                 { name: 'targetId'}
             ]
@@ -71,6 +72,7 @@ var features =
         {
             message: 'differences create json',
             inputs: [
+                { name: 'testId'},
                 { name: 'baselineId'},
                 { name: 'targetId'}
             ]

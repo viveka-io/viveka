@@ -1,18 +1,33 @@
 <div class="test-config mdl-card mdl-shadow--2dp">
     <div>
-        <span class="url mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width" title="{{config.url}}">
-            <input class="mdl-textfield__input" type="text" id="url" value="{{config.url}}" />
-            <label class="mdl-textfield__label" for="url">URL</label>
-        </span>
-        <br>
-        <span class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width">
+        <div id="url-container">
+            <span class="url mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width" title="{{config.url}}">
+                <input class="mdl-textfield__input" type="text" id="url" value="{{config.url}}" />
+                <label class="mdl-textfield__label" for="url">URL</label>
+            </span>
+            <label id="query-parameter-switcher" class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="query-parameter">
+                <input type="checkbox" id="query-parameter" class="mdl-icon-toggle__input" />
+                <i class="mdl-icon-toggle__label material-icons"><em class="icon-tune"></em></i>
+            </label>
+            <div class="mdl-tooltip" for="query-parameter-switcher">show parameters</div>
+        </div>
+        <div id="query-parameters-container">
+            <ul class="query-parameters">
+                {{~#each queryParameters~}}
+                <li class="parameter mdl-color--grey-200">
+                    <span><b>{{key}}</b>&nbsp;{{value}}</span>
+                </li>
+                {{~/each~}}
+            </ul>
+        </div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width">
             <input class="mdl-textfield__input" type="number" id="browser-width" value="{{config.browserWidth}}" maxlength="4" min="0" />
             <label class="mdl-textfield__label" for="browser-width">Screen width</label>
-        </span>
-        <span class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width">
+        </div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width">
             <input class="mdl-textfield__input" type="number" id="browser-height" value="{{config.browserHeight}}" maxlength="4" min="0" />
             <label class="mdl-textfield__label" for="browser-height">Screen height</label>
-        </span>
+        </div>
         <div id="browser-selector">
             {{#each browsers}}
             <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="option-{{@index}}" id="browser-{{@index}}">
