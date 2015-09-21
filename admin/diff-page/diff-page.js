@@ -98,6 +98,7 @@ function loadDifferences() {
 
 function getDifferencesAsync() {
     return emitOnSocket('differences create json', {
+        testId: testId,
         baselineId: baselineId,
         targetId: currentId,
         persist: true

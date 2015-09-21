@@ -132,11 +132,11 @@ function showTestCaseDiff(testCaseTextId) {
             }
 
             overlayCaption.append('<br>Baseline and latest fingerprints are ready');
-            render(baselineId, targetId);
+            render(testId, baselineId, targetId);
         });
 }
 
-function render(baselineId, targetId) {
+function render(testId, baselineId, targetId) {
     $('#overlay .caption').append('<br>Generating diff between ' + baselineId + ' and ' + targetId + ' ...');
 
     $('#wrapper').append(Handlebars.templates.containers({
@@ -144,20 +144,20 @@ function render(baselineId, targetId) {
         targetId: targetId
     }));
 
-    $('#imgA, #imgB').one('load', handleImageLoading(baselineId, targetId));
+    $('#imgA, #imgB').one('load', handleImageLoading(testId, baselineId, targetId));
 }
 
-function handleImageLoading(baselineId, targetId) {
+function handleImageLoading(testId, baselineId, targetId) {
     var loaded = 0;
 
     return function () {
         if (++loaded === 2) {
-            getDiffs(baselineId, targetId);
+            getDiffs(testId, baselineId, targetId);
         }
     };
 }
 
-function getDiffs(idA, idB) {
+function getDiffs(testId, idA, idB) {
     var $imgA           = $('#imgA'),
         $imgB           = $('#imgB'),
         $contA          = $('#contA'),
@@ -170,6 +170,7 @@ function getDiffs(idA, idB) {
         heightB         = $imgB[0].naturalHeight;
 
     emitOnSocket('differences create json', {
+        testId: testId,
         baselineId: idA,
         targetId: idB
     })
