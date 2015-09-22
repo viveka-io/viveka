@@ -47,17 +47,21 @@ function renderTestDetailsView(testDetails) {
     } else {
         testData = testDetails.result;
         testData.browsers = mapBrowsers(testData.config.browser);
+        testData.queryParameters = getQueryParameters(testData.config.url);
         $('#test-title').html(testData.name);
         $('#test-details-container')
             .removeClass('mdl-cell--12-col')
             .addClass('mdl-cell--4-col');
     }
 
-    testData.queryParameters = getQueryParameters(testData.config.url);
     $('#test-details-container').html(Handlebars.templates.testDetails(testData));
     $('#add-test').toggleClass('hidden', !isNewTest);
     componentHandler.upgradeAllRegistered();
     attachTestDetailsEventHandlers();
+
+    if (testData.queryParameters) {
+        attachQueryParametersTogglerEvent();
+    }
 }
 
 function mapBrowsers(testBrowser) {
@@ -88,13 +92,16 @@ function getQueryParameters(url) {
     return queryParameters;
 }
 
-function attachTestDetailsEventHandlers() {
+function attachQueryParametersTogglerEvent() {
     $('#query-parameter').off('click').on('change', toggleQueryParameters);
-    $('#add-test').off('click').on('click', createTest);
 }
 
 function toggleQueryParameters() {
     $('#query-parameters-container').stop().slideToggle();
+}
+
+function attachTestDetailsEventHandlers() {
+    $('#add-test').off('click').on('click', createTest);
 }
 
 function createTest() {
