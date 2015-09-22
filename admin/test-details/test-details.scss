@@ -79,20 +79,23 @@ body, .mdl-layout__content {
     padding: $grid-desktop-gutter;
 
     #url-container {
-        padding-right: $button-icon-size;
         position: relative;
-
-        #query-parameter-switcher {
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            position: absolute;
-            top: 18px;
-            right: 0;
+        
+        &.parametered {
+            padding-right: $button-icon-size;
         }
+    }
+
+    #query-parameter-switcher {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        position: absolute;
+        top: 18px;
+        right: 0;
     }
 
     #add-test {
