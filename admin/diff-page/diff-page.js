@@ -115,7 +115,18 @@ function panzoomify() {
                 $('#zoom')[0].MaterialSlider.change(scale);
             },
             onReset: function () {
-                $('#zoom')[0].MaterialSlider.change(1);
+                var scale = Math.min($panzoom.parent().height() / $panzoom.height(), $panzoom.parent().width() / $panzoom.width()),
+                    scaledWidth = $(this).width() * scale,
+                    scaledHeight = $(this).height() * scale,
+                    tX = ( scaledWidth - scaledWidth / scale ) / 2,
+                    tY = ( scaledHeight - scaledHeight / scale ) / 2,
+                    matrix = [scale, 0, 0, scale, tX, tY];
+
+                $panzoom.panzoom('setMatrix', matrix, {
+                    animate: true,
+                    range: true
+                });
+                $('#zoom')[0].MaterialSlider.change(scale);
             }
         });
     });
@@ -127,6 +138,7 @@ function panzoomify() {
 
         $panzoom.panzoom('option', 'minScale', minScale);
         $panzoom.panzoom('resetDimensions');
+        $panzoom.panzoom('change');
     });
 }
 
@@ -146,8 +158,8 @@ function getDifferencesAsync() {
 
 function renderDifferencesView(differencesData) {
     $('#diff-tool-container').html(Handlebars.templates.diffTool(differencesData));
-    panzoomify();
     componentHandler.upgradeAllRegistered();
+    panzoomify();
 }
 
 init();
