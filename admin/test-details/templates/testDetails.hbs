@@ -1,10 +1,10 @@
 <div class="test-config mdl-card mdl-shadow--2dp">
-    <div id="url-container"{{#if queryParameters}} class="parametered"{{/if}}>
-        <span class="url mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width" title="{{config.url}}">
-            <input class="mdl-textfield__input" type="text" id="url" value="{{config.url}}" />
+    <div id="url-container"{{#if config.url.queryParameters}} class="parametered"{{/if}}>
+        <span class="url mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width" title="{{config.url.href}}">
+            <input class="mdl-textfield__input" type="text" id="url" value="{{config.url.href}}" />
             <label class="mdl-textfield__label" for="url">URL</label>
         </span>
-        {{#if queryParameters}}
+        {{#if config.url.queryParameters}}
             <label id="query-parameter-switcher" class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="query-parameter">
                 <input type="checkbox" id="query-parameter" class="mdl-icon-toggle__input" />
                 <i class="mdl-icon-toggle__label material-icons"><em class="icon-tune"></em></i>
@@ -14,7 +14,7 @@
     </div>
     <div id="query-parameters-container">
         <ul class="query-parameters">
-            {{~#each queryParameters~}}
+            {{~#each config.url.queryParameters~}}
             <li class="parameter mdl-color--grey-200">
                 <span><b>{{key}}</b>&nbsp;{{value}}</span>
             </li>
