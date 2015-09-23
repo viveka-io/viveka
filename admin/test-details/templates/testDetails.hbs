@@ -21,6 +21,15 @@
             {{~/each~}}
         </ul>
     </div>
+    {{#if isNewTest}}
+    <div class="cookies-container">
+        {{> cookieInput index="1" hidden=true}}
+        <button id="new-cookie" class="mdl-button mdl-js-button mdl-button--icon mdl-color-text--green-500">
+            <i class="icon-add"></i>
+        </button>
+        <span class="mdl-tooltip" for="new-cookie">add cookie</span>
+    </div>
+    {{/if}}
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width">
         <input class="mdl-textfield__input" type="number" id="browser-width" value="{{config.browserWidth}}" maxlength="4" min="0" />
         <label class="mdl-textfield__label" for="browser-width">Screen width</label>

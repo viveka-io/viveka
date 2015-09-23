@@ -53,6 +53,7 @@ function renderTestDetailsView(testDetails) {
             .addClass('mdl-cell--4-col');
     }
 
+    testData.isNewTest = isNewTest;
     $('#test-details-container').html(Handlebars.templates.testDetails(testData));
     $('#add-test').toggleClass('hidden', !isNewTest);
     componentHandler.upgradeAllRegistered();
@@ -60,6 +61,10 @@ function renderTestDetailsView(testDetails) {
 
     if (!isNewTest && testData.config.url.queryParameters) {
         attachQueryParametersTogglerEvent();
+    }
+
+    if (isNewTest) {
+        attachCookieButtonsEvents();
     }
 }
 
@@ -82,25 +87,72 @@ function toggleQueryParameters() {
     $('#query-parameters-container').stop().slideToggle();
 }
 
+function attachCookieButtonsEvents() {
+    $('#new-cookie').off('click').on('click', addCookieInput);
+    $('.remove-cookie').off('click').on('click', removeCookieInput);
+}
+
+function addCookieInput() {
+    var $cookieInputs = $('.cookie-inputs-container');
+
+    $cookieInputs
+        .last()
+        .after(Handlebars.templates.cookieInput({
+            index: $cookieInputs.length / 2 + 1
+        }));
+
+    $('.remove-cookie').show();
+    attachCookieButtonsEvents();
+    componentHandler.upgradeAllRegistered();
+}
+
+function removeCookieInput() {
+    $(this).parent('.cookie-inputs-container').remove();
+
+    if ($('.cookie-inputs-container').length === 1) {
+        $('.remove-cookie').hide();
+    }
+}
+
 function attachTestDetailsEventHandlers() {
     $('#add-test').off('click').on('click', createTest);
 }
 
 function createTest() {
-    var details =
-        {
-            name: $('#name').val(),
-            config: {
-                url: $('#url').val(),
-                browserWidth: $('#browser-width').val(),
-                browserHeight: $('#browser-height').val(),
-                browser: $('input[name="browser"]').val(),
-                generator: 'SENSE'
-            }
-        };
+    var details = {
+        name: $('#name').val(),
+        config: {
+            url: $('#url').val(),
+            cookies: getCookies(),
+            browserWidth: $('#browser-width').val(),
+            browserHeight: $('#browser-height').val(),
+            browser: $('input[name="browser"]').val(),
+            generator: 'SENSE'
+        }
+    };
 
     emitOnSocket('tests create', details)
         .then(reloadAfterCreateTest);
+}
+
+function getCookies() {
+    var cookies = [];
+
+    $('.cookie-inputs-container').each(function (index, cookieContainer) {
+        var cookieName = $(cookieContainer).find('.cookie-input-name input').val(),
+            cookieValue = $(cookieContainer).find('.cookie-input-value input').val();
+        
+        if (cookieName && cookieValue) {
+            cookies.push({
+                name: cookieName,
+                value: cookieValue
+            });
+        }
+    });
+
+    if (cookies.length) {
+        return cookies;
+    }
 }
 
 function reloadAfterCreateTest(newTestData) {
@@ -185,5 +237,7 @@ function createFingerprint() {
 Handlebars.registerHelper('compareToFingerprintId', function () {
     return baselineId || firstFingerprintId;
 });
+
+Handlebars.registerPartial('cookieInput', Handlebars.templates.cookieInput);
 
 init();
