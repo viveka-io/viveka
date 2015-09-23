@@ -78,6 +78,7 @@ function panzoomify() {
             $reset: $('#zoom-reset'),
             $set: $panzoom,
             onChange: function (e, panzoom, transform) {
+                // TODO: handle all panzoom view
                 var contentRect = this.getBoundingClientRect(),
                     parentRect = this.parentNode.getBoundingClientRect(),
                     isWider = contentRect.width > parentRect.width,
@@ -115,6 +116,7 @@ function panzoomify() {
                 $('#zoom')[0].MaterialSlider.change(scale);
             },
             onReset: function () {
+                // TODO: handle all panzoom view
                 var scale = Math.min($panzoom.parent().height() / $panzoom.height(), $panzoom.parent().width() / $panzoom.width()),
                     scaledWidth = $(this).width() * scale,
                     scaledHeight = $(this).height() * scale,
@@ -138,7 +140,6 @@ function panzoomify() {
 
         $panzoom.panzoom('option', 'minScale', minScale);
         $panzoom.panzoom('resetDimensions');
-        $panzoom.panzoom('change');
     });
 }
 
