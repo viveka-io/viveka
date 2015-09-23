@@ -47,7 +47,6 @@ function renderTestDetailsView(testDetails) {
     } else {
         testData = testDetails.result;
         testData.browsers = mapBrowsers(testData.config.browser);
-        testData.queryParameters = getQueryParameters(testData.config.url);
         $('#test-title').html(testData.name);
         $('#test-details-container')
             .removeClass('mdl-cell--12-col')
@@ -59,7 +58,7 @@ function renderTestDetailsView(testDetails) {
     componentHandler.upgradeAllRegistered();
     attachTestDetailsEventHandlers();
 
-    if (testData.queryParameters) {
+    if (!isNewTest && testData.config.url.queryParameters) {
         attachQueryParametersTogglerEvent();
     }
 }
@@ -73,23 +72,6 @@ function mapBrowsers(testBrowser) {
             selected: testBrowser && browser.name.toUpperCase() === testBrowser.toUpperCase()
         };
     });
-}
-
-function getQueryParameters(url) {
-    var queryParametersDividerIndex = url.indexOf('?'),
-        queryParameters;
-    
-    if (queryParametersDividerIndex !== -1) {
-        queryParameters = url.slice(queryParametersDividerIndex + 1).split('&').map(function (param) {
-            var keyValue = param.split('=');
-            return {
-                key: keyValue[0],
-                value: keyValue[1]
-            };
-        });
-    }
-
-    return queryParameters;
 }
 
 function attachQueryParametersTogglerEvent() {

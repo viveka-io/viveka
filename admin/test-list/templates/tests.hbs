@@ -7,7 +7,8 @@
             <thead class="mdl-color--primary">
                 <tr>
                     <th class="mdl-color-text--primary-contrast mdl-data-table__cell--non-numeric">Title</th>
-                    <th class="mdl-color-text--primary-contrast mdl-data-table__cell--non-numeric">ID</th>
+                    <th class="mdl-color-text--primary-contrast mdl-data-table__cell--non-numeric">Host</th>
+                    <th class="mdl-color-text--primary-contrast mdl-data-table__cell--non-numeric">Path</th>
                     <th class="mdl-color-text--primary-contrast"></th>
                 </tr>
             </thead>
@@ -17,7 +18,8 @@
                     <td class="mdl-data-table__cell--non-numeric">
                         <a href="/test-details.html#{{_id}}" class="mdl-navigation__link mdl-typography--font-bold">{{name}}</a>
                     </td>
-                    <td class="mdl-data-table__cell--non-numeric">{{_id}}</td>
+                    <td class="mdl-data-table__cell--non-numeric">{{config.url.hostname}}</td>
+                    <td class="mdl-data-table__cell--non-numeric">{{config.url.pathname}}</td>
                     <td>
                         <a href="/test-details.html#{{_id}}" id="test-detail{{@index}}" class="mdl-button mdl-js-button mdl-button--icon mdl-button--primary">
                             <i class="icon-mode_edit"></i>
