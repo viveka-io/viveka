@@ -85,16 +85,16 @@ function setFingerprintIds(baselineId, targetId) {
 
 function showTestCaseDiff(testCaseTextId) {
     var testId = getTestCaseIdByTextId(testCaseTextId),
-        baselineId,
-        targetId,
+        baseline,
+        target,
         overlayCaption = $('#overlay .caption');
 
     overlayCaption.append('<br>Searching for baseline fingerprint...');
     emitOnSocket('fingerprints get baseline', { id: testId })
         .then(function (data) {
             if (data.result) {
-                baselineId = data.result._id;
-                overlayCaption.append('<br>Baseline fingerprint ' + baselineId + ' found.');
+                baseline = data.result;
+                overlayCaption.append('<br>Baseline fingerprint ' + baseline._id + ' found.');
 
                 return Promise.resolve();
             }
@@ -104,7 +104,7 @@ function showTestCaseDiff(testCaseTextId) {
             return emitOnSocket('fingerprints create', { id: testId })
                 .then(function (fingerprint) {
                     overlayCaption.append('<br>Fingerprint created. Approving it...');
-                    baselineId = fingerprint.result._id;
+                    baseline = fingerprint.result;
 
                     return emitOnSocket('fingerprints approve', { id: fingerprint.result._id });
                 });
@@ -115,9 +115,9 @@ function showTestCaseDiff(testCaseTextId) {
             return emitOnSocket('fingerprints get latest', { id: testId });
         })
         .then(function (data) {
-            if (data.result && data.result._id !== baselineId) {
-                targetId = data.result._id;
-                overlayCaption.append('<br>Latest fingerprint ' + targetId + ' found.');
+            if (data.result && data.result._id !== baseline._id) {
+                target = data.result;
+                overlayCaption.append('<br>Latest fingerprint ' + target._id + ' found.');
 
                 return Promise.resolve();
             }
@@ -128,23 +128,23 @@ function showTestCaseDiff(testCaseTextId) {
         })
         .then(function (data) {
             if (data && data.result) {
-                targetId = data.result._id;
+                target = data.result;
             }
 
             overlayCaption.append('<br>Baseline and latest fingerprints are ready');
-            render(testId, baselineId, targetId);
+            render(testId, baseline, target);
         });
 }
 
-function render(testId, baselineId, targetId) {
-    $('#overlay .caption').append('<br>Generating diff between ' + baselineId + ' and ' + targetId + ' ...');
+function render(testId, baseline, target) {
+    $('#overlay .caption').append('<br>Generating diff between ' + baseline._id + ' and ' + target._id + ' ...');
 
     $('#wrapper').append(Handlebars.templates.containers({
-        baselineId: baselineId,
-        targetId: targetId
+        baseline: baseline,
+        target: target
     }));
 
-    $('#imgA, #imgB').one('load', handleImageLoading(testId, baselineId, targetId));
+    $('#imgA, #imgB').one('load', handleImageLoading(testId, baseline._id, target._id));
 }
 
 function handleImageLoading(testId, baselineId, targetId) {

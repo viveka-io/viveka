@@ -75,9 +75,13 @@ body, .mdl-layout__content {
 
 .screenshots {
     position: relative;
-    background: color($color-black);
     overflow: hidden;
-    height: 800px;
+    max-height: 500px;
+    padding: 0;
+
+    .mdl-cell {
+        background: color($color-black);
+    }
 
     .container {
         position: relative;

@@ -5,8 +5,8 @@
     <button id="zoom-reset" class="mdl-button mdl-js-button mdl-button--icon"><i class="icon-youtube_searched_for"></i></button>
 </div>
 
-<div class="screenshots mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
-    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+<div class="screenshots mdl-grid">
+    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-shadow--2dp">
         <div id="baseline-container" class="container panzoom">
             <img src="{{screenshotA}}">
             {{#each result}}
@@ -16,7 +16,7 @@
             {{/each}}
         </div>
     </div>
-    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-shadow--2dp">
         <div id="current-container" class="container panzoom">
             <img src="{{screenshotB}}">
             {{#each result}}
