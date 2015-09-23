@@ -1,9 +1,6 @@
 <div class="test-config mdl-card mdl-shadow--2dp">
     <div id="url-container"{{#if hasParameters}} class="parametered"{{/if}}>
-        <span class="url mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width" title="{{config.url.href}}">
-            <input class="mdl-textfield__input" type="text" id="url" value="{{config.url.href}}" />
-            <label class="mdl-textfield__label" for="url">URL</label>
-        </span>
+        {{> materialInput tag="span" id="url" label="URL" value=config.url.href type="text" fullWidth=true}}
         {{#if hasParameters}}
         <label id="query-parameter-switcher" class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="query-parameter">
             <input type="checkbox" id="query-parameter" class="mdl-icon-toggle__input" />
@@ -35,14 +32,8 @@
         <span class="mdl-tooltip" for="new-cookie">add cookie</span>
     </div>
     {{/if}}
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width">
-        <input class="mdl-textfield__input" type="number" id="browser-width" value="{{config.browserWidth}}" maxlength="4" min="0" />
-        <label class="mdl-textfield__label" for="browser-width">Screen width</label>
-    </div>
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-textfield--full-width">
-        <input class="mdl-textfield__input" type="number" id="browser-height" value="{{config.browserHeight}}" maxlength="4" min="0" />
-        <label class="mdl-textfield__label" for="browser-height">Screen height</label>
-    </div>
+    {{> materialInput tag="div" id="browser-width" label="Screen width" value=config.browserWidth type="number" fullWidth=true maxlength=4 min=0}}
+    {{> materialInput tag="div" id="browser-width" label="Screen height" value=config.browserHeight type="number" fullWidth=true maxlength=4 min=0}}
     <div id="browser-selector">
         {{#each browsers}}
         <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="option-{{@index}}" id="browser-{{@index}}">

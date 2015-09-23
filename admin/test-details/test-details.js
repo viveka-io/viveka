@@ -239,5 +239,6 @@ Handlebars.registerHelper('compareToFingerprintId', function () {
 });
 
 Handlebars.registerPartial('cookieInput', Handlebars.templates.cookieInput);
+Handlebars.registerPartial('materialInput', Handlebars.templates.materialInput);
 
 init();
