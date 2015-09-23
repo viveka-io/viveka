@@ -65,6 +65,7 @@ function renderTestDetailsView(testDetails) {
     if (isNewTest) {
         attachTestDetailsEventHandlers();
         attachCookieButtonsEvents();
+        attachCookieSuggestEvents();
     }
 }
 
@@ -98,11 +99,12 @@ function addCookieInput() {
     $cookieInputs
         .last()
         .after(Handlebars.templates.cookieInput({
-            index: $cookieInputs.length / 2 + 1
+            index: $cookieInputs.length + 1
         }));
 
     $('.remove-cookie').show();
     attachCookieButtonsEvents();
+    attachCookieSuggestEvents();
     componentHandler.upgradeAllRegistered();
 }
 
@@ -112,6 +114,21 @@ function removeCookieInput() {
     if ($('.cookie-inputs-container').length === 1) {
         $('.remove-cookie').hide();
     }
+}
+
+function attachCookieSuggestEvents() {
+    $('.cookie-input-name input').off('keyup').on('keyup', suggestCookieName);
+}
+
+function suggestCookieName() {
+    var cookieName = $(this).val();
+
+    emitOnSocket('cookies suggest name', { cookieName: cookieName })
+        .then(showCookieNameSuggestions);
+}
+
+function showCookieNameSuggestions(suggestions) {
+    console.log(suggestions);
 }
 
 function attachTestDetailsEventHandlers() {
