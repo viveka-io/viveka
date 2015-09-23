@@ -59,7 +59,7 @@ function renderTestDetailsView(testDetails) {
     componentHandler.upgradeAllRegistered();
     attachTestDetailsEventHandlers();
 
-    if (!isNewTest && testData.config.url.queryParameters) {
+    if (!isNewTest && (testData.config.url.queryParameters || testData.config.cookies)) {
         attachQueryParametersTogglerEvent();
     }
 

@@ -5,11 +5,11 @@
             <label class="mdl-textfield__label" for="url">URL</label>
         </span>
         {{#if config.url.queryParameters}}
-            <label id="query-parameter-switcher" class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="query-parameter">
-                <input type="checkbox" id="query-parameter" class="mdl-icon-toggle__input" />
-                <i class="mdl-icon-toggle__label material-icons"><em class="icon-tune"></em></i>
-            </label>
-            <div class="mdl-tooltip" for="query-parameter-switcher">show parameters</div>
+        <label id="query-parameter-switcher" class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="query-parameter">
+            <input type="checkbox" id="query-parameter" class="mdl-icon-toggle__input" />
+            <i class="mdl-icon-toggle__label material-icons"><em class="icon-tune"></em></i>
+        </label>
+        <div class="mdl-tooltip" for="query-parameter-switcher">show parameters</div>
         {{/if}}
     </div>
     <div id="query-parameters-container">
@@ -17,6 +17,11 @@
             {{~#each config.url.queryParameters~}}
             <li class="parameter mdl-color--grey-200">
                 <span><b>{{key}}</b>&nbsp;{{value}}</span>
+            </li>
+            {{~/each~}}
+            {{~#each config.cookies~}}
+            <li class="cookie mdl-color--teal-50">
+                <span><b>{{name}}</b>&nbsp;{{value}}</span>
             </li>
             {{~/each~}}
         </ul>
