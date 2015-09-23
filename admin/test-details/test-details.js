@@ -47,6 +47,7 @@ function renderTestDetailsView(testDetails) {
     } else {
         testData = testDetails.result;
         testData.browsers = mapBrowsers(testData.config.browser);
+        testData.hasParameters = Boolean(testData.config.url.queryParameters) || Boolean(testData.config.cookies);
         $('#test-title').html(testData.name);
         $('#test-details-container')
             .removeClass('mdl-cell--12-col')
@@ -55,15 +56,14 @@ function renderTestDetailsView(testDetails) {
 
     testData.isNewTest = isNewTest;
     $('#test-details-container').html(Handlebars.templates.testDetails(testData));
-    $('#add-test').toggleClass('hidden', !isNewTest);
     componentHandler.upgradeAllRegistered();
-    attachTestDetailsEventHandlers();
 
-    if (!isNewTest && (testData.config.url.queryParameters || testData.config.cookies)) {
+    if (testData.hasParameters) {
         attachQueryParametersTogglerEvent();
     }
 
     if (isNewTest) {
+        attachTestDetailsEventHandlers();
         attachCookieButtonsEvents();
     }
 }
