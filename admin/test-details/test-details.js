@@ -1,4 +1,4 @@
-/* global window $ Handlebars componentHandler Router */
+﻿/* global window $ Handlebars componentHandler Router */
 
 import { emitOnSocket } from '/script/common.js';
 
@@ -88,11 +88,11 @@ function attachQueryParametersTogglerEvent() {
 }
 
 function toggleQueryParameters() {
-    $('#query-parameters-container').stop().slideToggle();
+    $('#query-parameters-container').stop(true, true).slideToggle();
 }
 
 function attachParameterZoomEvent() {
-    $('.parameter, .cookie').off('click').on('click', toggleZoomedClass);
+    $('.mdlext-label').off('click').on('click', toggleZoomedClass);
 }
 
 function toggleZoomedClass() {
@@ -116,7 +116,7 @@ function addCookieInput() {
             index: $cookieInputs.length + 1
         }));
 
-    $('.remove-cookie').show();
+    $('.remove-cookie').prop('disabled', false);
     attachCookieButtonsEvents();
     attachCookieSuggestEvents();
     componentHandler.upgradeAllRegistered();
@@ -126,19 +126,21 @@ function removeCookieInput() {
     $(this).parent('.cookie-inputs-container').remove();
 
     if ($('.cookie-inputs-container').length === 1) {
-        $('.remove-cookie').hide();
+        $('.remove-cookie').prop('disabled', true);
     }
 }
 
 function attachCookieSuggestEvents() {
     $('.cookie-input-name input')
         .off('keyup')
+        .on('change', suggestCookieName)
         .on('keyup', suggestCookieName)
         .on('focus', showSuggestionContainer)
         .on('blur', hideSuggestionContainer);
     
     $('.cookie-input-value input')
         .off('keyup')
+        .on('change', suggestCookieValue)
         .on('keyup', suggestCookieValue)
         .on('focus', showSuggestionContainer)
         .on('blur', hideSuggestionContainer);
@@ -165,6 +167,7 @@ function showCookieNameSuggestions($input, suggestions) {
             inputId: 'cookie-name',
             inputIndex: $input.data('cookie-index')
         }));
+        attachSuggestionClickEvent();
     } else {
         $suggestionsContainer.empty();
     }
@@ -191,6 +194,7 @@ function showCookieValueSuggestions($input, suggestions) {
             inputId: 'cookie-value',
             inputIndex: $input.data('cookie-index')
         }));
+        attachSuggestionClickEvent();
     } else {
         $suggestionsContainer.empty();
     }
@@ -226,6 +230,20 @@ function removeFocusToMaterialInput() {
     } else {
         $mdlInputContainer.removeClass('is-dirty');
     }
+}
+
+function attachSuggestionClickEvent() {
+    $('.suggestions li')
+        .off('mousedown')
+        .on('mousedown', fillInputWithSuggestion);
+}
+
+function fillInputWithSuggestion() {
+    var $clickedSuggestion = $(this),
+        inputId = $clickedSuggestion.parent('.suggestions').attr('for'),
+        suggestion = $clickedSuggestion.html();
+
+    $('#' + inputId).val(suggestion).trigger('change');
 }
 
 function attachTestDetailsEventHandlers() {

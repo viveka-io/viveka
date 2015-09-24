@@ -1,4 +1,4 @@
-@import '../../common/style/_general';
+﻿@import '../../common/style/_general';
 
 .mdl-layout__header-row {
     padding-left: $grid-desktop-gutter;
@@ -105,10 +105,6 @@ body, .mdl-layout__content {
     }
 }
 
-.hidden {
-    display: none;
-}
-
 #fingerprints-list-container {
     position: relative;
 
@@ -140,7 +136,7 @@ body, .mdl-layout__content {
 
     .query-parameters {
         margin: 0;
-        padding: 0;
+        padding: 0 0 $grid-desktop-gutter / 2;
         list-style: none;
         position: relative;
 
@@ -149,16 +145,10 @@ body, .mdl-layout__content {
         }
     }
 
-    .parameter,
-    .cookie {
-        display: inline-block;
+    .mdlext-label {
         max-width: 300px;
         overflow: hidden;
         text-overflow: ellipsis;
-        padding: 4px 16px;
-        border-radius: 16px;
-        margin-bottom: 8px;
-        font-size: 90%;
         transition: all .3s ease;
         cursor: pointer;
 
@@ -171,11 +161,10 @@ body, .mdl-layout__content {
             top: 0;
             left: 0;
             right: 0;
-            bottom: 0;
+            bottom: $grid-desktop-gutter / 2;
             max-width: none;
             border-radius: initial;
-            margin: 0;
-            overflow-y: scroll;
+            overflow-y: auto;
 
             .key {
                 display: block;
@@ -229,3 +218,74 @@ body, .mdl-layout__content {
         min-width: 200px;
     }
 }
+
+.cookies-container {
+    position: relative;
+    
+    #new-cookie {
+        position: absolute;
+        bottom: $input-text-vertical-spacing - 2;
+        right: 0;
+    }
+}
+
+.cookie-inputs-container {
+    margin-right: $button-icon-size;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    align-content: stretch;
+    flex-wrap: wrap;
+
+    @media screen and (max-width: $grid-tablet-breakpoint - 1) {
+        .cookie-input-name.mdl-textfield {
+            flex: 1 1 100%;
+            margin-right: $grid-desktop-gutter + $button-icon-size;
+        }
+    }
+
+
+    .remove-cookie {
+        color: color($palette-red-500);
+    }
+
+    .cookie-input-name {
+        flex: 2;
+        margin-right: $grid-desktop-gutter;
+    }
+
+    .cookie-input-value {
+        flex: 3;
+        margin-right: $grid-desktop-gutter;
+    }
+}
+
+.suggestions-container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    display: none;
+
+    .suggestions {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        li {
+            margin: 0;
+            padding: $grid-desktop-gutter/2 $grid-desktop-gutter;
+            transition: background .3s ease;
+            cursor: pointer;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+
+            &:hover {
+                background: color($color-primary, .1);
+            }
+        }
+    }
+}
+
