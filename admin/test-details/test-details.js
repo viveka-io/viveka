@@ -195,15 +195,11 @@ function showCookieValueSuggestions($input, suggestions) {
 }
 
 function showSuggestionContainer() {
-    var $input = $(this);
-
-    $('.suggestions-container[for="' + $input.attr('id') + '"]').show();
+    $('.suggestions-container[for="' + $(this).attr('id') + '"]').show();
 }
 
 function hideSuggestionContainer() {
-    var $input = $(this);
-    
-    $('.suggestions-container[for="' + $input.attr('id') + '"]').hide();
+    $('.suggestions-container[for="' + $(this).attr('id') + '"]').hide();
 }
 
 function attachTestDetailsEventHandlers() {
