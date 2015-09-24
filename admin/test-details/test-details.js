@@ -129,8 +129,17 @@ function removeCookieInput() {
 }
 
 function attachCookieSuggestEvents() {
-    $('.cookie-input-name input').off('keyup').on('keyup', suggestCookieName);
-    $('.cookie-input-value input').off('keyup').on('keyup', suggestCookieValue);
+    $('.cookie-input-name input')
+        .off('keyup')
+        .on('keyup', suggestCookieName)
+        .on('focus', showSuggestionContainer)
+        .on('blur', hideSuggestionContainer);
+    
+    $('.cookie-input-value input')
+        .off('keyup')
+        .on('keyup', suggestCookieValue)
+        .on('focus', showSuggestionContainer)
+        .on('blur', hideSuggestionContainer);
 }
 
 function suggestCookieName() {
@@ -140,6 +149,8 @@ function suggestCookieName() {
     if (cookieName) {
         emitOnSocket('cookies suggest name', { cookieName: cookieName })
             .then(showCookieNameSuggestions.bind(null, $input));
+    } else {
+        $('.suggestions-container[for="' + $input.attr('id') + '"]').empty();
     }
 }
 
@@ -152,7 +163,8 @@ function showCookieNameSuggestions($input, suggestions) {
             inputId: 'cookie-name',
             inputIndex: $input.data('cookie-index')
         }));
-        componentHandler.upgradeAllRegistered();
+    } else {
+        $suggestionsContainer.empty();
     }
 }
 
@@ -160,19 +172,38 @@ function suggestCookieValue() {
     var cookieIndex = $(this).data('cookie-index'),
         cookieName = $('.cookie-name[data-cookie-index="' + cookieIndex + '"]').val(),
         cookieValue = $(this).val(),
-        inputId = $(this).attr('id');
+        $input = $(this);
 
     if (cookieName && cookieValue) {
         emitOnSocket('cookies suggest value', { cookieName: cookieName, cookieValue: cookieValue })
-            .then(showCookieValueSuggestions.bind(inputId));
+            .then(showCookieValueSuggestions.bind(null, $input));
     }
 }
 
-function showCookieValueSuggestions() {
-    /*if (suggestions.length) {
+function showCookieValueSuggestions($input, suggestions) {
+    var $suggestionsContainer = $('.suggestions-container[for="' + $input.attr('id') + '"]');
 
-    }*/
-    console.log(arguments);
+    if (suggestions.length) {
+        $suggestionsContainer.html(Handlebars.templates.suggestions({
+            suggestions: suggestions,
+            inputId: 'cookie-value',
+            inputIndex: $input.data('cookie-index')
+        }));
+    } else {
+        $suggestionsContainer.empty();
+    }
+}
+
+function showSuggestionContainer() {
+    var $input = $(this);
+
+    $('.suggestions-container[for="' + $input.attr('id') + '"]').show();
+}
+
+function hideSuggestionContainer() {
+    var $input = $(this);
+    
+    $('.suggestions-container[for="' + $input.attr('id') + '"]').hide();
 }
 
 function attachTestDetailsEventHandlers() {
