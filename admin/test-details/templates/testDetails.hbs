@@ -12,12 +12,12 @@
     <div id="query-parameters-container">
         <ul class="query-parameters">
             {{~#each config.url.queryParameters~}}
-            <li class="parameter mdl-color--grey-200">
+            <li class="parameter mdlext-label mdl-color--grey-200 mdl-color-text--grey-900">
                 <span class="key">{{key}}</span>{{#if value}}<span class="value">{{value}}</span>{{/if}}
             </li>
             {{~/each~}}
             {{~#each config.cookies~}}
-            <li class="cookie mdl-color--teal-50">
+            <li class="cookie mdlext-label mdl-color--teal-50 mdl-color-text--teal-900">
                 <span class="key">{{name}}</span>{{#if value}}<span class="value">{{value}}</span>{{/if}}
             </li>
             {{~/each~}}
@@ -25,7 +25,7 @@
     </div>
     {{#if isNewTest}}
     <div class="cookies-container">
-        {{> cookieInput index=1 hidden=true}}
+        {{> cookieInput index=1 disabled=true}}
         <button id="new-cookie" class="mdl-button mdl-js-button mdl-button--icon mdl-color-text--green-500">
             <i class="icon-add"></i>
         </button>
@@ -33,7 +33,7 @@
     </div>
     {{/if}}
     {{> materialInput tag="div" id="browser-width" label="Screen width" value=config.browserWidth type="number" fullWidth=true maxlength=4 min=0}}
-    {{> materialInput tag="div" id="browser-width" label="Screen height" value=config.browserHeight type="number" fullWidth=true maxlength=4 min=0}}
+    {{> materialInput tag="div" id="browser-height" label="Screen height" value=config.browserHeight type="number" fullWidth=true maxlength=4 min=0}}
     <div id="browser-selector">
         {{#each browsers}}
         <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="option-{{@index}}" id="browser-{{@index}}">
@@ -43,7 +43,7 @@
         <div class="mdl-tooltip" for="browser-{{@index}}">{{name}}</div>
         {{/each}}
     </div>
-    {{> materialInput tag="div" id="labels" label="Labels" type="text" fullWidth=true tagsInput=true}}
+    {{> materialInput tag="div" id="labels" label="Labels" value=labels type="text" fullWidth=true tagsInput=true}}
     {{#if isNewTest}}
     <button id="add-test" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--green">
         <i class="icon-add"></i>
