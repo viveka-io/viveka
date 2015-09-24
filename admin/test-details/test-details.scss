@@ -143,6 +143,10 @@ body, .mdl-layout__content {
         padding: 0;
         list-style: none;
         position: relative;
+
+        &.zoomed {
+            min-height: 200px;
+        }
     }
 
     .parameter,

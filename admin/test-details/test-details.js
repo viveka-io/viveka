@@ -94,7 +94,10 @@ function attachParameterZoomEvent() {
 }
 
 function toggleZoomedClass() {
-    $(this).toggleClass('zoomed');
+    $(this)
+        .parent('.query-parameters')
+        .andSelf()
+        .toggleClass('zoomed');
 }
 
 function attachCookieButtonsEvents() {
@@ -127,17 +130,49 @@ function removeCookieInput() {
 
 function attachCookieSuggestEvents() {
     $('.cookie-input-name input').off('keyup').on('keyup', suggestCookieName);
+    $('.cookie-input-value input').off('keyup').on('keyup', suggestCookieValue);
 }
 
 function suggestCookieName() {
-    var cookieName = $(this).val();
+    var cookieName = $(this).val(),
+        $input = $(this);
 
-    emitOnSocket('cookies suggest name', { cookieName: cookieName })
-        .then(showCookieNameSuggestions);
+    if (cookieName) {
+        emitOnSocket('cookies suggest name', { cookieName: cookieName })
+            .then(showCookieNameSuggestions.bind(null, $input));
+    }
 }
 
-function showCookieNameSuggestions(suggestions) {
-    console.log(suggestions);
+function showCookieNameSuggestions($input, suggestions) {
+    var $suggestionsContainer = $('.suggestions-container[for="' + $input.attr('id') + '"]');
+
+    if (suggestions.length) {
+        $suggestionsContainer.html(Handlebars.templates.suggestions({
+            suggestions: suggestions,
+            inputId: 'cookie-name',
+            inputIndex: $input.data('cookie-index')
+        }));
+        componentHandler.upgradeAllRegistered();
+    }
+}
+
+function suggestCookieValue() {
+    var cookieIndex = $(this).data('cookie-index'),
+        cookieName = $('.cookie-name[data-cookie-index="' + cookieIndex + '"]').val(),
+        cookieValue = $(this).val(),
+        inputId = $(this).attr('id');
+
+    if (cookieName && cookieValue) {
+        emitOnSocket('cookies suggest value', { cookieName: cookieName, cookieValue: cookieValue })
+            .then(showCookieValueSuggestions.bind(inputId));
+    }
+}
+
+function showCookieValueSuggestions() {
+    /*if (suggestions.length) {
+
+    }*/
+    console.log(arguments);
 }
 
 function attachTestDetailsEventHandlers() {
@@ -265,6 +300,7 @@ Handlebars.registerHelper('compareToFingerprintId', function () {
 });
 
 Handlebars.registerPartial('cookieInput', Handlebars.templates.cookieInput);
+Handlebars.registerPartial('suggestions', Handlebars.templates.suggestions);
 Handlebars.registerPartial('materialInput', Handlebars.templates.materialInput);
 
 init();
