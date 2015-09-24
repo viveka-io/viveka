@@ -90,7 +90,7 @@ function toggleQueryParameters() {
 }
 
 function attachParameterZoomEvent() {
-    $('.parameter, .cookie').off('click').on('click', toggleZoomedClass);
+    $('.mdlext-label').off('click').on('click', toggleZoomedClass);
 }
 
 function toggleZoomedClass() {
