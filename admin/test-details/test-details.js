@@ -56,7 +56,10 @@ function renderTestDetailsView(testDetails) {
 
     testData.isNewTest = isNewTest;
     $('#test-details-container').html(Handlebars.templates.testDetails(testData));
-    $('input[data-role=tagsinput]').tagsinput();
+    $('input[data-role=tagsinput]').tagsinput({
+        tagClass: 'mdlext-label',
+        trimValue: true
+    });
     componentHandler.upgradeAllRegistered();
 
     if (testData.hasParameters) {

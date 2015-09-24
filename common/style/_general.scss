@@ -45,11 +45,43 @@ $color-accent: $palette-red-500;
 
 // Extend MDL
 
+
 .mdlext-label {
     display: inline-block;
-    padding: 0 $grid-desktop-gutter / 2;
+    padding: $grid-desktop-gutter/4 $grid-desktop-gutter/2;
     border-radius: $button-border-radius;
     font-size: 90%;
     background: color($color-primary);
     color: color($color-primary-contrast);
+}
+
+.mdlext-tags-input {
+    padding-top: $input-text-vertical-spacing + 6;
+
+    .bootstrap-tagsinput {
+        display: flex;
+        flex-wrap: wrap;
+
+        .tag {
+            margin: -2px 4px 6px 0;
+
+            span{
+                margin: 0 0 0 $grid-desktop-gutter/2;
+                vertical-align: middle;
+
+                &:after {
+                    content: '\e209';
+                    font: normal 1em/1 icomoon;
+                }
+            }
+        }
+
+        input {
+            @extend .mdl-textfield__input;
+            flex: 1;
+            min-width: 200px;
+            outline: none;
+        }
+    }
+
 }
