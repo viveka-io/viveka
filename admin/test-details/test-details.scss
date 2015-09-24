@@ -208,6 +208,15 @@ body, .mdl-layout__content {
     justify-content: space-between;
     align-items: center;
     align-content: stretch;
+    flex-wrap: wrap;
+
+    @media screen and (max-width: $grid-tablet-breakpoint - 1) {
+        .cookie-input-name.mdl-textfield {
+            flex: 1 1 100%;
+            margin-right: $grid-desktop-gutter + $button-icon-size;
+        }
+    }
+
 
     .remove-cookie {
         color: color($palette-red-500);
@@ -226,8 +235,8 @@ body, .mdl-layout__content {
 
 .suggestions-container {
     position: absolute;
-    left:0;
-    min-width: 100%;
+    left: 0;
+    right: 0;
     z-index: 10;
     display: none;
 
