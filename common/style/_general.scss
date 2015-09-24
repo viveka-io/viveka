@@ -42,3 +42,14 @@ $color-accent: $palette-red-500;
         -webkit-font-smoothing: antialiased;
     }
 }
+
+// Extend MDL
+
+.mdlext-label {
+    display: inline-block;
+    padding: 0 $grid-desktop-gutter / 2;
+    border-radius: $button-border-radius;
+    font-size: 90%;
+    background: color($color-primary);
+    color: color($color-primary-contrast);
+}
