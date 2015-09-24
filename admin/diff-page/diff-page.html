@@ -7,6 +7,7 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/fonts/iconmoon.css">
+    <link rel="stylesheet" href="/bower_components/leaflet/dist/leaflet.css">
     <link rel="stylesheet" href="/style/diff-page.css">
     <link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico" />
 </head>
@@ -40,7 +41,12 @@
             <div class="page-content" id="view">
                 <div class="mdl-grid">
                     <div id="test-details-container" class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone"></div>
-                    <div id="diff-tool-container" class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone"></div>
+                    <div id="diff-tool-container" class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+                        <div class="loader mdl-color--white mdl-shadow--2dp">
+                            <i class="mdl-spinner mdl-js-spinner is-active"></i>
+                            <span class="caption">Find differences...</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -52,7 +58,7 @@
     <script src="/bower_components/handlebars/handlebars.runtime.min.js"></script>
     <script src="/bower_components/director/build/director.min.js"></script>
     <script src="/bower_components/material-design-lite/material.min.js"></script>
-    <script src="/bower_components/jquery.panzoom/dist/jquery.panzoom.min.js"></script>
+    <script src="/bower_components/leaflet/dist/leaflet.js"></script>
     <script src="/bower_components/system.js/dist/system-register-only.js"></script>
     <script src="/template/diff-page.js"></script>
     <script>System.import('script/diff-page.js')</script>

@@ -73,6 +73,17 @@ body, .mdl-layout__content {
     }
 }
 
+.loader {
+    max-width: 200px;
+    margin: 0 auto;
+    padding: $grid-desktop-gutter;
+
+    .mdl-spinner {
+        vertical-align: middle;
+        margin-right: $grid-desktop-gutter;
+    }
+}
+
 .screenshots {
     position: relative;
     overflow: hidden;
