@@ -86,7 +86,7 @@ function attachQueryParametersTogglerEvent() {
 }
 
 function toggleQueryParameters() {
-    $('#query-parameters-container').stop().slideToggle();
+    $('#query-parameters-container').stop(true, true).slideToggle();
 }
 
 function attachParameterZoomEvent() {
@@ -114,7 +114,7 @@ function addCookieInput() {
             index: $cookieInputs.length + 1
         }));
 
-    $('.remove-cookie').show();
+    $('.remove-cookie').prop('disabled', false);
     attachCookieButtonsEvents();
     attachCookieSuggestEvents();
     componentHandler.upgradeAllRegistered();
@@ -124,7 +124,7 @@ function removeCookieInput() {
     $(this).parent('.cookie-inputs-container').remove();
 
     if ($('.cookie-inputs-container').length === 1) {
-        $('.remove-cookie').hide();
+        $('.remove-cookie').prop('disabled', true);
     }
 }
 
