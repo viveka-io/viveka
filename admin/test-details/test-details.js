@@ -56,6 +56,7 @@ function renderTestDetailsView(testDetails) {
 
     testData.isNewTest = isNewTest;
     $('#test-details-container').html(Handlebars.templates.testDetails(testData));
+    $('input[data-role=tagsinput]').tagsinput();
     componentHandler.upgradeAllRegistered();
 
     if (testData.hasParameters) {
@@ -67,6 +68,7 @@ function renderTestDetailsView(testDetails) {
         attachTestDetailsEventHandlers();
         attachCookieButtonsEvents();
         attachCookieSuggestEvents();
+        attachTagsInputEvents();
     }
 }
 
@@ -200,6 +202,30 @@ function showSuggestionContainer() {
 
 function hideSuggestionContainer() {
     $('.suggestions-container[for="' + $(this).attr('id') + '"]').hide();
+}
+
+function attachTagsInputEvents() {
+    $('.bootstrap-tagsinput input')
+        .off('focus blur')
+        .on('focus', addFocusToMaterialInput)
+        .on('blur', removeFocusToMaterialInput);
+}
+
+function addFocusToMaterialInput() {
+    $(this).parents('.mdl-textfield').addClass('is-focused');
+}
+
+function removeFocusToMaterialInput() {
+    var $mdlInputContainer = $(this).parents('.mdl-textfield').first(),
+        mdlInputValue = $mdlInputContainer.find('.mdl-textfield__input').val();
+
+    $mdlInputContainer.removeClass('is-focused');
+
+    if (mdlInputValue) {
+        $mdlInputContainer.addClass('is-dirty');
+    } else {
+        $mdlInputContainer.removeClass('is-dirty');
+    }
 }
 
 function attachTestDetailsEventHandlers() {
