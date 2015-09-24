@@ -58,6 +58,10 @@ $color-accent: $palette-red-500;
 .mdlext-tags-input {
     padding-top: $input-text-vertical-spacing + 6;
 
+    &.is-disabled input {
+        display: none;
+    }
+
     .bootstrap-tagsinput {
         display: flex;
         flex-wrap: wrap;
