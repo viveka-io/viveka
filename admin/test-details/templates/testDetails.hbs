@@ -13,12 +13,12 @@
         <ul class="query-parameters">
             {{~#each config.url.queryParameters~}}
             <li class="parameter mdl-color--grey-200">
-                <span><b>{{key}}</b>&nbsp;{{value}}</span>
+                <span class="key">{{key}}</span>{{#if value}}<span class="value">{{value}}</span>{{/if}}
             </li>
             {{~/each~}}
             {{~#each config.cookies~}}
             <li class="cookie mdl-color--teal-50">
-                <span><b>{{name}}</b>&nbsp;{{value}}</span>
+                <span class="key">{{name}}</span>{{#if value}}<span class="value">{{value}}</span>{{/if}}
             </li>
             {{~/each~}}
         </ul>

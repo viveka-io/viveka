@@ -60,6 +60,7 @@ function renderTestDetailsView(testDetails) {
 
     if (testData.hasParameters) {
         attachQueryParametersTogglerEvent();
+        attachParameterZoomEvent();
     }
 
     if (isNewTest) {
@@ -86,6 +87,14 @@ function attachQueryParametersTogglerEvent() {
 
 function toggleQueryParameters() {
     $('#query-parameters-container').stop().slideToggle();
+}
+
+function attachParameterZoomEvent() {
+    $('.parameter, .cookie').off('click').on('click', toggleZoomedClass);
+}
+
+function toggleZoomedClass() {
+    $(this).toggleClass('zoomed');
 }
 
 function attachCookieButtonsEvents() {

@@ -142,20 +142,54 @@ body, .mdl-layout__content {
         margin: 0;
         padding: 0;
         list-style: none;
+        position: relative;
     }
 
     .parameter,
     .cookie {
         display: inline-block;
+        max-width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
         padding: 4px 16px;
         border-radius: 16px;
         margin-bottom: 8px;
         font-size: 90%;
-        transition: all .1s ease;
+        transition: all .3s ease;
         cursor: pointer;
 
         &:hover {
             @extend .mdl-shadow--2dp;
+        }
+
+        &.zoomed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            max-width: none;
+            border-radius: initial;
+            margin: 0;
+            overflow-y: scroll;
+
+            .key {
+                display: block;
+            }
+
+            .value {
+                display: block;
+                margin-left: 0;
+                word-wrap: break-word;
+            }
+        }
+
+        .key {
+            font-weight: bold;
+        }
+
+        .value {
+            margin-left: 4px;
         }
     }
 
