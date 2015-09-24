@@ -260,7 +260,8 @@ function createTest() {
             browserHeight: $('#browser-height').val(),
             browser: $('input[name="browser"]').val(),
             generator: 'SENSE'
-        }
+        },
+        labels: $('#labels').val().split(',')
     };
 
     emitOnSocket('tests create', details)

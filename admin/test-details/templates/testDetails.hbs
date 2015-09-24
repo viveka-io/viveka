@@ -43,7 +43,7 @@
         <div class="mdl-tooltip" for="browser-{{@index}}">{{name}}</div>
         {{/each}}
     </div>
-    {{> materialInput tag="div" id="labels" label="Labels" type="text" fullWidth=true tagsInput=true}}
+    {{> materialInput tag="div" id="labels" label="Labels" value=labels type="text" fullWidth=true tagsInput=true}}
     {{#if isNewTest}}
     <button id="add-test" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--green">
         <i class="icon-add"></i>
