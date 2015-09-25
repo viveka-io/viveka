@@ -8,9 +8,10 @@ var glob = require('glob');
 var merge = require('merge-stream');
 var runSequence = require('run-sequence');
 var browserSync = require('browser-sync');
-var browserSyncInitialized = false;
+var browserSyncInstance;
 var cp = require('child_process');
 var node;
+
 //--------------------------- CONFIGURATION ----------------------------------
 var sections = {
     'dev-section': {
@@ -44,10 +45,6 @@ gulp.task('server:babel', function () {
 });
 
 gulp.task('stopServer', function () {
-    if (browserSyncInitialized) {
-        browserSync.pause();
-    }
-
     if (node) {
         node.kill();
     }
@@ -102,7 +99,6 @@ Object.keys(sections).map(function (section) {
             .pipe($.flatten())
             .pipe($.sourcemaps.write('.'))
             .pipe(gulp.dest(dest))
-            .pipe(browserSync.stream());
     });
     //---------------------------- STYLE TASK -----------------------------------
     gulp.task(section + ':style', function () {
@@ -114,7 +110,6 @@ Object.keys(sections).map(function (section) {
             .pipe($.flatten())
             .pipe($.sourcemaps.write('.'))
             .pipe(gulp.dest(dest))
-            .pipe(browserSync.stream());
     });
     //---------------------------- TEMPLATE TASK ------------------------------
     gulp.task(section + ':template', function () {
@@ -157,28 +152,34 @@ Object.keys(sections).map(function (section) {
     });
 });
 //---------------------------- WATCH TASK -----------------------------------
-gulp.task('browser-sync', function () {
-    if (!browserSyncInitialized) {
-        browserSync.init({
-            proxy: 'localhost:5555'
-        });
-        browserSyncInitialized = true;
-    } else {
-        browserSync.resume();
-        browserSync.reload();
+gulp.task('browser-sync', ['default'], function () {
+
+    if (browserSyncInstance) {
+        browserSyncInstance.exit();
     }
+
+    browserSyncInstance = browserSync.create();
+    browserSyncInstance.init({
+        proxy: 'localhost:5555'
+    });
 });
+
+function browserSyncReload() {
+    if (browserSyncInstance) {
+        browserSyncInstance.reload();
+    }
+}
 
 gulp.task('watch', function () {
     gulp.watch(server.src.all, function(){
-        runSequence('stopServer', 'server:babel', 'startServer', 'browser-sync');
+        runSequence('stopServer', 'server:babel', 'startServer');
     });
     gulp.watch('common/**/*.js', ['common:script']);
     Object.keys(sections).forEach(function (section) {
-        gulp.watch(section + '/**/*.js', [section + ':script']);
-        gulp.watch(section + '/**/*.scss', [section + ':style']);
-        gulp.watch(section + '/**/*.hbs', [section + ':template', browserSync.reload]);
-        gulp.watch(section + '/**/*.html', [section + ':markup', browserSync.reload]);
+        gulp.watch(section + '/**/*.js', [section + ':script', browserSyncReload]);
+        gulp.watch(section + '/**/*.scss', [section + ':style', browserSyncReload]);
+        gulp.watch(section + '/**/*.hbs', [section + ':template', browserSyncReload]);
+        gulp.watch(section + '/**/*.html', [section + ':markup', browserSyncReload]);
     });
 });
 //---------------------------- CLEAN TASK -----------------------------------
@@ -193,9 +194,9 @@ gulp.task('default', function (done) {
         list.push(section + ':template');
         list.push(section + ':markup');
         return list;
-    }, ['common:script', 'startServer']);
+    }, ['common:script']);
 
-    runSequence('clean', 'server:babel', tasks, ['browser-sync', 'watch'], done);
+    runSequence('clean', 'server:babel', tasks, ['startServer', 'watch'], done);
 });
 //---------------------------- ERROR HANDLER -----------------------------------
 function errorHandler(title) {
