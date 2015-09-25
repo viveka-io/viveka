@@ -1,0 +1,20 @@
+<div class="cookie-inputs-container">
+    <div class="cookie-input-name mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input cookie-name" data-cookie-index="{{index}}" type="text" id="cookie-name-{{index}}" value="" />
+        <label class="mdl-textfield__label" for="cookie-name-{{index}}">Cookie name</label>
+        <div class="suggestions-container mdl-color--white mdl-shadow--2dp" for="cookie-name-{{index}}">
+            {{> suggestions inputId="cookie-name" inputIndex=index}}
+        </div>
+    </div>
+    <div class="cookie-input-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input cookie-value" data-cookie-index="{{index}}" type="text" id="cookie-value-{{index}}" value="" />
+        <label class="mdl-textfield__label" for="cookie-value-{{index}}">Cookie value</label>
+        <div class="suggestions-container mdl-color--white mdl-shadow--2dp" for="cookie-value-{{index}}">
+            {{> suggestions inputId="cookie-value" inputIndex=index}}
+        </div>
+    </div>
+    <button id="remove-cookie-{{index}}" class="remove-cookie mdl-button mdl-js-button mdl-button--icon"{{#if disabled}} disabled{{/if}}>
+        <i class="icon-remove"></i>
+    </button>
+    <span class="mdl-tooltip" for="remove-cookie-{{index}}">remove cookie</span>
+</div>
