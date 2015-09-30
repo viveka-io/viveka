@@ -9,6 +9,7 @@
                     <th class="mdl-color-text--primary-contrast mdl-data-table__cell--non-numeric">Title</th>
                     <th class="mdl-color-text--primary-contrast mdl-data-table__cell--non-numeric">Host</th>
                     <th class="mdl-color-text--primary-contrast mdl-data-table__cell--non-numeric">Path</th>
+                    <th class="mdl-color-text--primary-contrast mdl-data-table__cell--non-numeric">Behind</th>
                     <th class="mdl-color-text--primary-contrast"></th>
                 </tr>
             </thead>
@@ -20,6 +21,7 @@
                     </td>
                     <td class="mdl-data-table__cell--non-numeric">{{config.url.hostname}}</td>
                     <td class="mdl-data-table__cell--non-numeric">{{config.url.pathname}}</td>
+                    <td class="mdl-data-table__cell--non-numeric">{{unseenFingerprintCount}}</td>
                     <td>
                         <a href="/test-details.html#{{_id}}" id="test-detail{{@index}}" class="mdl-button mdl-js-button mdl-button--icon mdl-button--primary">
                             <i class="icon-mode_edit"></i>
