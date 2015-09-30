@@ -48,6 +48,9 @@ function renderTestDetailsView(testDetails) {
         testData = testDetails.result;
         testData.browsers = mapBrowsers(testData.config.browser);
         testData.hasParameters = Boolean(testData.config.url.queryParameters) || Boolean(testData.config.cookies);
+        testData.labels = testData.labels.map(function (labelObject) {
+            return labelObject.label;
+        });
         $('#test-title').html(testData.name);
         $('#test-details-container')
             .removeClass('mdl-cell--12-col')
@@ -264,7 +267,9 @@ function createTest() {
             browser: $('input[name="browser"]').val(),
             generator: 'SENSE'
         },
-        labels: $('#labels').val().split(',')
+        labels: $('#labels').val().split(',').map(function (label) {
+            return { label: label };
+        })
     };
 
     emitOnSocket('tests create', details)
