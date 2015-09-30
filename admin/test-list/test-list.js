@@ -48,4 +48,6 @@ function deleteTest(jQueryEvent) {
         .then(loadTests());
 }
 
+Handlebars.registerPartial('materialInput', Handlebars.templates.materialInput);
+
 init();
