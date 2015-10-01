@@ -7,24 +7,10 @@
 
 <div class="screenshots mdl-grid">
     <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-shadow--2dp">
-        <div id="baseline-container" class="container">
-            <img src="{{screenshotA}}">
-            {{#each result}}
-                {{#if a}}
-                <div class="diff" style="top: {{a.offset.top}}px; left:  {{a.offset.left}}px; width:  {{a.offset.width}}px; height:  {{a.offset.height}}px; background-image: url({{../../screenshotA}}); background-position: -{{a.offset.left}}px -{{a.offset.top}}px;"></div>
-                {{/if}}
-            {{/each}}
-        </div>
+        <div id="baseline-container" class="container"></div>
     </div>
     <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet mdl-cell--4-col-phone mdl-shadow--2dp">
-        <div id="current-container" class="container">
-            <img src="{{screenshotB}}">
-            {{#each result}}
-                {{#if b}}
-                <div class="diff" style="top: {{b.offset.top}}px; left:  {{b.offset.left}}px; width:  {{b.offset.width}}px; height:  {{b.offset.height}}px; background-image: url({{../../screenshotB}}); background-position: -{{b.offset.left}}px -{{b.offset.top}}px;"></div>
-                {{/if}}
-            {{/each}}
-        </div>
+        <div id="current-container" class="container"></div>
     </div>
     {{#unless result}}
     <div class="no-diff mdl-shadow--4dp mdl-color--green mdl-color-text--white mdl-typography--title">

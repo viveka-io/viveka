@@ -19,6 +19,8 @@
     "jquery.panzoom": "latest",
     "lodash": "~3.9.3",
     "material-design-lite": "~1.0.4",
-    "system.js": "systemjs/systemjs#~0.18.17"
+    "system.js": "systemjs/systemjs#~0.18.17",
+    "leaflet": "~0.7.5",
+    "Leaflet.Sync": "~0.0.5"
   }
 }

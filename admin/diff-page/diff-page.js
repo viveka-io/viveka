@@ -1,4 +1,4 @@
-/* global window $ Handlebars componentHandler Router */
+/* global window $ Handlebars componentHandler Router Promise L */
 
 import { emitOnSocket } from '/script/common.js';
 
@@ -77,14 +77,59 @@ function getDifferencesAsync() {
     });
 }
 
-function initLeaflet() {
-
-}
-
 function renderDifferencesView(differencesData) {
     $('#diff-tool-container').html(Handlebars.templates.diffTool(differencesData));
     componentHandler.upgradeAllRegistered();
-    initLeaflet();
+    initLeaflet(differencesData);
+}
+
+function initLeaflet(differencesData) {
+    try {
+        Promise.all([
+            createMap('baseline-container', differencesData.screenshotA),
+            createMap('current-container', differencesData.screenshotB)
+        ]).then(function(maps) {
+            //maps[0].sync(maps[1]);
+            //maps[1].sync(maps[0]);
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+function createMap(containerId, imageUrl) {
+    return new Promise(function(resolve) {
+            $('<img/>').attr('src', imageUrl).one('load', function () {
+                var w = this.width,
+                    h = this.height,
+                    map;
+
+                // create the map
+                map = L.map(containerId, {
+                    minZoom: 0.1,
+                    maxZoom: 1,
+                    center: [0, 0],
+                    zoom: 1,
+                    crs: L.CRS.Simple,
+                    bounceAtZoomLimits: false,
+                    zoomControl: containerId === 'baseline-container'
+                });
+
+                // calculate the edges of the image, in coordinate space
+                var southWest = map.unproject([0, h], map.getMaxZoom());
+                var northEast = map.unproject([w, 0], map.getMaxZoom());
+                var bounds = new L.LatLngBounds(southWest, northEast);
+
+                // add the image overlay, so that it covers the entire map
+                L.imageOverlay(imageUrl, bounds).addTo(map);
+
+                // tell leaflet that the map is exactly as big as the image
+                map.setMaxBounds(bounds);
+
+                resolve(map);
+            });
+        }
+    );
 }
 
 init();

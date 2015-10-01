@@ -87,7 +87,6 @@ body, .mdl-layout__content {
 .screenshots {
     position: relative;
     overflow: hidden;
-    max-height: 500px;
     padding: 0;
 
     .mdl-cell {
@@ -96,16 +95,7 @@ body, .mdl-layout__content {
 
     .container {
         position: relative;
-        display: inline-block;
-
-        img {
-            display: block;
-            opacity: .5;
-        }
-
-        .diff {
-            position: absolute;
-        }
+        min-height: 500px;
     }
 
     .no-diff {
