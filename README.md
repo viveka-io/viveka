@@ -49,7 +49,7 @@ Make sure your MongoDB connection is working!
 
 To run your tests on different browsers, you have to install them first and some of them needs additional drivers. [LIST](http://www.seleniumhq.org/download/)
 
-* Firefox can be used without additional drivers
+* Firefox can be used without additional drivers (if you installed it already)
 * Chrome needs [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/)
     * [Download it](https://sites.google.com/a/chromium.org/chromedriver/downloads)
     * Put it somewhere
