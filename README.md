@@ -61,7 +61,7 @@ To run your tests on different browsers, you have to install them first and some
 * Safari needs [SafariDriver](https://code.google.com/p/selenium/wiki/SafariDriver)
     * [Download it](http://selenium-release.storage.googleapis.com/2.45/SafariDriver.safariextz) (v2.45)
     * Install as an extension to Safari
-* PhantoJS needs [PhantomJS](http://phantomjs.org/)
+* PhantomJS needs [PhantomJS](http://phantomjs.org/)
     * [Download it](http://phantomjs.org/download.html)
     * Put it somewhere
     * And add the folder to your PATH
