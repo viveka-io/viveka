@@ -40,8 +40,8 @@ This can be done with:
 
 ### Running
     npm install
-    bower install
-    gulp
+    bower install // "npm install" should run this anyway!
+    npm start // or "gulp"
 
 Make sure your MongoDB connection is working!
 
