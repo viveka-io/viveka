@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "bower install",
-    "start": "gulp --silent"
+    "start": "gulp --silent --no-env-check"
   },
   "repository": {
     "type": "git",

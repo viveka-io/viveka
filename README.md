@@ -41,7 +41,9 @@ This can be done with:
 ### Running
     npm install
     bower install // "npm install" should run this anyway!
-    npm start // or "gulp"
+    gulp --silent // "--silent" is optional
+    or gulp --no-env-check  // to skip environment check
+    or gulp --populate-tests // to populate our predefined tests
 
 Make sure your MongoDB connection is working!
 

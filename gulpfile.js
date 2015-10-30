@@ -51,7 +51,12 @@ gulp.task('stopServer', function () {
 });
 
 gulp.task('startServer', function (done) {
-    node = cp.spawn('node', [server.tmp.index], { stdio: ['ipc', process.stdout, process.stderr] });
+    var args = [server.tmp.index];
+
+    if (process.argv.indexOf('--populate-tests') > -1) { args.push('--populate-tests'); }
+    if (process.argv.indexOf('--no-env-check') > -1) { args.push('--no-env-check'); }
+
+    node = cp.spawn('node', args, { stdio: ['ipc', process.stdout, process.stderr] });
     node.on('close', function (code) {
         if (code) {
             $.util.log('Server crashed, waiting for changes...');
@@ -98,7 +103,7 @@ Object.keys(sections).map(function (section) {
             }).on('error', errorHandler('Client:Babel')))
             .pipe($.flatten())
             .pipe($.sourcemaps.write('.'))
-            .pipe(gulp.dest(dest))
+            .pipe(gulp.dest(dest));
     });
     //---------------------------- STYLE TASK -----------------------------------
     gulp.task(section + ':style', function () {
@@ -109,7 +114,7 @@ Object.keys(sections).map(function (section) {
             .pipe($.sass().on('error', errorHandler('Sass')))
             .pipe($.flatten())
             .pipe($.sourcemaps.write('.'))
-            .pipe(gulp.dest(dest))
+            .pipe(gulp.dest(dest));
     });
     //---------------------------- TEMPLATE TASK ------------------------------
     gulp.task(section + ':template', function () {
